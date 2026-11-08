@@ -4,7 +4,7 @@ import type { SaveStatus } from "../vault/session";
 export function saveLabel(status: SaveStatus): string {
   switch (status) {
     case "saved":
-      return "Enregistré sur GitHub";
+      return "Enregistré";
     case "dirty":
       return "Non enregistré";
     case "saving":

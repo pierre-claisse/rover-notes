@@ -5,6 +5,7 @@ import { newObjectId } from "../domain/limits";
 import { parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import type { StudyQuestion } from "../domain/curriculumDocument";
 import { assertNever } from "../domain/assert";
+import { formatFrenchDate } from "../domain/time";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
 import { useVault } from "./vault";
@@ -267,7 +268,7 @@ export function WeekPage() {
           .filter((entry) => entry.weekId === weekId)
           .map((entry) => (
             <li key={entry.id}>
-              {entry.localDate} · {entry.minutes} min · {entry.summary}
+              {formatFrenchDate(entry.localDate)} · {entry.minutes} min · {entry.summary}
             </li>
           ))}
       </ul>
