@@ -1,0 +1,725 @@
+{
+  "origin": "authored",
+  "note": "Questions et indices de P0 (S1 à S9). Ce fichier, dans rover-notes/curriculum/, fait partie de la source unique du programme. Il ne complète pas un Canvas : le dépôt rover-notes est la référence.",
+  "questions": [
+    {
+      "id": "P0-S1-q-bases",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o1",
+        "P0-S1-o2"
+      ],
+      "prompt": "Images des vecteurs de base. Calculez le produit de la matrice [[0,-1],[1,0]] par (1,0), puis par (0,1). Décrivez dans quel quadrant et dans quel sens chaque image se place.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "La première colonne d’une matrice est l’image du premier vecteur de base (1,0).",
+        "(1,0) part sur (0,1) ; (0,1) part sur (−1,0).",
+        "C’est un quart de tour dans le sens antihoraire : l’axe x vient sur l’axe y."
+      ]
+    },
+    {
+      "id": "P0-S1-q-rotation-robot",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o2"
+      ],
+      "prompt": "Pourquoi un robot qui tourne a besoin de cette matrice ? Après un quart de tour à gauche, où se trouve, dans l’ancien repère, un point qui était 1 m devant lui ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Si x pointe vers l’avant, « devant » est le vecteur (1,0).",
+        "Appliquez la même matrice à ce vecteur.",
+        "Le point qui était devant se retrouve à gauche de l’ancien repère, à 1 m."
+      ]
+    },
+    {
+      "id": "P0-S1-q-stack-heap",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o3",
+        "P0-S1-o4"
+      ],
+      "prompt": "Pile, tas, pointeur, adresses. Collez deux adresses réelles de votre programme C : une variable locale et un bloc malloc. Indiquez laquelle est la plus haute, ce qui vit sur la pile, ce qui vit sur le tas, et ce que le pointeur contient.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Affichez les adresses avec printf(\"%p\", (void*)&locale) et printf(\"%p\", bloc).",
+        "Comparez vos deux nombres. Ne récitez pas « la pile est en haut » si vos adresses disent autre chose.",
+        "Le pointeur est une variable qui contient l’adresse du bloc. L’adresse de cette variable, elle, est sur la pile."
+      ]
+    },
+    {
+      "id": "P0-S1-q-linux",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o5"
+      ],
+      "prompt": "SSH, systemd, dialout. Décrivez comment vous ouvrez une session SSH, comment vous lisez l’état d’un service systemd, et pourquoi ouvrir /dev/ttyUSB0 exige le groupe dialout.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "systemctl status et journalctl -u montrent l’état d’un service et ses journaux.",
+        "ls -l /dev/ttyUSB0 affiche le propriétaire, le groupe et le mode. Le groupe attendu est souvent dialout.",
+        "L’utilisateur doit appartenir à ce groupe. Les règles udev reposent ces droits : un chmod manuel ne survit pas au rebranchement."
+      ]
+    },
+    {
+      "id": "P0-S1-q-parser",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o6"
+      ],
+      "prompt": "Contrat du parseur, sans IA pour cette première version. Pour la trame {\"T\":1,\"L\":0.5,\"R\":0.5} : champs obligatoires, types, trames refusées (au moins une accolade manquante et un nombre mal formé), et trois tests avec l’entrée exacte et le résultat attendu.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Écrivez le contrat que votre fonction garantit : T entier, L et R nombres, et ce qui est rejeté.",
+        "Une trame invalide doit échouer proprement, pas renvoyer des champs à moitié lus.",
+        "Trois lignes suffisent : nominale acceptée ; accolade manquante refusée ; nombre mal formé refusé. Écrivez l’oracle avant de lancer le test."
+      ]
+    },
+    {
+      "id": "P0-S1-q-parser-checks",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": [
+        "P0-S1-o6"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "options": [
+        {
+          "id": "valid-nominal",
+          "label": "Trame nominale {\"T\":1,\"L\":0.5,\"R\":0.5} acceptée"
+        },
+        {
+          "id": "invalid-brace",
+          "label": "Accolade manquante refusée"
+        },
+        {
+          "id": "invalid-number",
+          "label": "Nombre mal formé refusé"
+        },
+        {
+          "id": "three-tests",
+          "label": "Au moins trois tests lancés sans IA"
+        }
+      ],
+      "hints": [
+        "Ne cochez pas un cas que vous n’avez pas exécuté.",
+        "Le troisième test doit être lancé par votre binaire ou votre make.",
+        "Si un test est rouge, laissez la case vide et notez-le dans les blocages."
+      ]
+    },
+    {
+      "id": "P0-S2-q-composition",
+      "weekId": "P0-S2",
+      "linkedObjectiveIds": [
+        "P0-S2-o1"
+      ],
+      "prompt": "Composition et ordre. Prenez A = [[0,-1],[1,0]] (rotation de 90° dans le sens antihoraire) et B = [[1,0],[0,-1]] (symétrie par rapport à l’axe des x). Calculez à la main A·B et B·A. Dites, pour chaque produit, ce que devient (1,0) puis (0,1), et pourquoi les deux compositions ne sont pas les mêmes.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Le produit M·N applique d’abord N, puis M. Les colonnes de M·N sont M fois les colonnes de N.",
+        "Calculez d’abord A·(1,0) et A·(0,−1) pour obtenir les colonnes de A·B.",
+        "Vérifiez ensuite en Python (numpy ou à la main dans un script). Si A·B = B·A, relisez l’ordre des colonnes."
+      ]
+    },
+    {
+      "id": "P0-S2-q-pointeurs",
+      "weekId": "P0-S2",
+      "linkedObjectiveIds": [
+        "P0-S2-o2"
+      ],
+      "prompt": "Pointeurs. Expliquez pourquoi p[i] et *(p+i) désignent le même objet. Illustrez avec un tableau de 3 entiers : que valent p, p+1 et &p[1] ? Qu’est-ce qu’un pointeur de pointeur, concrètement ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "p[i] est défini comme *(p+i). L’arithmétique de pointeurs avance d’i éléments, pas d’i octets.",
+        "Si p pointe sur le premier entier, p+1 pointe sur le suivant : son adresse augmente de sizeof(int).",
+        "&p[1] est l’adresse du deuxième élément, donc la même valeur que p+1. Un pointeur de pointeur (int **) contient l’adresse d’un pointeur, pas celle d’un entier."
+      ]
+    },
+    {
+      "id": "P0-S2-q-shell",
+      "weekId": "P0-S2",
+      "linkedObjectiveIds": [
+        "P0-S2-o3",
+        "P0-S2-o4"
+      ],
+      "prompt": "Shell. En une phrase chacune, dites ce que font : cmd > fichier, cmd >> fichier, cmd 2>&1, cmd | other. Puis décrivez une commande find ou grep que vous avez réellement lancée, et comment vous lisez un ls -l (propriétaire, groupe, mode).",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "> écrase, >> ajoute, 2>&1 envoie aussi la sortie d’erreur vers la même destination que la sortie standard, | enchaîne deux processus.",
+        "ls -l affiche type et droits, puis nombre de liens, propriétaire, groupe, taille, date, nom.",
+        "chmod change le mode, chown le propriétaire. Notez la commande exacte que vous avez lancée, pas un exemple recopié."
+      ]
+    },
+    {
+      "id": "P0-S2-q-tests-checks",
+      "weekId": "P0-S2",
+      "linkedObjectiveIds": [
+        "P0-S2-o3"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Ne cochez pas un cas que vous n’avez pas lancé.",
+        "run_tests.sh doit échouer clairement si un test est rouge.",
+        "Si un test d’erreur passe à tort, laissez la case vide et notez-le dans les blocages."
+      ],
+      "options": [
+        {
+          "id": "error-brace",
+          "label": "Le parseur refuse une accolade manquante"
+        },
+        {
+          "id": "error-number",
+          "label": "Le parseur refuse un nombre mal formé"
+        },
+        {
+          "id": "error-missing-field",
+          "label": "Le parseur refuse un champ obligatoire absent"
+        },
+        {
+          "id": "run-tests-sh",
+          "label": "script run_tests.sh lancé, tests d’erreur verts"
+        }
+      ]
+    },
+    {
+      "id": "P0-S3-q-determinant",
+      "weekId": "P0-S3",
+      "linkedObjectiveIds": [
+        "P0-S3-o1"
+      ],
+      "prompt": "Déterminant. Que mesure le déterminant d’une matrice 2×2 (facteur d’aire, orientation) ? Que se passe-t-il géométriquement si le déterminant est nul ? Calculez det([[2,0],[0,3]]) et det([[1,2],[2,4]]) et interprétez chaque résultat.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Pour [[a,b],[c,d]], det = ad − bc. Le signe indique si l’orientation est conservée.",
+        "Un déterminant nul signifie que les deux colonnes sont colinéaires : l’image du plan est aplatie (une droite ou un point).",
+        "[[2,0],[0,3]] multiplie les aires par 6. [[1,2],[2,4]] envoie tout sur une seule direction : det = 0."
+      ]
+    },
+    {
+      "id": "P0-S3-q-asan",
+      "weekId": "P0-S3",
+      "linkedObjectiveIds": [
+        "P0-S3-o2"
+      ],
+      "prompt": "Mémoire dynamique. Décrivez comment vous allouez et libérez un tampon circulaire. Quelle commande lance AddressSanitizer (ou valgrind) ? Quelle différence voyez-vous entre une fuite et un usage après free ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Compilez avec -fsanitize=address -g, ou lancez valgrind --leak-check=full.",
+        "Une fuite : malloc sans free correspondant. Un usage après free : lecture ou écriture d’un bloc déjà rendu.",
+        "Le tampon circulaire doit rester correct aux bords (écriture qui revient au début) et ASan doit rester silencieux sur vos tests."
+      ]
+    },
+    {
+      "id": "P0-S3-q-ohm",
+      "weekId": "P0-S3",
+      "linkedObjectiveIds": [
+        "P0-S3-o3",
+        "P0-S3-o4"
+      ],
+      "prompt": "Loi d’Ohm. Une LED a une chute de 2 V, une résistance série de 220 Ω, une alimentation de 3,3 V. Calculez le courant dans la LED et la puissance dissipée dans la résistance. Expliquez ensuite, avec vos mots, ce que sont tension, courant et résistance.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "La LED « mange » 2 V ; le reste de la tension est aux bornes de la résistance.",
+        "I = U / R sur la résistance, avec U = 3,3 − 2. P = U · I sur cette même résistance.",
+        "Écrivez le calcul avec les unités (V, Ω, A ou mA, W ou mW). Ne recopiez pas un résultat trouvé ailleurs : faites le calcul."
+      ]
+    },
+    {
+      "id": "P0-S3-q-buffer-checks",
+      "weekId": "P0-S3",
+      "linkedObjectiveIds": [
+        "P0-S3-o2"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Ne cochez pas une vérif que vous n’avez pas lancée.",
+        "ASan ou valgrind doivent porter sur les tests du tampon, pas seulement sur un hello world.",
+        "Si ASan signale encore une erreur, laissez la case vide."
+      ],
+      "options": [
+        {
+          "id": "ring-tests",
+          "label": "Tests du tampon circulaire verts"
+        },
+        {
+          "id": "asan-clean",
+          "label": "ASan ou valgrind : zéro erreur sur ces tests"
+        },
+        {
+          "id": "wrap-around",
+          "label": "Cas de rebouclage (écriture au-delà de la fin) testé"
+        }
+      ]
+    },
+    {
+      "id": "P0-S4-q-scalaire",
+      "weekId": "P0-S4",
+      "linkedObjectiveIds": [
+        "P0-S4-o1"
+      ],
+      "prompt": "Produit scalaire. Calculez (3,4) · (4,−3) et (3,4) · (3,4). Interprétez chaque résultat : les vecteurs sont-ils orthogonaux ? Que représente le second calcul par rapport à la longueur ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "u · v = u₁v₁ + u₂v₂. Si le produit est nul, les vecteurs sont orthogonaux.",
+        "u · u = ||u||². Pour (3,4), vous devez retrouver 25, donc une longueur de 5.",
+        "Le produit scalaire mesure aussi une projection : u · v = ||u|| ||v|| cos θ."
+      ]
+    },
+    {
+      "id": "P0-S4-q-pwm",
+      "weekId": "P0-S4",
+      "linkedObjectiveIds": [
+        "P0-S4-o2"
+      ],
+      "prompt": "PWM. Expliquez, sans notes, pourquoi une PWM à 25 % donne en moyenne un quart de la tension d’alimentation. Précisez ce que sont le rapport cyclique et la fréquence, et pourquoi cela peut régler la vitesse d’un moteur du rover.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Le rapport cyclique est la fraction de la période où le signal est à l’état haut.",
+        "La moyenne temporelle d’un signal qui vaut V pendant un quart de la période et 0 le reste est V/4, si la période est assez courte.",
+        "La fréquence doit être assez haute pour que l’inertie du moteur (ou un filtre) lisse les impulsions. Un graphe d’une période à 25 % aide à le voir."
+      ]
+    },
+    {
+      "id": "P0-S4-q-endian-volatile",
+      "weekId": "P0-S4",
+      "linkedObjectiveIds": [
+        "P0-S4-o3",
+        "P0-S4-o4"
+      ],
+      "prompt": "Endianness et volatile. Dans un tableau d’octets [0x34, 0x12], quelle valeur lisez-vous pour un entier 16 bits petit-boutiste ? Et pour un grand-boutiste ? Dans quel cas précis utilise-t-on volatile en C, et que se passe-t-il si on l’oublie sur un registre matériel ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Petit-boutiste : l’octet de poids faible est en premier dans la mémoire. Ici 0x34 est le poids faible.",
+        "Grand-boutiste : on lirait 0x3412. Petit-boutiste : 0x1234.",
+        "volatile dit au compilateur que la valeur peut changer hors du flux du programme (registre mémoire-mappé, variable partagée avec une ISR). Sans volatile, une lecture peut être mise en cache dans un registre et ne plus voir le matériel."
+      ]
+    },
+    {
+      "id": "P0-S4-q-endian-checks",
+      "weekId": "P0-S4",
+      "linkedObjectiveIds": [
+        "P0-S4-o3"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Les fonctions d’endianness doivent être testées dans les deux sens (écrire puis relire).",
+        "Le graphe PWM peut être une image, un CSV tracé, ou un schéma coté : l’important est qu’il montre une période à 25 %.",
+        "Ne cochez pas un test que vous n’avez pas compilé."
+      ],
+      "options": [
+        {
+          "id": "le-read",
+          "label": "Lecture 16 bits petit-boutiste testée"
+        },
+        {
+          "id": "be-read",
+          "label": "Lecture 16 bits grand-boutiste testée"
+        },
+        {
+          "id": "pwm-graph",
+          "label": "Graphe ou schéma d’une PWM à 25 % joint aux notes"
+        }
+      ]
+    },
+    {
+      "id": "P0-S5-q-vectoriel",
+      "weekId": "P0-S5",
+      "linkedObjectiveIds": [
+        "P0-S5-o1"
+      ],
+      "prompt": "Produit vectoriel. Calculez i × j pour i = (1,0,0) et j = (0,1,0). Dans quel sens va le résultat ? À quoi sert un produit vectoriel pour un robot (normale, sens de rotation) ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "En 3D, u × v est orthogonal à u et à v. Son sens suit la règle de la main droite.",
+        "i × j = k = (0,0,1). j × i = −k : l’ordre compte.",
+        "Sur un rover, cela sert à passer d’un plan (avant, gauche) à une normale « haut », ou à exprimer une rotation / un moment."
+      ]
+    },
+    {
+      "id": "P0-S5-q-bus",
+      "weekId": "P0-S5",
+      "linkedObjectiveIds": [
+        "P0-S5-o2"
+      ],
+      "prompt": "Bus série. Comparez UART, I2C et SPI : fils (horloge ?), adressage, ordre de grandeur du débit. Sur le UGV Rover PT PI5 AI, lequel relie le Raspberry Pi 5 à l’ESP32 ? Quel bus utilise une adresse sur 7 bits ? Lequel n’a pas de fil d’horloge ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "UART : deux fils de données (TX/RX), pas d’horloge partagée, pas d’adresse. I2C : SDA + SCL, adresses (souvent 7 bits). SPI : horloge + MOSI/MISO + une sélection de puce par esclave.",
+        "Le firmware et le wiki Waveshare font parler le Pi et l’ESP32 en UART, avec des trames JSON.",
+        "Réponse attendue sans notes le jour de la vérif : I2C = adresse 7 bits ; UART = pas de fil d’horloge ; Pi ↔ ESP32 = UART."
+      ]
+    },
+    {
+      "id": "P0-S5-q-raii",
+      "weekId": "P0-S5",
+      "linkedObjectiveIds": [
+        "P0-S5-o3",
+        "P0-S5-o4"
+      ],
+      "prompt": "RAII. Décrivez votre classe C++ : quelle ressource elle possède, ce que fait le destructeur, et pourquoi vous n’appelez pas free ou close à la main dans le code client. Pourquoi std::unique_ptr (ou std::vector / std::string) remplace-t-il un malloc nu ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "RAII : la ressource est acquise dans le constructeur (ou une factory) et rendue dans le destructeur.",
+        "Quand l’objet sort de portée — y compris si une exception survient — le destructeur s’exécute.",
+        "std::unique_ptr libère le bloc au delete ; std::vector et std::string gèrent leur tampon. Le code client n’a plus à se souvenir d’un free."
+      ]
+    },
+    {
+      "id": "P0-S5-q-raii-checks",
+      "weekId": "P0-S5",
+      "linkedObjectiveIds": [
+        "P0-S5-o3",
+        "P0-S5-o4"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "La classe doit compiler et passer au moins un test qui vérifie la libération (ou l’absence de fuite).",
+        "Le schéma d’architecture v1 doit montrer Pi 5, UART, ESP32, et les périphériques du kit AI (IMU, INA219, caméra, tourelle) : pas de lidar, le kit AI n’en a pas.",
+        "Ne cochez pas un schéma que vous n’avez pas dessiné."
+      ],
+      "options": [
+        {
+          "id": "raii-class",
+          "label": "Classe RAII compilée et testée"
+        },
+        {
+          "id": "no-raw-malloc",
+          "label": "Au moins un usage de std::vector, std::string ou std::unique_ptr à la place d’un malloc nu"
+        },
+        {
+          "id": "arch-v1",
+          "label": "Schéma d’architecture v1 (Pi 5 ↔ UART ↔ ESP32, kit AI) joint aux notes"
+        }
+      ]
+    },
+    {
+      "id": "P0-S6-q-changement-base",
+      "weekId": "P0-S6",
+      "linkedObjectiveIds": [
+        "P0-S6-o1"
+      ],
+      "prompt": "Changement de base. Le rover est au point monde (2, 1), orienté de 90° dans le sens antihoraire (son axe x pointe vers l’avant). Un point se trouve 1 m devant lui, dans le repère du robot. Quelles sont les coordonnées de ce point dans le repère monde ? Écrivez la rotation et la translation que vous utilisez.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Un point p_robot passe au monde par p_monde = R(θ) · p_robot + t, où t est la position du robot.",
+        "Devant lui, dans son repère, le point est (1, 0). θ = 90° : R envoie (1, 0) sur (0, 1).",
+        "Ajoutez ensuite la translation (2, 1). Vérifiez que le point monde n’est pas simplement (3, 1) : le robot ne regarde pas vers +x monde."
+      ]
+    },
+    {
+      "id": "P0-S6-q-ina219",
+      "weekId": "P0-S6",
+      "linkedObjectiveIds": [
+        "P0-S6-o2",
+        "P0-S6-o3"
+      ],
+      "prompt": "INA219. Dans la datasheet TI, identifiez le registre de tension bus (adresse, bits utiles, poids du LSB). Prenez une valeur brute d’exemple dans la doc, convertissez-la à la main en volts, et écrivez : brut, décalage de bits, LSB, résultat. Dites aussi comment vous recalculez un courant à partir du registre de courant et de la calibration.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Ouvrez la datasheet officielle Texas Instruments de l’INA219, pas un blog. Repérez le Bus Voltage Register.",
+        "Les bits de poids faible de ce registre ne font pas tous partie de la mesure : lisez le décalage indiqué, et le LSB (en mV).",
+        "Le LSB du courant dépend du registre de calibration et de la résistance shunt. Recopiez la formule de la datasheet, puis appliquez-la à un exemple chiffré."
+      ]
+    },
+    {
+      "id": "P0-S6-q-cross",
+      "weekId": "P0-S6",
+      "linkedObjectiveIds": [
+        "P0-S6-o4"
+      ],
+      "prompt": "Cross-compilation. Qu’est-ce qu’un compilateur croisé ? Comment obtenez-vous un binaire ARM64 (aarch64) depuis votre PC, sans droits admin ? Comment vérifiez-vous le format du fichier produit (file, readelf ou équivalent) ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Un compilateur croisé produit du code pour une architecture différente de celle de la machine qui compile.",
+        "Sur votre machine partagée : toolchain conda/conteneur, pas un paquet système qui exige sudo.",
+        "file monbinaire doit mentionner ARM aarch64 (ou AArch64), pas x86-64. Notez la commande exacte que vous avez utilisée."
+      ]
+    },
+    {
+      "id": "P0-S6-q-ina-checks",
+      "weekId": "P0-S6",
+      "linkedObjectiveIds": [
+        "P0-S6-o3",
+        "P0-S6-o4"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Les tests du convertisseur doivent porter sur des valeurs de registres, pas seulement sur un entier quelconque.",
+        "Le binaire ARM64 peut ne pas s’exécuter sur votre PC : file ou readelf suffisent à prouver le format.",
+        "Ne cochez pas un test rouge."
+      ],
+      "options": [
+        {
+          "id": "ina-tests",
+          "label": "Convertisseur INA219 en C : tests verts"
+        },
+        {
+          "id": "bus-hand",
+          "label": "Au moins une conversion à la main du registre bus, vérifiée par le programme"
+        },
+        {
+          "id": "aarch64",
+          "label": "Binaire ARM64 produit et identifié (file ou readelf)"
+        }
+      ]
+    },
+    {
+      "id": "P0-S7-q-valeurs-propres",
+      "weekId": "P0-S7",
+      "linkedObjectiveIds": [
+        "P0-S7-o1"
+      ],
+      "prompt": "Valeurs propres. Qu’est-ce qu’un vecteur propre ? Pourquoi une rotation du plan autre que 0° ou 180° n’a-t-elle pas de vecteur propre réel (non nul) ? Que se passe-t-il si vous cherchez les valeurs propres de [[0,-1],[1,0]] dans les réels ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Av = λv signifie que A étire v sans le faire sortir de sa droite.",
+        "Une rotation de 90° envoie tout vecteur non nul hors de sa droite : aucun v réel ne reste aligné avec Av.",
+        "Le polynôme caractéristique de [[0,-1],[1,0]] est λ² + 1 = 0 : les racines sont imaginaires. Écrivez le calcul."
+      ]
+    },
+    {
+      "id": "P0-S7-q-ownership",
+      "weekId": "P0-S7",
+      "linkedObjectiveIds": [
+        "P0-S7-o2",
+        "P0-S7-o3"
+      ],
+      "prompt": "Ownership Rust. Expliquez, sur un exemple que vous avez compilé, ce que sont ownership, emprunt et durée de vie. Pourquoi un code qui utilise une String après l’avoir déplacée (moved) ne compile-t-il pas ? Collez l’erreur du compilateur et votre correction.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Une valeur a un seul propriétaire. let b = a déplace a si le type n’est pas Copy (String ne l’est pas).",
+        "Après le move, a n’est plus utilisable. Un emprunt (& ou &mut) permet d’utiliser la valeur sans la prendre.",
+        "Collez le message rustc, pas une paraphrase. cargo test doit passer sur la fonction que vous avez écrite."
+      ]
+    },
+    {
+      "id": "P0-S7-q-ci",
+      "weekId": "P0-S7",
+      "linkedObjectiveIds": [
+        "P0-S7-o4"
+      ],
+      "prompt": "CI. Décrivez votre workflow GitHub Actions : quels jobs, quelles commandes, sur quel dépôt. Que se passe-t-il si un test C échoue ? Collez l’URL d’un run vert.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Un fichier sous .github/workflows/ décrit les étapes : checkout, compilation, tests.",
+        "La CI doit compiler et tester le code C (moitié du critère de fin de P0). Un test rouge doit faire échouer le workflow.",
+        "L’URL d’un run Actions (pas seulement le YAML) est la preuve."
+      ]
+    },
+    {
+      "id": "P0-S7-q-ci-checks",
+      "weekId": "P0-S7",
+      "linkedObjectiveIds": [
+        "P0-S7-o3",
+        "P0-S7-o4"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "cargo test et la CI C sont deux preuves distinctes.",
+        "Un workflow qui n’a jamais tourné sur GitHub ne compte pas.",
+        "Si le run est rouge, laissez la case vide."
+      ],
+      "options": [
+        {
+          "id": "cargo-test",
+          "label": "cargo test vert sur une fonction Rust écrite cette semaine"
+        },
+        {
+          "id": "ci-c-green",
+          "label": "CI GitHub Actions verte sur les tests C"
+        },
+        {
+          "id": "move-explained",
+          "label": "Erreur de move Rust reproduite, puis corrigée, avec le message compilateur dans les notes"
+        }
+      ]
+    },
+    {
+      "id": "P0-S8-q-result",
+      "weekId": "P0-S8",
+      "linkedObjectiveIds": [
+        "P0-S8-o1",
+        "P0-S8-o2"
+      ],
+      "prompt": "Result, Option, traits. Sur votre parseur Rust (ou un exemple plus petit), montrez un Result, un Option et un usage de l’opérateur ?. Qu’est-ce qu’un trait, et quel trait avez-vous défini ou implémenté ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Option : présence ou absence (Some / None). Result : succès ou erreur (Ok / Err).",
+        "L’opérateur ? transmet l’erreur au caller si on est déjà dans une fonction qui renvoie Result.",
+        "Un trait décrit un comportement (des méthodes) qu’un type peut implémenter, un peu comme une interface. Citez le vôtre."
+      ]
+    },
+    {
+      "id": "P0-S8-q-parser-rust",
+      "weekId": "P0-S8",
+      "linkedObjectiveIds": [
+        "P0-S8-o3"
+      ],
+      "prompt": "Parseur Rust. Quelles différences avez-vous constatées en portant le parseur C vers Rust (types, erreurs, tests) ? Donnez trois tests : une trame nominale et deux refus, avec l’oracle de chacun.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Gardez le même contrat que le parseur C : T entier, L et R nombres, échec propre sur une trame invalide.",
+        "Les tests Rust se lancent avec cargo test. Écrivez l’oracle avant d’implémenter si possible.",
+        "Ne vous contentez pas d’un unwrap partout : une trame invalide doit produire une Err, pas un panic."
+      ]
+    },
+    {
+      "id": "P0-S8-q-nostd",
+      "weekId": "P0-S8",
+      "linkedObjectiveIds": [
+        "P0-S8-o4"
+      ],
+      "prompt": "no_std. Que signifie no_std ? Donnez sans notes au moins deux choses indisponibles (ou très différentes) sans la bibliothèque standard, et dites pourquoi cela intéresse un microcontrôleur comme l’ESP32.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "no_std : on n’utilise pas la crate std, seulement core (et éventuellement alloc).",
+        "Sans std : pas de std::fs, pas de threads std, pas d’allocateur global par défaut, pas de HashMap de std, un panic beaucoup plus limité.",
+        "Sur un ESP32, il n’y a souvent ni système de fichiers complet, ni le luxe d’allouer sans budget. Écrivez deux exemples concrets, pas une liste apprise par cœur sans les relier au matériel."
+      ]
+    },
+    {
+      "id": "P0-S8-q-parser-checks",
+      "weekId": "P0-S8",
+      "linkedObjectiveIds": [
+        "P0-S8-o3"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Les tests doivent tourner via cargo test.",
+        "Une trame invalide qui panique n’est pas un échec propre.",
+        "Ne cochez pas un port que vous n’avez pas compilé."
+      ],
+      "options": [
+        {
+          "id": "nominal-ok",
+          "label": "Trame nominale acceptée par le parseur Rust"
+        },
+        {
+          "id": "invalid-err",
+          "label": "Au moins deux trames invalides renvoient Err (pas de panic)"
+        },
+        {
+          "id": "cargo-test-parser",
+          "label": "cargo test vert sur le parseur Rust"
+        }
+      ]
+    },
+    {
+      "id": "P0-S9-q-systeme",
+      "weekId": "P0-S9",
+      "linkedObjectiveIds": [
+        "P0-S9-o1"
+      ],
+      "prompt": "Système linéaire. Résolvez par élimination : x + y = 5 et 2x − y = 1. Expliquez ensuite la vue « lignes » (intersection de droites) et la vue « colonnes » (combinaison des colonnes du système).",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Additionnez ou soustrayez les équations pour éliminer une inconnue, puis substituez.",
+        "Vue lignes : chaque équation est une droite ; la solution est leur intersection.",
+        "Vue colonnes : x·(1,2) + y·(1,−1) = (5,1). Vous cherchez les poids qui reconstruisent le second membre."
+      ]
+    },
+    {
+      "id": "P0-S9-q-ros2",
+      "weekId": "P0-S9",
+      "linkedObjectiveIds": [
+        "P0-S9-o2"
+      ],
+      "prompt": "ROS 2 Humble. Comment avez-vous installé Humble (conteneur, sans droits admin) ? Quelles commandes lancent un talker et un listener ? Que voyez-vous circuler, et comment l’avez-vous vérifié (ros2 topic list / echo) ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Un conteneur (Docker ou Podman en utilisateur) évite d’installer ROS 2 sur la machine partagée.",
+        "Les démos classiques sont talker et listener (demo_nodes_cpp ou demo_nodes_py) sur un topic comme /chatter.",
+        "Notez les commandes exactes et un extrait de ce que vous avez vu. Pas besoin du robot physique pour cette semaine."
+      ]
+    },
+    {
+      "id": "P0-S9-q-architecture",
+      "weekId": "P0-S9",
+      "linkedObjectiveIds": [
+        "P0-S9-o3",
+        "P0-S9-o4"
+      ],
+      "prompt": "Architecture. D’après la documentation Waveshare du UGV Rover PT PI5 AI, expliquez chaque lien utile entre le Pi 5 et l’ESP32 (alimentation, UART, rôle de chaque côté). Le kit AI n’a ni lidar ni caméra de profondeur : mentionnez-le. Préparez ensuite le plan de votre page technique en anglais (titres, schéma, ce que vous allez illustrer).",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Le wiki et le dépôt ugv_base_ros décrivent l’ESP32 comme contrôleur bas niveau et le Pi comme cerveau (commande, vision, plus tard ROS 2).",
+        "Les trames JSON passent en UART. N’inventez pas un lidar : il n’est pas dans le kit AI ; un D500 est prévu plus tard, en P5.",
+        "L’enregistrement de 3 minutes sans notes est l’exercice de vérification : entraînez-vous à partir de votre schéma, pas d’une feuille recopiée."
+      ]
+    },
+    {
+      "id": "P0-S9-q-bilan-checks",
+      "weekId": "P0-S9",
+      "linkedObjectiveIds": [
+        "P0-S9-o2",
+        "P0-S9-o3",
+        "P0-S9-o4"
+      ],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "hints": [
+        "Le talker/listener doit avoir tourné dans votre conteneur.",
+        "L’enregistrement et le brouillon d’article sont deux preuves distinctes.",
+        "Le bilan P0 est une page rédigée, pas seulement une checklist cochée."
+      ],
+      "options": [
+        {
+          "id": "ros2-talker",
+          "label": "Talker/listener ROS 2 Humble vu tourner (conteneur)"
+        },
+        {
+          "id": "arch-recording",
+          "label": "Enregistrement de 3 minutes (Pi 5 ↔ UART ↔ ESP32) sans notes"
+        },
+        {
+          "id": "article-draft",
+          "label": "Brouillon d’article technique en anglais + bilan P0 commités"
+        }
+      ]
+    }
+  ]
+}

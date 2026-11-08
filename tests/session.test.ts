@@ -2,8 +2,9 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { utf8Decode } from "../src/crypto/bytes";
-import { openObject, parseEnvelope } from "../src/crypto/envelope";
+import { utf8, utf8Decode } from "../src/crypto/bytes";
+import { openObject, parseEnvelope, sealObject, serializeEnvelope } from "../src/crypto/envelope";
+import { canonicalJson } from "../src/domain/json";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
 import { objectPath } from "../src/domain/limits";
 import { minutesEntered, parseWeekRecord } from "../src/domain/schemas";
@@ -51,6 +52,85 @@ describe("session S1", () => {
     await again.open();
     expect(again.getSnapshot().weeks["P0-S1"]?.notes).toBe("");
     expect(store.puts.filter((path) => path.endsWith("manifest.enc.json")).length).toBe(1);
+    expect(store.puts).toHaveLength(4);
+  });
+
+  it("réécrit le programme ancien depuis le seed et garde le reste du coffre", async () => {
+    const current = loadCurriculumDocument();
+    const legacy = structuredClone(current);
+    legacy.programRevision = 0;
+    legacy.inconsistency = {
+      origin: "authored",
+      summary: "Les deux chiffres ne décrivent pas le même calendrier.",
+    };
+    legacy.gaps = ["écart ancien, sans arbitrage"];
+    legacy.authoredComplement = {
+      ...legacy.authoredComplement,
+      questions: legacy.authoredComplement.questions.filter((question) => question.weekId === "P0-S1"),
+    };
+    const store = new MemoryContents();
+    const opened = new VaultSession({
+      client: store,
+      dataKey,
+      keyId: "k1",
+      seed: async () => legacy,
+      drafts: new MemoryDraftStore(),
+      now: () => new Date("2026-11-08T12:00:00Z"),
+      autosaveMs: 0,
+    });
+    await opened.open();
+    const proof = Uint8Array.from([4, 5, 6, 7]);
+    opened.updateWeek("P0-S1", (week) => ({
+      ...week,
+      notes: "note-conservée",
+      answers: [{ questionId: "P0-S1-q-bases", value: { kind: "text", text: "réponse-conservée" } }],
+    }));
+    await opened.uploadEvidence("P0-S1", { filename: "preuve-conservée.txt", mimeType: "text/plain", bytes: proof });
+    await opened.saveWeek("P0-S1");
+    await opened.addJournalEntry(entry("33333333-3333-4333-8333-333333333333", 25, "séance-conservée"));
+    const before = opened.getSnapshot();
+    expect(before.phase).toBe("ready");
+    expect(before.manifest?.activeWeekId).toBe("P0-S1");
+    expect(before.curriculum?.authoredComplement.questions).toHaveLength(6);
+    const curriculumObjectId = before.manifest!.curriculumObjectId;
+    const journalObjectId = before.manifest!.journalObjectId;
+    const weekObjectId = before.manifest!.weeks.find((item) => item.weekId === "P0-S1")!.objectId;
+    const manifestSha = store.files.get("vault/v1/manifest.enc.json")!.sha;
+    const journalSha = store.files.get(objectPath(journalObjectId))!.sha;
+    const weekSha = store.files.get(objectPath(weekObjectId))!.sha;
+    await stripProgramRevision(store, curriculumObjectId);
+
+    const putsBefore = store.puts.length;
+    const migrated = session(store);
+    await migrated.open();
+    const snap = migrated.getSnapshot();
+    expect(snap.phase).toBe("ready");
+    expect(snap.errorMessage).toBeNull();
+    expect(snap.curriculum?.programRevision).toBe(current.programRevision);
+    expect(snap.curriculum?.inconsistency.summary).toBe(current.inconsistency.summary);
+    expect(snap.curriculum?.authoredComplement.questions).toHaveLength(38);
+    expect(snap.curriculum?.gaps).toEqual(current.gaps);
+    expect(snap.manifest?.activeWeekId).toBe("P0-S1");
+    expect(snap.manifest?.curriculumObjectId).toBe(curriculumObjectId);
+    expect(snap.manifest?.journalObjectId).toBe(journalObjectId);
+    expect(snap.journal?.entries).toEqual(before.journal?.entries);
+    expect(snap.weeks["P0-S1"]?.notes).toBe("note-conservée");
+    expect(snap.weeks["P0-S1"]?.answers).toEqual([{ questionId: "P0-S1-q-bases", value: { kind: "text", text: "réponse-conservée" } }]);
+    expect(snap.weeks["P0-S1"]?.evidence).toHaveLength(1);
+    const evidence = snap.weeks["P0-S1"]?.evidence[0];
+    if (!evidence || evidence.kind !== "file") throw new Error("preuve absente");
+    expect((await migrated.downloadEvidence("P0-S1", evidence.id)).bytes).toEqual(proof);
+    expect(store.files.get("vault/v1/manifest.enc.json")!.sha).toBe(manifestSha);
+    expect(store.files.get(objectPath(journalObjectId))!.sha).toBe(journalSha);
+    expect(store.files.get(objectPath(weekObjectId))!.sha).toBe(weekSha);
+    expect(store.puts.slice(putsBefore)).toEqual([objectPath(curriculumObjectId)]);
+
+    const putsAfter = store.puts.length;
+    const again = session(store);
+    await again.open();
+    expect(again.getSnapshot().curriculum?.inconsistency.summary).toBe(current.inconsistency.summary);
+    expect(again.getSnapshot().weeks["P0-S1"]?.notes).toBe("note-conservée");
+    expect(store.puts).toHaveLength(putsAfter);
   });
 
   it("enregistre et relit une réponse", async () => {
@@ -217,6 +297,17 @@ describe("session S1", () => {
     expect(JSON.stringify(summary)).not.toContain(Buffer.from(dataKey).toString("base64"));
   });
 });
+
+async function stripProgramRevision(store: MemoryContents, objectId: string): Promise<void> {
+  const path = objectPath(objectId);
+  const file = store.files.get(path);
+  if (!file) throw new Error("programme absent");
+  const envelope = parseEnvelope(JSON.parse(file.text) as unknown);
+  const plain = JSON.parse(utf8Decode(await openObject(dataKey, envelope))) as Record<string, unknown>;
+  delete plain.programRevision;
+  const resealed = await sealObject(dataKey, "k1", objectId, utf8(canonicalJson(plain)));
+  store.files.set(path, { sha: file.sha, text: serializeEnvelope(resealed) });
+}
 
 function entry(id: string, minutes: number, summary: string) {
   return {

@@ -60,7 +60,7 @@ export function HomePage() {
         <p>Un brouillon chiffré est conservé sur cet appareil, sans la clé.</p>
       )}
       <section className="callout">
-        <h2>18 mois et S94</h2>
+        <h2>Calendrier</h2>
         <p>{snap.curriculum.inconsistency.summary}</p>
         <ul>
           {snap.curriculum.gaps.map((gap) => (

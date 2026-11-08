@@ -4,13 +4,17 @@
   "provenance": {
     "overview": "https://cursor.com/canvas/store-5b26d037-b305-4870-8d2e-d59cc2d6977f/db1bb61e-f76c-4448-96a4-302ffb6c6f4c",
     "program": "https://cursor.com/canvas/store-5b26d037-b305-4870-8d2e-d59cc2d6977f/ea922683-b26f-4176-a146-496ce9401bb7",
-    "extraction": "Lossless French strings from ReadCanvas. Original JSX preserved in overview.md/program.md. No invented week-level detail."
+    "extraction": "Programme maintenu dans ce dépôt. L’import initial venait des pages de plan ; rover-notes est désormais la source unique. Pas de détail inventé pour S10–S94."
+  },
+  "programRevision": 1,
+  "inconsistency": {
+    "summary": "Le rythme visé est d’environ 9 h par semaine. Le programme compte 94 semaines, soit environ 846 h, proche des 860 h prévues. À ce rythme, la durée réelle est d’environ 22 mois, pas 18. Les 18 mois du plan d’origine étaient trop justes pour ce volume. On ne compacte pas le syllabus pour coller à 18 mois. Les numéros S1 à S94 décrivent l’ordre pédagogique. Aucune date n’est inventée pour S10–S94. La semaine en cours reste P0-S1."
   },
   "gaps": [
-    "Les Canvas ne contiennent pas de questions détaillées ou d’indices pédagogiques distincts : seuls les exercices de vérification sont fournis. Les listes detailedQuestions et hints restent vides.",
-    "P1–P7 : les objectifs sont définis par phase et les semaines par blocs indicatifs ; pas de programme individuel détaillé pour S10–S94.",
-    "Les blocs vont jusqu’à S94 malgré un objectif annoncé de 18 mois ; à 9 h/semaine, ne pas transformer ces estimations en calendrier daté sans arbitrage.",
-    "Dates S1 originales : 2 nov. 2026 ; contexte utilisateur au 8 nov. 2026 : 0 h et S1 toujours en cours. Ne pas avancer automatiquement à S2."
+    "S1 à S9 ont des questions, des indices et un planning détaillé, maintenus dans rover-notes (curriculum/). Ce dépôt est la source du programme.",
+    "P1 à P7 restent des blocs indicatifs par phase (S10–S94). Ils seront détaillés dans rover-notes à l’approche de chaque phase, pas d’avance, et sans dates inventées.",
+    "Calendrier : 94 semaines × 9 h ≈ 22 mois (846 h). Les 18 mois du plan d’origine ne suffisent pas pour environ 860 h.",
+    "Semaine en cours : P0-S1. Les dates source de S1 (lundi 2 novembre 2026) sont un repère, pas un retard. Au 8 novembre 2026 : 0 h. Ne pas avancer automatiquement à S2."
   ],
   "context": {
     "asOf": "2026-11-08",

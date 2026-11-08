@@ -25,8 +25,7 @@ import {
   type WeekRecord,
 } from "../domain/schemas";
 import { parisTimestamp } from "../domain/time";
-import type { CurriculumDocument } from "../domain/curriculumDocument";
-import { parseCurriculumDocument } from "../domain/curriculumDocument";
+import { packagedCurriculumWins, parseCurriculumDocument, type CurriculumDocument } from "../domain/curriculumDocument";
 import { GitHubRequestError, isConflictError, isNetworkError, type ContentsStore } from "../github/client";
 import { sha256Hex } from "../crypto/bytes";
 import { splitFile } from "./chunks";
@@ -314,7 +313,8 @@ export class VaultSession {
     this.manifestObjectId = envelope.objectId;
     this.manifestSha = sha;
     const curriculumFile = await this.requireObject(manifest.curriculumObjectId);
-    this.curriculum = parseCurriculumDocument(JSON.parse(utf8Decode(curriculumFile.plain)) as unknown);
+    const stored = JSON.parse(utf8Decode(curriculumFile.plain)) as unknown;
+    this.curriculum = await this.adoptCurriculum(manifest.curriculumObjectId, curriculumFile.sha, stored);
     const journalFile = await this.requireObject(manifest.journalObjectId);
     this.journal = parseJournal(JSON.parse(utf8Decode(journalFile.plain)) as unknown);
     this.journalBase = structuredClone(this.journal);
@@ -323,6 +323,28 @@ export class VaultSession {
     const active = manifest.weeks.find((item) => item.weekId === manifest.activeWeekId);
     if (!active) throw new Error("La semaine en cours n’est pas référencée.");
     await this.loadWeek(active.weekId, active.objectId);
+  }
+
+  private async adoptCurriculum(objectId: string, sha: string, stored: unknown): Promise<CurriculumDocument> {
+    const packaged = await this.readPackagedCurriculum();
+    if (!packaged || !(await packagedCurriculumWins(stored, packaged))) return parseCurriculumDocument(stored);
+    const path = objectPath(objectId);
+    const plaintext = utf8(canonicalJson(packaged));
+    const first = await this.putPlain(path, objectId, plaintext, sha);
+    if (first.ok) return packaged;
+    const remote = JSON.parse(utf8Decode(await this.decrypt(first.remoteText, objectId))) as unknown;
+    if (!(await packagedCurriculumWins(remote, packaged))) return parseCurriculumDocument(remote);
+    const second = await this.putPlain(path, objectId, plaintext, first.remoteSha);
+    if (!second.ok) throw new Error("Programme du coffre non mis à jour.");
+    return packaged;
+  }
+
+  private async readPackagedCurriculum(): Promise<CurriculumDocument | null> {
+    try {
+      return parseCurriculumDocument(await this.options.seed());
+    } catch {
+      return null;
+    }
   }
 
   private async loadWeek(weekId: string, objectId: string): Promise<void> {

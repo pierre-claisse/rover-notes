@@ -31,6 +31,8 @@ export function WeekPage() {
     ...snap.curriculum.sourceQuestions.filter((item) => item.weekId === weekId),
     ...snap.curriculum.authoredComplement.questions.filter((item) => item.weekId === weekId),
   ];
+  const authoredQuestions = questions.filter((item) => item.origin === "authored");
+  const verificationQuestions = questions.filter((item) => item.origin === "canvas");
 
   return (
     <article>
@@ -99,12 +101,24 @@ export function WeekPage() {
             );
           })}
         </fieldset>
-        {questions.some((item) => item.origin === "authored") ? (
-          <p>Complément pédagogique (origin: authored). Ce n’est pas le Canvas.</p>
-        ) : null}
-        {questions.map((question) => (
-          <QuestionField key={question.id} question={question} record={record} disabled={locked} weekId={weekId} />
+        {verificationQuestions.map((question) => (
+          <QuestionField
+            key={question.id}
+            legend="Exercice de vérification"
+            question={question}
+            record={record}
+            disabled={locked}
+            weekId={weekId}
+          />
         ))}
+        {authoredQuestions.length > 0 ? (
+          <section>
+            <h2>Questions</h2>
+            {authoredQuestions.map((question) => (
+              <QuestionField key={question.id} legend="Questions" question={question} record={record} disabled={locked} weekId={weekId} />
+            ))}
+          </section>
+        ) : null}
         <label htmlFor="notes">Notes</label>
         <textarea
           id="notes"
@@ -296,17 +310,19 @@ function QuestionField({
   record,
   weekId,
   disabled,
+  legend,
 }: {
   question: StudyQuestion;
   record: WeekRecord;
   weekId: string;
   disabled: boolean;
+  legend: string;
 }) {
   const { session } = useVault();
   const [hints, setHints] = useState(0);
   return (
     <fieldset disabled={disabled}>
-      <legend>{question.origin === "authored" ? "Question ajoutée" : "Exercice de vérification"}</legend>
+      <legend>{legend}</legend>
       <p>{question.prompt}</p>
       {renderAnswer(question, record, (value) =>
         session.updateWeek(weekId, (week) => ({
