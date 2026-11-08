@@ -6,6 +6,7 @@ import { utf8Decode } from "./crypto/bytes";
 import { openObject, parseEnvelope, type BootstrapPayload } from "./crypto/envelope";
 import { parseCurriculumDocument, type CurriculumDocument } from "./domain/curriculumDocument";
 import { GitHubContents, type ContentsStore } from "./github/client";
+import { GlossaryPage } from "./ui/GlossaryPage";
 import { HomePage } from "./ui/HomePage";
 import { JournalPage } from "./ui/JournalPage";
 import { ProgramPage } from "./ui/ProgramPage";
@@ -88,6 +89,7 @@ function Unlocked({ deps }: { deps?: AppDeps }) {
           <Route element={<Shell />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/programme" element={<ProgramPage />} />
+            <Route path="/glossaire/:entryId?" element={<GlossaryPage />} />
             <Route path="/journal" element={<JournalPage />} />
             <Route path="/semaine/:weekId" element={<WeekPage />} />
           </Route>

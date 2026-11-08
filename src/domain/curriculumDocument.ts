@@ -27,6 +27,57 @@ export type StudyQuestion = {
   origin: "authored" | "canvas";
 };
 
+export type WeekBriefing = {
+  whyThisWeek: string;
+  keyIdea: string;
+  sundayOutcome: string;
+  roverLink: string;
+  jsToCTrap: string;
+  nextUnlocks: string;
+  withoutRobot: string;
+};
+
+export type PhaseNarrative = {
+  promise: string;
+  hardwareNote: string;
+  exitCriteria: string[];
+  throughLine: string;
+  portfolioNote: string;
+  commonPitfall: string;
+};
+
+export type BlockBriefing = {
+  whyThisBlock: string;
+  hardwareNote: string;
+};
+
+export type GlossaryEntry = {
+  id: string;
+  term: string;
+  definition: string;
+  weekIds: string[];
+  roverLink: string;
+};
+
+export type ThroughLine = {
+  id: string;
+  title: string;
+  summary: string;
+  weeks: string[];
+  steps: string[];
+};
+
+export type HomeCoach = {
+  activeWeekId: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  honestCalendar: string;
+  throughLine: string;
+  constraint: string;
+  nextAction: string;
+};
+
 export type PhaseDocument = {
   id: string;
   nom: string;
@@ -38,7 +89,8 @@ export type PhaseDocument = {
   done: string;
   objectives: string[];
   sources: string[];
-  blocks: { fromWeek: number; toWeek: number; title: string; sourceText: string }[];
+  narrative: PhaseNarrative;
+  blocks: { fromWeek: number; toWeek: number; title: string; sourceText: string; briefing: BlockBriefing }[];
   programDetail: { titre: string; blocs: string; themes: { title: string; items: string[] }[]; resources: string } | null;
 };
 
@@ -54,6 +106,7 @@ export type WeekDocument = {
   verification: string | null;
   proofs: string[];
   scheduleNotes: ScheduleNotes;
+  briefing: WeekBriefing | null;
   canvasDetailedQuestions: string[];
   canvasHints: string[];
 };
@@ -81,9 +134,12 @@ export type CurriculumDocument = {
   sourceQuestions: StudyQuestion[];
   authoredComplement: { origin: "authored"; note: string; questions: StudyQuestion[] };
   inconsistency: { origin: "authored"; summary: string };
+  homeCoach: HomeCoach;
+  throughLines: ThroughLine[];
+  glossary: GlossaryEntry[];
 };
 
-export function buildCurriculumDocument(source: unknown, authored: unknown): CurriculumDocument {
+export function buildCurriculumDocument(source: unknown, authored: unknown, pedagogie: unknown): CurriculumDocument {
   const root = record(source, "curriculum");
   if (root.schemaVersion !== 1 || root.language !== "fr") throw new Error("Curriculum source refusé");
   const provenance = record(root.provenance, "provenance");
@@ -91,9 +147,13 @@ export function buildCurriculumDocument(source: unknown, authored: unknown): Cur
   const context = record(root.context, "context");
   const programRevision = integer(root.programRevision, "programRevision", 1, 1_000_000);
   if (context.timezone !== "Europe/Paris") throw new Error("Fuseau du curriculum refusé");
-  const weeks = array(root.weeks, "weeks").map((item) => buildWeek(item));
-  const phases = array(root.phases, "phases").map((item) => buildPhase(item));
+  const pedagogy = parsePedagogy(pedagogie);
+  const weeks = attachWeekBriefings(array(root.weeks, "weeks").map((item) => buildWeek(item)), pedagogy);
+  const phases = attachPhasePedagogy(array(root.phases, "phases").map((item) => buildPhase(item)), pedagogy);
   const authoredComplement = buildAuthored(authored, weeks);
+  const activeWeek = text(context.activeWeek, "context.activeWeek");
+  if (pedagogy.homeCoach.activeWeekId !== activeWeek) throw new Error("homeCoach.activeWeekId");
+  assertPedagogyWeeks(pedagogy, weeks);
   const sourceQuestions = weeks.flatMap((week) => (week.verification ? [verificationQuestion(week)] : []));
   return {
     schemaVersion: 1,
@@ -112,7 +172,7 @@ export function buildCurriculumDocument(source: unknown, authored: unknown): Cur
       completedHours: number(context.completedHours, "context.completedHours"),
       hoursPerWeek: number(context.hoursPerWeek, "context.hoursPerWeek"),
       robotPurchased: bool(context.robotPurchased, "context.robotPurchased"),
-      activeWeek: text(context.activeWeek, "context.activeWeek"),
+      activeWeek,
       scheduleNotes: array(context.scheduleNotes, "context.scheduleNotes").map((item, index) => text(item, `context.scheduleNotes.${index}`)),
     },
     phases,
@@ -131,6 +191,9 @@ export function buildCurriculumDocument(source: unknown, authored: unknown): Cur
     sourceQuestions,
     authoredComplement,
     inconsistency: { origin: "authored", summary: text(inconsistency.summary, "inconsistency.summary") },
+    homeCoach: pedagogy.homeCoach,
+    throughLines: pedagogy.throughLines,
+    glossary: pedagogy.glossary,
   };
 }
 
@@ -186,7 +249,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function buildWeek(value: unknown): WeekDocument {
+function buildWeek(value: unknown): Omit<WeekDocument, "briefing"> {
   const week = record(value, "week");
   const id = text(week.id, "week.id");
   const detailLevel = week.detailLevel === "source-detailed" || week.detailLevel === "indicative-block-only" ? week.detailLevel : null;
@@ -236,7 +299,9 @@ function buildSchedule(value: unknown, detailLevel: DetailLevel, id: string): Sc
   };
 }
 
-function buildPhase(value: unknown): PhaseDocument {
+function buildPhase(value: unknown): Omit<PhaseDocument, "narrative" | "blocks"> & {
+  blocks: Omit<PhaseDocument["blocks"][number], "briefing">[];
+} {
   const phase = record(value, "phase");
   const id = text(phase.id, "phase.id");
   const detail = phase.programDetail == null ? null : record(phase.programDetail, `${id}.programDetail`);
@@ -359,4 +424,194 @@ function integer(value: unknown, label: string, min: number, max: number): numbe
 function bool(value: unknown, label: string): boolean {
   if (typeof value !== "boolean") throw new Error(label);
   return value;
+}
+
+const WEEK_BRIEFING_FIELDS = ["whyThisWeek", "keyIdea", "sundayOutcome", "roverLink", "jsToCTrap", "nextUnlocks", "withoutRobot"] as const;
+const PHASE_NARRATIVE_FIELDS = ["promise", "hardwareNote", "throughLine", "portfolioNote", "commonPitfall"] as const;
+
+type Pedagogy = {
+  homeCoach: HomeCoach;
+  throughLines: ThroughLine[];
+  weekBriefings: Record<string, { title: string; briefing: WeekBriefing }>;
+  phaseNarratives: Record<string, { nom: string; narrative: PhaseNarrative }>;
+  blockBriefings: { phaseId: string; fromWeek: number; toWeek: number; title: string; briefing: BlockBriefing }[];
+  glossary: GlossaryEntry[];
+};
+
+function parsePedagogy(value: unknown): Pedagogy {
+  const root = record(value, "pedagogie");
+  exactKeySet(root, ["homeCoach", "throughLines", "weekBriefings", "phaseNarratives", "blockBriefings", "glossary"], "pedagogie");
+  return {
+    homeCoach: parseHomeCoach(root.homeCoach),
+    throughLines: parseThroughLines(root.throughLines),
+    weekBriefings: parseWeekBriefings(root.weekBriefings),
+    phaseNarratives: parsePhaseNarratives(root.phaseNarratives),
+    blockBriefings: parseBlockBriefings(root.blockBriefings),
+    glossary: parseGlossary(root.glossary),
+  };
+}
+
+function parseHomeCoach(value: unknown): HomeCoach {
+  const coach = record(value, "homeCoach");
+  exactKeySet(
+    coach,
+    ["activeWeekId", "eyebrow", "title", "body", "honestCalendar", "throughLine", "constraint", "nextAction"],
+    "homeCoach",
+  );
+  return {
+    activeWeekId: text(coach.activeWeekId, "homeCoach.activeWeekId"),
+    eyebrow: text(coach.eyebrow, "homeCoach.eyebrow"),
+    title: text(coach.title, "homeCoach.title"),
+    body: text(coach.body, "homeCoach.body"),
+    honestCalendar: text(coach.honestCalendar, "homeCoach.honestCalendar"),
+    throughLine: text(coach.throughLine, "homeCoach.throughLine"),
+    constraint: text(coach.constraint, "homeCoach.constraint"),
+    nextAction: text(coach.nextAction, "homeCoach.nextAction"),
+  };
+}
+
+function parseThroughLines(value: unknown): ThroughLine[] {
+  const lines = array(value, "throughLines").map((item, index) => {
+    const line = record(item, `throughLines.${index}`);
+    exactKeySet(line, ["id", "title", "summary", "weeks", "steps"], "throughLines", ["steps"]);
+    return {
+      id: text(line.id, `throughLines.${index}.id`),
+      title: text(line.title, `throughLines.${index}.title`),
+      summary: text(line.summary, `throughLines.${index}.summary`),
+      weeks: strings(line.weeks, `throughLines.${index}.weeks`),
+      steps: line.steps == null ? [] : strings(line.steps, `throughLines.${index}.steps`),
+    };
+  });
+  rejectDuplicateIds(lines.map((line) => line.id), "throughLines");
+  return lines;
+}
+
+function parseWeekBriefings(value: unknown): Pedagogy["weekBriefings"] {
+  const root = record(value, "weekBriefings");
+  const briefings: Pedagogy["weekBriefings"] = {};
+  for (const [weekId, item] of Object.entries(root)) {
+    const briefing = record(item, `weekBriefings.${weekId}`);
+    exactKeySet(briefing, ["title", ...WEEK_BRIEFING_FIELDS], `weekBriefings.${weekId}`);
+    const fields = {} as WeekBriefing;
+    for (const field of WEEK_BRIEFING_FIELDS) fields[field] = text(briefing[field], `weekBriefings.${weekId}.${field}`);
+    briefings[weekId] = { title: text(briefing.title, `weekBriefings.${weekId}.title`), briefing: fields };
+  }
+  return briefings;
+}
+
+function parsePhaseNarratives(value: unknown): Pedagogy["phaseNarratives"] {
+  const root = record(value, "phaseNarratives");
+  const narratives: Pedagogy["phaseNarratives"] = {};
+  for (const [phaseId, item] of Object.entries(root)) {
+    const narrative = record(item, `phaseNarratives.${phaseId}`);
+    exactKeySet(narrative, ["nom", ...PHASE_NARRATIVE_FIELDS, "exitCriteria"], `phaseNarratives.${phaseId}`);
+    narratives[phaseId] = {
+      nom: text(narrative.nom, `phaseNarratives.${phaseId}.nom`),
+      narrative: {
+        promise: text(narrative.promise, `phaseNarratives.${phaseId}.promise`),
+        hardwareNote: text(narrative.hardwareNote, `phaseNarratives.${phaseId}.hardwareNote`),
+        exitCriteria: strings(narrative.exitCriteria, `phaseNarratives.${phaseId}.exitCriteria`),
+        throughLine: text(narrative.throughLine, `phaseNarratives.${phaseId}.throughLine`),
+        portfolioNote: text(narrative.portfolioNote, `phaseNarratives.${phaseId}.portfolioNote`),
+        commonPitfall: text(narrative.commonPitfall, `phaseNarratives.${phaseId}.commonPitfall`),
+      },
+    };
+  }
+  return narratives;
+}
+
+function parseBlockBriefings(value: unknown): Pedagogy["blockBriefings"] {
+  return array(value, "blockBriefings").map((item, index) => {
+    const block = record(item, `blockBriefings.${index}`);
+    exactKeySet(block, ["phaseId", "fromWeek", "toWeek", "title", "whyThisBlock", "hardwareNote"], `blockBriefings.${index}`);
+    return {
+      phaseId: text(block.phaseId, `blockBriefings.${index}.phaseId`),
+      fromWeek: number(block.fromWeek, `blockBriefings.${index}.fromWeek`),
+      toWeek: number(block.toWeek, `blockBriefings.${index}.toWeek`),
+      title: text(block.title, `blockBriefings.${index}.title`),
+      briefing: {
+        whyThisBlock: text(block.whyThisBlock, `blockBriefings.${index}.whyThisBlock`),
+        hardwareNote: text(block.hardwareNote, `blockBriefings.${index}.hardwareNote`),
+      },
+    };
+  });
+}
+
+function parseGlossary(value: unknown): GlossaryEntry[] {
+  const entries = array(value, "glossary").map((item, index) => {
+    const entry = record(item, `glossary.${index}`);
+    exactKeySet(entry, ["id", "term", "definition", "weekIds", "roverLink"], `glossary.${index}`);
+    return {
+      id: text(entry.id, `glossary.${index}.id`),
+      term: text(entry.term, `glossary.${index}.term`),
+      definition: text(entry.definition, `glossary.${index}.definition`),
+      weekIds: strings(entry.weekIds, `glossary.${index}.weekIds`),
+      roverLink: text(entry.roverLink, `glossary.${index}.roverLink`),
+    };
+  });
+  rejectDuplicateIds(entries.map((entry) => entry.id), "glossary");
+  return entries;
+}
+
+function attachWeekBriefings(weeks: Omit<WeekDocument, "briefing">[], pedagogy: Pedagogy): WeekDocument[] {
+  const detailed = weeks.filter((week) => week.detailLevel === "source-detailed").map((week) => week.id);
+  const briefingIds = Object.keys(pedagogy.weekBriefings);
+  if (detailed.length !== briefingIds.length || detailed.some((id) => !pedagogy.weekBriefings[id])) {
+    throw new Error("Briefings de semaine incomplets");
+  }
+  return weeks.map((week) => {
+    const found = pedagogy.weekBriefings[week.id];
+    if (week.detailLevel === "indicative-block-only") {
+      if (found) throw new Error(`Briefing inattendu pour ${week.id}`);
+      return { ...week, briefing: null };
+    }
+    if (!found || found.title !== week.title) throw new Error(`Briefing refusé pour ${week.id}`);
+    return { ...week, briefing: found.briefing };
+  });
+}
+
+function attachPhasePedagogy(
+  phases: Array<Omit<PhaseDocument, "narrative" | "blocks"> & { blocks: Omit<PhaseDocument["blocks"][number], "briefing">[] }>,
+  pedagogy: Pedagogy,
+): PhaseDocument[] {
+  const used = new Set<string>();
+  const next = phases.map((phase) => {
+    const found = pedagogy.phaseNarratives[phase.id];
+    if (!found || found.nom !== phase.nom) throw new Error(`Récit refusé pour ${phase.id}`);
+    const blocks = phase.blocks.map((block) => {
+      const match = pedagogy.blockBriefings.find(
+        (item) => item.phaseId === phase.id && item.fromWeek === block.fromWeek && item.toWeek === block.toWeek,
+      );
+      if (!match || match.title !== block.title) throw new Error(`Briefing de bloc refusé pour ${phase.id} S${block.fromWeek}`);
+      const key = `${phase.id}:${block.fromWeek}-${block.toWeek}`;
+      if (used.has(key)) throw new Error(`Briefing de bloc en double pour ${key}`);
+      used.add(key);
+      return { ...block, briefing: match.briefing };
+    });
+    return { ...phase, narrative: found.narrative, blocks };
+  });
+  if (used.size !== pedagogy.blockBriefings.length) throw new Error("Briefing de bloc en trop");
+  if (Object.keys(pedagogy.phaseNarratives).length !== phases.length) throw new Error("Récit de phase en trop");
+  return next;
+}
+
+function assertPedagogyWeeks(pedagogy: Pedagogy, weeks: WeekDocument[]): void {
+  const ids = new Set(weeks.map((week) => week.id));
+  for (const line of pedagogy.throughLines) {
+    for (const weekId of line.weeks) if (!ids.has(weekId)) throw new Error(`Fil hors semaine: ${weekId}`);
+  }
+  for (const entry of pedagogy.glossary) {
+    for (const weekId of entry.weekIds) if (!ids.has(weekId)) throw new Error(`Glossaire hors semaine: ${weekId}`);
+  }
+}
+
+function exactKeySet(value: Record<string, unknown>, keys: readonly string[], label: string, optional: readonly string[] = []): void {
+  const allowed = new Set(keys);
+  const required = keys.filter((key) => !optional.includes(key));
+  for (const key of Object.keys(value)) if (!allowed.has(key)) throw new Error(`${label}.${key}`);
+  for (const key of required) if (!(key in value)) throw new Error(`${label}.${key}`);
+}
+
+function rejectDuplicateIds(ids: string[], label: string): void {
+  if (new Set(ids).size !== ids.length) throw new Error(label);
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { copyBytes } from "../crypto/bytes";
 import { newObjectId } from "../domain/limits";
-import type { StudyQuestion } from "../domain/curriculumDocument";
+import type { CurriculumDocument, StudyQuestion, WeekDocument } from "../domain/curriculumDocument";
 import { minutesEntered, parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import { assertNever } from "../domain/assert";
 import { formatFrenchDate, formatFrenchNumeric, parisWeekday } from "../domain/time";
@@ -11,6 +11,7 @@ import { followAnchor, readScrollTarget, scrollToId } from "./anchor";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
 import { TimeMeter } from "./Meter";
+import { WeekBriefingView, WeekTerms } from "./pedagogy";
 import { labelForHref } from "./present";
 import { SlotList } from "./slots";
 import { useVault } from "./vault";
@@ -71,6 +72,7 @@ export function WeekPage() {
   const currentWeek = snap.manifest?.activeWeekId === weekId;
   const declared = record.objectives.filter((item) => item.selfAssessment === "declared").length;
   const entries = snap.journal.entries.filter((entry) => entry.weekId === weekId);
+  const block = weekBlock(snap.curriculum, plan);
 
   return (
     <article className="week">
@@ -124,13 +126,24 @@ export function WeekPage() {
             </a>
           </p>
         ) : null}
+        {plan.briefing ? <WeekBriefingView briefing={plan.briefing} /> : null}
+        {block && !plan.briefing ? (
+          <>
+            <p>{block.briefing.whyThisBlock}</p>
+            <p>{block.briefing.hardwareNote}</p>
+          </>
+        ) : null}
+        <WeekTerms weekId={weekId} entries={snap.curriculum.glossary} />
         {slots ? (
           <>
             {!todaySlot && !sunday ? <p>Pas de créneau ce {weekday}. Le livrable et le plan de la semaine restent le repère.</p> : null}
             <SlotList slots={slots} weekday={weekday} />
           </>
         ) : (
-          <p className="callout">Bloc indicatif, à détailler. Les objectifs ci-dessous sont ceux de la phase, pas un programme de semaine inventé.</p>
+          <>
+            <p className="callout">Bloc indicatif, à détailler. Les objectifs ci-dessous sont ceux de la phase, pas un programme de semaine inventé.</p>
+            {"note" in plan.scheduleNotes ? <p>{plan.scheduleNotes.note}</p> : null}
+          </>
         )}
       </section>
       <form
@@ -417,6 +430,11 @@ export function WeekPage() {
       </section>
     </article>
   );
+}
+
+function weekBlock(curriculum: CurriculumDocument, week: WeekDocument) {
+  const phase = curriculum.phases.find((item) => item.id === week.phase);
+  return phase?.blocks.find((item) => week.weekNumber >= item.fromWeek && week.weekNumber <= item.toWeek) ?? null;
 }
 
 function visibilityLabel(visibility: "private" | "public"): string {

@@ -6,7 +6,7 @@
     "program": "https://cursor.com/canvas/store-5b26d037-b305-4870-8d2e-d59cc2d6977f/ea922683-b26f-4176-a146-496ce9401bb7",
     "extraction": "Programme maintenu dans ce dépôt. L’import initial venait des pages de plan ; rover-notes est désormais la source unique. Pas de détail inventé pour S10–S94."
   },
-  "programRevision": 1,
+  "programRevision": 2,
   "inconsistency": {
     "summary": "Le rythme visé est d’environ 9 h par semaine. Le programme compte 94 semaines, soit environ 846 h, proche des 860 h prévues. À ce rythme, la durée réelle est d’environ 22 mois, pas 18. Les 18 mois du plan d’origine étaient trop justes pour ce volume. On ne compacte pas le syllabus pour coller à 18 mois. Les numéros S1 à S94 décrivent l’ordre pédagogique. Aucune date n’est inventée pour S10–S94. La semaine en cours reste P0-S1."
   },
@@ -47,7 +47,7 @@
         "Lire la datasheet de l'INA219 et recalculer à la main la tension/courant affichés"
       ],
       "livrable": "Repo `rover-notes` + article EN « Reverse-engineering my rover's architecture »",
-      "done": "Tu sais expliquer sans notes chaque fil entre le Pi et l'ESP32 et tu as un test C qui passe en CI",
+      "done": "Vous savez expliquer sans notes chaque fil entre le Pi et l'ESP32, et un test C passe en CI",
       "phase": "P0",
       "objectives": [
         "Je sais dire ce que fait une matrice 2×2 à un vecteur, en regardant où vont (1,0) et (0,1)",
@@ -701,7 +701,7 @@
         "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
         "Documentation gcc/gdb ; conda-forge ou image Docker gcc",
         "https://missing.csail.mit.edu/ ; wiki UGV Rover (format JSON)",
-        "Votre dépôt rover-notes"
+        "Le hub rover-notes (coffre) pour les notes ; un dépôt de code distinct pour le parseur"
       ],
       "detailedQuestions": [],
       "hints": [],
@@ -709,7 +709,7 @@
         "Maths : épisodes 1 à 3 de « Essence of linear algebra ». Exercice papier : ce que fait [[0,-1],[1,0]] à (1,0) et (0,1), et pourquoi un robot qui tourne en a besoin",
         "C : installer gcc, make, gdb sans droits admin (conda ou conteneur). Programme qui affiche l'adresse d'une variable locale et d'un bloc malloc ; expliquer pile vs tas",
         "1 h 30 Linux : SSH, systemd, permissions du port série /dev/ttyUSB0, groupe dialout. Puis 2 h 30 : parseur de trames C sans IA pour {\"T\":1,\"L\":0.5,\"R\":0.5}, au moins 3 tests",
-        "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
+        "Noter la semaine dans le hub (coffre chiffré). Le code du parseur et ses tests iront dans un dépôt de travail distinct, pas dans l’application publique rover-notes.",
         "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute"
       ],
       "verification": "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute",
@@ -740,8 +740,8 @@
           {
             "c": "Dimanche",
             "d": "2 h",
-            "contenu": "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
-            "res": "Votre dépôt rover-notes"
+            "contenu": "Noter la semaine dans le hub (coffre chiffré). Le code du parseur et ses tests iront dans un dépôt de travail distinct, pas dans l’application publique rover-notes.",
+            "res": "Le hub rover-notes (coffre) pour les notes ; un dépôt de code distinct pour le parseur"
           }
         ]
       },
@@ -779,8 +779,8 @@
           {
             "c": "Dimanche",
             "d": "2 h",
-            "contenu": "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
-            "res": "Votre dépôt rover-notes"
+            "contenu": "Noter la semaine dans le hub (coffre chiffré). Le code du parseur et ses tests iront dans un dépôt de travail distinct, pas dans l’application publique rover-notes.",
+            "res": "Le hub rover-notes (coffre) pour les notes ; un dépôt de code distinct pour le parseur"
           }
         ],
         "verif": "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute",
@@ -1606,7 +1606,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S10–S12 outillage et compilation reproductible",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1628,7 +1628,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S10–S12 outillage et compilation reproductible",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1650,7 +1650,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S10–S12 outillage et compilation reproductible",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1672,7 +1672,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S13–S16 PID et réponse indicielle",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1694,7 +1694,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S13–S16 PID et réponse indicielle",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1716,7 +1716,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S13–S16 PID et réponse indicielle",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1738,7 +1738,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S13–S16 PID et réponse indicielle",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1760,7 +1760,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S17–S18 temps réel et jitter",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1782,7 +1782,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S17–S18 temps réel et jitter",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1804,7 +1804,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S19–S21 protocole binaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1826,7 +1826,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S19–S21 protocole binaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1848,7 +1848,7 @@
       "phaseProofRef": "P1",
       "scheduleNotes": {
         "blockSourceText": "S19–S21 protocole binaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1870,7 +1870,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1892,7 +1892,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1914,7 +1914,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1936,7 +1936,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1958,7 +1958,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S26–S29 rotations et quaternions",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -1980,7 +1980,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S26–S29 rotations et quaternions",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2002,7 +2002,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S26–S29 rotations et quaternions",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2024,7 +2024,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S26–S29 rotations et quaternions",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2046,7 +2046,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S30–S33 EKF",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2068,7 +2068,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S30–S33 EKF",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2090,7 +2090,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S30–S33 EKF",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2112,7 +2112,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S30–S33 EKF",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2134,7 +2134,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S34–S37 Rust embassy et watchdog",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2156,7 +2156,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S34–S37 Rust embassy et watchdog",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2178,7 +2178,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S34–S37 Rust embassy et watchdog",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2200,7 +2200,7 @@
       "phaseProofRef": "P2",
       "scheduleNotes": {
         "blockSourceText": "S34–S37 Rust embassy et watchdog",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2222,7 +2222,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2244,7 +2244,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2266,7 +2266,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2288,7 +2288,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2310,7 +2310,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2332,7 +2332,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2354,7 +2354,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2376,7 +2376,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2398,7 +2398,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S46–S50 dashboard React + WebRTC",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2420,7 +2420,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S46–S50 dashboard React + WebRTC",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2442,7 +2442,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S46–S50 dashboard React + WebRTC",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2464,7 +2464,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S46–S50 dashboard React + WebRTC",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2486,7 +2486,7 @@
       "phaseProofRef": "P3",
       "scheduleNotes": {
         "blockSourceText": "S46–S50 dashboard React + WebRTC",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2508,7 +2508,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2530,7 +2530,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2552,7 +2552,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2574,7 +2574,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S54–S56 AprilTag et pan-tilt",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2596,7 +2596,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S54–S56 AprilTag et pan-tilt",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2618,7 +2618,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S54–S56 AprilTag et pan-tilt",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2640,7 +2640,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S57–S59 inférence embarquée",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2662,7 +2662,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S57–S59 inférence embarquée",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2684,7 +2684,7 @@
       "phaseProofRef": "P4",
       "scheduleNotes": {
         "blockSourceText": "S57–S59 inférence embarquée",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2706,7 +2706,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S60–S62 filtre particulaire et SLAM",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2728,7 +2728,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S60–S62 filtre particulaire et SLAM",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2750,7 +2750,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S60–S62 filtre particulaire et SLAM",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2772,7 +2772,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2794,7 +2794,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2816,7 +2816,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2838,7 +2838,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2860,7 +2860,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2882,7 +2882,7 @@
       "phaseProofRef": "P5",
       "scheduleNotes": {
         "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2904,7 +2904,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S69–S72 banc HIL et CI",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2926,7 +2926,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S69–S72 banc HIL et CI",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2948,7 +2948,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S69–S72 banc HIL et CI",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2970,7 +2970,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S69–S72 banc HIL et CI",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -2992,7 +2992,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3014,7 +3014,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3036,7 +3036,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3058,7 +3058,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S76–S78 sûreté et OTA",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3080,7 +3080,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S76–S78 sûreté et OTA",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3102,7 +3102,7 @@
       "phaseProofRef": "P6",
       "scheduleNotes": {
         "blockSourceText": "S76–S78 sûreté et OTA",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3124,7 +3124,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S79–S82 choix et prototype",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3146,7 +3146,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S79–S82 choix et prototype",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3168,7 +3168,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S79–S82 choix et prototype",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3190,7 +3190,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S79–S82 choix et prototype",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3212,7 +3212,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3234,7 +3234,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3256,7 +3256,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3278,7 +3278,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3300,7 +3300,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3322,7 +3322,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3344,7 +3344,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3366,7 +3366,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S83–S90 réalisation et mesures",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3388,7 +3388,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S91–S94 article, vidéo, talk",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3410,7 +3410,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S91–S94 article, vidéo, talk",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3432,7 +3432,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S91–S94 article, vidéo, talk",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     },
     {
@@ -3454,7 +3454,7 @@
       "phaseProofRef": "P7",
       "scheduleNotes": {
         "blockSourceText": "S91–S94 article, vidéo, talk",
-        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+        "note": "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées."
       }
     }
   ],

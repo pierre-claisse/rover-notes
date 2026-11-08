@@ -1,0 +1,727 @@
+{
+  "homeCoach": {
+    "activeWeekId": "P0-S1",
+    "eyebrow": "Semaine en cours",
+    "title": "P0 · S1 — Vecteurs, mémoire C, Linux série, premier parseur",
+    "body": "Vous démarrez les fondations : une matrice qui fait tourner un robot, des adresses mémoire que JavaScript vous cachait, un port série qui a des permissions, et une première trame JSON à parser vous-même, sans assistant. Au 8 novembre 2026 : 0 h consignées. La semaine du 9 novembre est la vraie semaine de départ, pas un rattrapage. Les dates inscrites sur S1 (lundi 2 novembre 2026) sont un repère de séquence, pas un retard.",
+    "honestCalendar": "Le programme compte 94 semaines à environ 9 h, soit environ 846 h et 22 mois à ce rythme — pas 18. On ne compacte pas le syllabus. Les créneaux maths du mardi sont déjà dans ces 9 h.",
+    "throughLine": "Fil de P0 : un parseur de trames JSON UART, écrit sans IA. Il s’étoffe chaque samedi jusqu’à un test C en intégration continue et un schéma Pi 5 ↔ ESP32 que vous saurez expliquer sans notes.",
+    "constraint": "Le rover n’est pas encore acheté : les samedis se font sans matériel (Linux, C, plus tard Rust et ROS 2 en simulation). Une semaine sur quatre peut être plus légère ; prévoyez de la marge.",
+    "nextAction": "Mardi, 1 h 30 : Essence of linear algebra, épisodes 1 à 3, puis l’exercice papier sur la rotation de 90° — ce que la matrice [[0,-1],[1,0]] fait aux vecteurs de base, et pourquoi un robot qui tourne en a besoin."
+  },
+  "throughLines": [
+    {
+      "id": "parseur",
+      "title": "Le parseur de trames",
+      "summary": "En P0, le samedi construit un seul objet : lire une commande JSON du rover octet par octet, la tester, puis la rendre robuste. C’est le premier artefact digne d’un portfolio d’embarqué.",
+      "weeks": [
+        "P0-S1",
+        "P0-S2",
+        "P0-S3",
+        "P0-S5",
+        "P0-S6",
+        "P0-S7",
+        "P0-S8"
+      ],
+      "steps": [
+        "S1 : parser {\"T\":1,\"L\":0.5,\"R\":0.5} avec au moins 3 tests, sans IA.",
+        "S2 : trames invalides et script qui lance les tests.",
+        "S3 : tampon circulaire et lecture octet par octet, sans erreur AddressSanitizer.",
+        "S5 : même tampon en classe C++ RAII.",
+        "S6 : le compiler aussi pour ARM64 (le Pi 5).",
+        "S7 : GitHub Actions compile et teste le C.",
+        "S8 : le porter en Rust avec les mêmes tests, et comprendre no_std."
+      ]
+    },
+    {
+      "id": "maths-mardi",
+      "title": "Les maths du mardi",
+      "summary": "Chaque mardi, 1 h 30 de géométrie linéaire dans les 9 h de la semaine — ce n’est pas un surcroît. Ces idées reviendront dès qu’un robot tourne, vise une cible, ou estime son orientation.",
+      "weeks": [
+        "P0-S1",
+        "P0-S2",
+        "P0-S3",
+        "P0-S4",
+        "P0-S5",
+        "P0-S6",
+        "P0-S7",
+        "P0-S8",
+        "P0-S9"
+      ]
+    },
+    {
+      "id": "js-vers-c",
+      "title": "De JavaScript vers la machine",
+      "summary": "Vous savez déjà construire des interfaces. Ici, le compilateur, les adresses, les permissions et les bus remplacent le ramasse-miettes et le navigateur. Le but n’est pas d’oublier le web : il reviendra au tableau de bord de P3.",
+      "weeks": [
+        "P0-S1",
+        "P0-S2",
+        "P0-S3",
+        "P0-S5",
+        "P0-S7",
+        "P0-S8"
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "Pi 5 ↔ UART ↔ ESP32",
+      "summary": "Le kit AI a un Raspberry Pi 5 qui parle à un ESP32 par UART, en JSON. Pas de lidar ni de caméra de profondeur dans ce kit ; un lidar D500 est prévu plus tard, en P5. Comprendre chaque fil est le critère de fin de P0.",
+      "weeks": [
+        "P0-S1",
+        "P0-S5",
+        "P0-S9"
+      ]
+    }
+  ],
+  "weekBriefings": {
+    "P0-S1": {
+      "title": "Vecteurs, mémoire C, Linux série, premier parseur",
+      "whyThisWeek": "C’est la bascule : une transformation du plan, une adresse mémoire, un port série, et une trame à lire vous-même. Quatre portes d’entrée vers le même métier — l’embarqué — plutôt que quatre sujets collés côte à côte.",
+      "keyIdea": "Une matrice 2×2 n’est pas un tableau de notes : c’est une règle qui envoie chaque point du plan quelque part. On la comprend en suivant l’image des deux vecteurs de base, (1,0) et (0,1). Plus tard, la même idée fera tourner le cap du rover.\n\nEn C, une variable a une adresse réelle que vous pouvez afficher. Certaines vivent le temps d’une fonction, d’autres jusqu’à ce que vous les libériez. JavaScript vous épargnait cette distinction ; ici elle devient visible, et c’est voulu.\n\nLe port série n’est pas un fetch HTTP. C’est un fichier spécial, avec un groupe et des permissions. Sans le droit d’ouvrir le périphérique, aucun parseur ne verra jamais une trame.\n\nLe parseur de la semaine lit une commande JSON minimale du rover. Vous l’écrivez sans assistant : le but est que chaque caractère ait une raison que vous savez dire.",
+      "sundayOutcome": "Vous savez relier une rotation du plan à un robot qui tourne, montrer deux adresses C et dire ce qu’elles représentent, ouvrir un raisonnement sur SSH et le port série, et vous avez un parseur testé pour la trame minimale.",
+      "roverLink": "Le firmware Waveshare du UGV Rover parle en JSON sur le lien série entre le Pi 5 et l’ESP32. Une commande typique indique un type et des consignes gauche/droite. Parser cette forme, c’est commencer à parler la langue de votre robot, même s’il n’est pas encore sur le bureau.",
+      "jsToCTrap": "En JavaScript, les nombres et les tableaux cachent leur représentation. En C, le type, l’adresse et la durée de vie sont votre responsabilité. N’attendez pas du compilateur qu’il range la mémoire comme un ramasse-miettes.",
+      "nextUnlocks": "S2 compose les transformations et rend le parseur exigeant sur les trames mal formées.",
+      "withoutRobot": "Rien de S1 n’exige le kit. Les maths se font sur papier, le C et Linux sur votre machine (conda ou conteneur, sans droits administrateur), le parseur sur des chaînes de test."
+    },
+    "P0-S2": {
+      "title": "Composition de matrices, pointeurs, shell",
+      "whyThisWeek": "Les transformations s’enchaînent, et l’ordre compte — comme les couches d’un traitement robotique. En parallèle, les pointeurs rendent enfin concrets les tableaux C, et le shell devient l’atelier où vous lancez vos tests.",
+      "keyIdea": "Multiplier deux matrices, c’est appliquer une transformation puis une autre. Inverser l’ordre, ce n’est pas « la même chose dans l’autre sens » : le résultat change, et vous devez le sentir sur un exemple assez petit pour le faire à la main.\n\nUn tableau C n’est pas une liste JavaScript. p[i] et *(p+i) disent la même chose : un décalage à partir d’une adresse. Passer une structure par pointeur évite de copier l’objet et permet de le modifier.\n\nLe parseur de S1 acceptait une trame bien née. Un vrai lien série enverra aussi des coupures, des accolades manquantes, des nombres illisibles. Un parseur qui « marche sur l’exemple du wiki » et explose ailleurs n’est pas encore un parseur.",
+      "sundayOutcome": "Vous prévoyez correctement qu’un produit de matrices n’est pas commutatif, vous manipulez pointeurs et tableaux sans deviner, et votre parseur a des tests d’erreur lancés par un script.",
+      "roverLink": "Plus tard, une rotation puis une translation (ou l’inverse) diront où se trouve un point vu du robot dans le monde. Dès maintenant, le parseur apprend à refuser une consigne illisible plutôt que de commander des roues au hasard.",
+      "jsToCTrap": "array[i] en JavaScript contrôle les bornes et grandit tout seul. En C, dépasser la fin d’un tableau est une erreur silencieuse jusqu’au jour où elle ne l’est plus. Écrivez les tests d’erreur avant d’ajouter des fonctionnalités.",
+      "nextUnlocks": "S3 ajoute le déterminant, l’allocation dynamique, et un tampon circulaire qui nourrit le parseur octet par octet.",
+      "withoutRobot": "Les produits de matrices se vérifient à la main puis en Python. Le shell et les tests d’erreur n’ont besoin d’aucun port série physique."
+    },
+    "P0-S3": {
+      "title": "Déterminant, mémoire dynamique, électricité de base",
+      "whyThisWeek": "Trois notions de responsabilité : une transformation qui écrase ou préserve les aires, une mémoire que vous devez rendre, une tension et un courant que vous devez savoir calculer avant de brancher quoi que ce soit.",
+      "keyIdea": "Le déterminant d’une matrice 2×2 dit par quel facteur les aires sont multipliées, et dans quel sens. S’il est nul, la transformation écrase le plan : on perd de l’information, et on ne peut pas revenir en arrière.\n\nmalloc réserve un bloc ; free le rend. Oublier free, ou s’en servir deux fois, sont des erreurs que AddressSanitizer (ou Valgrind) rend visibles. Un tampon circulaire sert à accumuler les octets qui arrivent un par un depuis un lien série, jusqu’à ce qu’une trame complète puisse être tentée.\n\nLa loi d’Ohm relie tension, courant et résistance. Avant le rover, c’est déjà ce qui vous permet de parler d’une LED, d’une résistance série ou plus tard d’un capteur de courant, sans inventer les chiffres.",
+      "sundayOutcome": "Vous interprétez un déterminant sans le réciter, vous avez un tampon circulaire branché au parseur sans erreur du sanitizer, et vous savez mener un petit calcul d’électricité jusqu’au bout.",
+      "roverLink": "Le lien UART n’envoie pas une chaîne Python d’un seul tenant : il envoie des octets. Le tampon circulaire est le pont entre ce flux et votre parseur. L’électricité de cette semaine prépare la lecture, plus tard, du capteur de courant INA219 du rover.",
+      "jsToCTrap": "En JavaScript, laisser tomber une référence suffit : le ramasse-miettes s’en charge. En C, chaque malloc a un propriétaire. Compilez avec -fsanitize=address dès cette semaine, pas « plus tard si ça plante ».",
+      "nextUnlocks": "S4 introduit le produit scalaire (viser une cible), la PWM des moteurs, et la façon dont les entiers tiennent dans des octets.",
+      "withoutRobot": "Le tampon se teste avec des octets fournis par vos tests, pas par un vrai adaptateur USB. Les calculs d’Ohm se font sur papier."
+    },
+    "P0-S4": {
+      "title": "Matrices non carrées, produit scalaire, PWM, endianness",
+      "whyThisWeek": "On passe de « transformer le plan » à « mesurer un alignement » et à « commander une moyenne de tension ». Côté machine, on apprend enfin comment un entier 16 bits se range dans deux octets — le pain quotidien des registres et des protocoles.",
+      "keyIdea": "Le produit scalaire mesure à quel point deux directions s’accordent. C’est l’outil pour parler d’un cap et d’une cible, avant même d’avoir une IMU.\n\nLa modulation de largeur d’impulsion (PWM) n’abaisse pas réellement une alimentation continue comme le ferait un potentiomètre : elle alterne tout-ou-rien très vite. Le rapport cyclique dit la fraction du temps à l’état haut. Un pont en H permet en plus d’inverser le sens du courant dans un moteur.\n\nLes processeurs ne s’accordent pas tous sur l’ordre des octets d’un entier. Lire un registre 16 bits « dans le désordre » invente une valeur. volatile dit au compilateur qu’une variable peut changer hors du fil d’instructions qu’il voit — typiquement un registre matériel ou une donnée touchée par une interruption. Cette semaine est prévue plus légère : consolidez plutôt que d’empiler.",
+      "sundayOutcome": "Vous reliez produit scalaire et visée, vous expliquez le rôle d’un rapport cyclique, et vous lisez un entier 16 bits dans les deux boutismes avec des tests.",
+      "roverLink": "Les moteurs du UGV sont commandés en PWM derrière un pont en H, côté ESP32. Les capteurs (INA219, IMU) parlent en registres multi-octets. Ces deux familles de détails reviendront dès que vous toucherez au firmware.",
+      "jsToCTrap": "TypedArray et DataView existent en JavaScript précisément parce que l’ordre des octets compte dès qu’on quitte le JSON. En C, vous écrivez cette lecture vous-même, et vous la testez.",
+      "nextUnlocks": "S5 ajoute le produit vectoriel (sens de rotation), compare UART, I2C et SPI, et passe le tampon en C++ RAII.",
+      "withoutRobot": "La PWM de cette semaine est une simulation : un tableau de niveaux, puis un graphe. N’inventez pas de mesures moteur."
+    },
+    "P0-S5": {
+      "title": "Produit vectoriel, bus série, C++ et RAII",
+      "whyThisWeek": "Vous apprenez à décider d’un sens de rotation, à nommer les bus du rover, et à faire gérer une ressource par un objet C++ plutôt que par une paire malloc/free facile à oublier.",
+      "keyIdea": "En deux dimensions, le signe du produit vectoriel dit de quel côté il faut tourner pour aligner deux directions. C’est une règle géométrique, pas une recette de pilote automatique.\n\nUART, I2C et SPI ne sont pas interchangeables. UART n’a pas de fil d’horloge dédié : les deux côtés se mettent d’accord sur un débit. I2C partage deux fils et adresse les composants, souvent sur 7 bits. SPI va plus vite, avec une horloge et une sélection de puce. Sur le kit AI, le Raspberry Pi 5 et l’ESP32 se parlent en UART.\n\nRAII signifie qu’un objet possède une ressource et la rend dans son destructeur. std::vector, std::string et std::unique_ptr existent pour que vous arrêtiez d’écrire malloc à la main quand la bibliothèque standard le fait mieux.",
+      "sundayOutcome": "Vous savez vous servir d’un produit vectoriel pour un sens de rotation, vous dressez un tableau honnête des trois bus, et le tampon circulaire est une classe C++ qui libère sa mémoire toute seule.",
+      "roverLink": "D’après le wiki et les dépôts Waveshare, le lien de commande entre le Pi 5 et l’ESP32 est l’UART, avec des trames JSON. Le kit AI n’a pas de lidar : ne le faites pas apparaître sur le schéma d’architecture. Le lidar D500 est un achat ultérieur, pour la P5.",
+      "jsToCTrap": "try/finally ou un ramasse-miettes ferment souvent vos ressources en JavaScript. En C++, le destructeur est le lieu prévu pour ça. Si vous devez vous souvenir d’appeler release(), le type n’a pas encore fait son travail.",
+      "nextUnlocks": "S6 change de repère (robot vers monde), vous apprend à lire une datasheet, et à compiler pour ARM64.",
+      "withoutRobot": "Le schéma d’architecture se fait d’après le wiki et les dépôts ugv_base_ros / ugv_rpi, pas d’après un boîtier ouvert. Ne devinez pas de fils absents de la documentation."
+    },
+    "P0-S6": {
+      "title": "Changement de base, datasheet INA219, cross-compilation",
+      "whyThisWeek": "Un point « devant le robot » n’a de sens que si vous savez dans quel repère vous parlez. Un registre n’a de sens que si vous savez lire la notice. Un binaire n’a de sens sur le Pi 5 que s’il est compilé pour ARM64.",
+      "keyIdea": "Changer de base, c’est exprimer les mêmes points dans un autre jeu d’axes. Le rover a un repère lié à son châssis (devant, gauche) et un repère lié à la pièce. Passer de l’un à l’autre demande la position du robot et son cap — déjà une rotation et une translation, pas une formule magique.\n\nUne datasheet n’est pas un tutoriel. On y cherche le brochage, la plage d’alimentation, les registres, la taille des champs et la formule de conversion. Pour l’INA219, servez-vous du document Texas Instruments : n’inventez pas de valeurs brutes d’exemple ni de poids de bit de mémoire.\n\nCompiler pour aarch64 depuis votre PC, c’est produire un binaire que le Pi 5 peut exécuter. file et qemu permettent de vérifier sans avoir la carte sous la main.",
+      "sundayOutcome": "Vous savez poser un changement de repère sur un exemple simple, vous avez un convertisseur INA219 testé à partir de cas tirés de la datasheet, et un binaire ARM64 du parseur.",
+      "roverLink": "Le rover embarque un INA219 pour surveiller la batterie. Plus tard, une tension ou un courant lu de travers fera croire à une fausse alarme — ou en masquera une vraie. La cross-compilation prépare le jour où le parseur tournera sur le Pi 5, pas seulement sur votre PC.",
+      "jsToCTrap": "npm run build cible souvent le même monde que votre navigateur. Ici, l’hôte (votre PC) et la cible (ARM64) diffèrent. Un binaire qui s’exécute chez vous n’est pas, par magie, le bon pour le Pi.",
+      "nextUnlocks": "S7 ouvre Rust (ownership) et met le parseur C sous GitHub Actions : la moitié du critère de fin de P0.",
+      "withoutRobot": "La datasheet et un compilateur croisé suffisent. N’inventez pas de capture de registres réels."
+    },
+    "P0-S7": {
+      "title": "Valeurs propres, Rust (ownership), CI",
+      "whyThisWeek": "Les valeurs propres disent ce qu’une transformation étire. Rust vous force à dire qui possède une valeur. La CI dit si le parseur C continue de passer quand vous n’êtes pas derrière la machine.",
+      "keyIdea": "Un vecteur propre est une direction que la transformation se contente d’allonger ou de raccourcir, sans la faire sortir de sa droite. Certaines matrices, comme une rotation du plan autre que 0° ou 180°, n’en ont pas dans les réels : tout est mis en mouvement.\n\nEn Rust, chaque valeur a un propriétaire. La passer à quelqu’un d’autre, c’est souvent la déplacer : l’ancien nom n’a plus le droit de s’en servir. C’est volontairement plus strict que JavaScript, et c’est ce qui rend un grand nombre d’erreurs de mémoire impossibles à compiler.\n\nGitHub Actions, ici, n’est pas un badge décoratif : à chaque poussée, make test doit compiler le parseur C et réussir. C’est la moitié du critère de fin de P0 (l’autre moitié est d’expliquer l’architecture sans notes).",
+      "sundayOutcome": "Vous interprétez une valeur propre sur un exemple simple, vous expliquez un déplacement Rust sur un cas concret, et le parseur C a une intégration continue verte.",
+      "roverLink": "Le firmware et les outils autour du rover devront être reproductibles. Une CI qui casse le lendemain d’un « ça marchait sur ma machine » est déjà un réflexe d’ingénieur, avant même de flasher l’ESP32.",
+      "jsToCTrap": "En JavaScript, utiliser une variable après l’avoir passée ailleurs est banal : on passe des références. En Rust, le compilateur refuse souvent ce que votre instinct JS trouve innocent. Lisez l’erreur : elle enseigne le modèle, elle ne vous accuse pas.",
+      "nextUnlocks": "S8 porte le parseur en Rust et clarifie ce que no_std retire — le pont vers l’embarqué de P2.",
+      "withoutRobot": "Rust et GitHub Actions s’installent sans kit. La CI tourne dans le nuage, pas sur le rover."
+    },
+    "P0-S8": {
+      "title": "Rust : erreurs, traits ; parseur en Rust",
+      "whyThisWeek": "Même comportement, autre langage : porter le parseur force à comparer C et Rust sur un problème que vous connaissez déjà. no_std montre ce qui disparaît quand il n’y a plus de système d’exploitation confortable.",
+      "keyIdea": "Result et Option rendent l’absence et l’échec visibles dans le type. L’opérateur ? transmet une erreur au caller au lieu de l’avaler. Un trait décrit un comportement qu’un type peut fournir — proche d’une interface, avec des règles plus précises sur la propriété des données.\n\nPorter le parseur ne consiste pas à le réécrire « de mémoire en plus joli ». Les mêmes cas de test doivent passer : trame minimale, trames invalides, lecture par morceaux si vous l’aviez déjà.\n\nno_std, c’est compiler sans la bibliothèque standard complète. Beaucoup de confort disparaît : le tas n’est plus là par défaut, ni les fichiers, ni un runtime généreux. C’est le monde dans lequel un firmware ESP32 Rust devra tenir en P2. Cette semaine peut être plus légère : un port fidèle vaut mieux qu’une réécriture ambitieuse.",
+      "sundayOutcome": "Le parseur existe en Rust avec les mêmes tests, vous savez vous servir de Result et d’un trait simple, et vous pouvez citer concrètement ce que no_std retire.",
+      "roverLink": "En P2, le firmware Rust du rover visera un ESP32 en no_std (embassy, esp-hal). Cette semaine est la répétition générale, sur un problème déjà résolu en C.",
+      "jsToCTrap": "Les exceptions JavaScript peuvent surgir de nulle part. En Rust, une fonction qui peut échouer le dit dans sa signature. Ne contournez pas Result avec unwrap partout juste pour « que ça compile » : vous effaceriez l’intérêt de l’exercice.",
+      "nextUnlocks": "S9 ouvre MIT 18.06 et ROS 2 en simulation, puis clôt P0 par l’architecture du rover et un brouillon d’article.",
+      "withoutRobot": "Le port Rust se teste sur votre machine. Inutile d’attendre l’ESP32 pour comprendre no_std."
+    },
+    "P0-S9": {
+      "title": "MIT 18.06, ROS 2 en simulation, bilan P0",
+      "whyThisWeek": "Vous reliez l’algèbre déjà vue à un cours plus formel, vous touchez ROS 2 sans robot, et vous prouvez la fin de P0 : expliquer l’architecture, par écrit et à voix haute.",
+      "keyIdea": "L’élimination de Gauss permet de résoudre un petit système linéaire en regardant soit des lignes (des équations), soit des colonnes (des combinaisons de vecteurs). Ce n’est pas un nouvel univers : c’est une langue plus précise pour ce que les épisodes 3Blue1Brown ont déjà fait voir.\n\nROS 2 Humble, dans un conteneur, vous fait lancer des nœuds qui publient et écoutent des topics. Ce n’est pas encore le rover. C’est le vocabulaire de P3, essayé tôt pour qu’il cesse d’intimider.\n\nL’article et l’enregistrement de trois minutes sont le vrai examen de P0. Appuyez-vous sur le wiki et sur les dépôts ugv_base_ros et ugv_rpi. Le kit AI relie un Pi 5 à un ESP32 par UART ; il n’embarque ni lidar ni caméra de profondeur. Dites ce qui est là, et ce qui viendra plus tard (D500 en P5), sans remplir les trous par imagination.",
+      "sundayOutcome": "Un petit système linéaire résolu proprement, un talker/listener ROS 2 vu tourner, un brouillon d’article d’architecture, un bilan honnête des « je sais », et un enregistrement de trois minutes sans notes.",
+      "roverLink": "Le livrable de P0 est précisément ce schéma commenté : que fait le Pi, que fait l’ESP32, quel fil les relie, que circulent les trames JSON, quels capteurs sont déjà sur le kit (IMU, INA219, caméra 5 MP 160°, tourelle ST3215), lesquels n’y sont pas.",
+      "jsToCTrap": "Résistez à l’envie de rédiger l’article comme une page produit. Un ingénieur veut le schéma, les noms de bus, les dépôts, et ce que vous avez réellement vérifié — pas une promesse marketing.",
+      "nextUnlocks": "P1 entre dans le firmware ESP32 en C++ : outillage reproductible, puis PID sur une roue, temps réel, protocole binaire. Le détail semaine par semaine s’écrira à l’approche de la phase.",
+      "withoutRobot": "ROS 2 s’installe en conteneur. L’architecture se documente depuis le wiki et les dépôts publics. N’attendez pas le colis pour clôturer P0."
+    }
+  },
+  "phaseNarratives": {
+    "P0": {
+      "nom": "Fondations",
+      "promise": "En neuf semaines, vous passez de développeur web à quelqu’un qui peut montrer de la mémoire C, un port série, un parseur testé, une CI, et le schéma réel du kit — pas un schéma imaginé.",
+      "hardwareNote": "Le robot cible est le Waveshare UGV Rover PT PI5 AI : Raspberry Pi 5 4 Go, ESP32, IMU 9 axes, INA219, OLED, tourelle ST3215, caméra 5 MP 160°, six roues motrices, UPS 3S. Les 3 piles 18650 et le chargeur ne sont pas fournis. Pas de lidar, pas de caméra de profondeur. Le lidar D500 est prévu comme achat séparé, pour la P5. Tant que le kit n’est pas là, toute la P0 se fait sans lui.",
+      "exitCriteria": [
+        "Expliquer sans notes chaque fil utile entre le Pi 5 et l’ESP32, d’après la documentation.",
+        "Un test C du parseur passe en intégration continue.",
+        "Un brouillon d’article en anglais sur l’architecture, avec schéma."
+      ],
+      "throughLine": "Le parseur JSON UART est l’objet qui traverse la phase. Les maths du mardi préparent rotations, visée et changements de repère.",
+      "portfolioNote": "Le premier article, « Reverse-engineering my rover's architecture », est déjà un artefact de dossier US s’il dit vrai : sources, schéma, limites du kit AI.",
+      "commonPitfall": "Vouloir « rattraper » un calendrier de 18 mois en sautant des samedis de parseur. Le volume prévu tient en environ 22 mois à 9 h par semaine ; on ne compacte pas."
+    },
+    "P1": {
+      "nom": "Firmware ESP32 en C++",
+      "promise": "Comprendre le firmware d’origine, le compiler de façon reproductible, puis mesurer avant de régler : une roue, une réponse indicielle, un PID dont les gains ont une conséquence visible.",
+      "hardwareNote": "Le dépôt de référence côté bas niveau est ugv_base_ros. Le programme web d’origine peut occuper le lien série et la caméra : il faudra savoir l’arrêter avant de parler au rover autrement. Pas besoin du lidar en P1.",
+      "exitCriteria": [
+        "Dépassement inférieur à 10 %, mesuré sur une réponse indicielle réelle (quand le rover sera là) ou, à défaut, protocole d’expérience déjà écrit et outillé.",
+        "Un protocole binaire avec taux d’erreur mesuré sur une heure de trafic.",
+        "Article « Tuning wheel PID with real step responses » avec graphes."
+      ],
+      "throughLine": "Consigne, mesure, erreur, commande. Puis : ne plus faire voyager ça en JSON une fois que le format vous limite.",
+      "portfolioNote": "Des graphes avant/après valent plus qu’un « j’ai réglé le PID ». Un recruteur lit les axes, les unités, le dépassement.",
+      "commonPitfall": "Tourner les gains au feeling sans enregistrer la réponse. Sans graphe, vous n’avez rien appris que vous puissiez défendre."
+    },
+    "P2": {
+      "nom": "IMU, fusion de capteurs, Rust embarqué",
+      "promise": "Estimer l’orientation à partir de capteurs imparfaits, puis faire rouler le rover sur un firmware Rust dont le chien de garde coupe les moteurs si le silence dure trop.",
+      "hardwareNote": "Le kit AI a une IMU 9 axes. Calibration du magnétomètre et logs réels demanderont le matériel ; la théorie, le filtre complémentaire et une partie de l’EKF s’étudient avant, sur des logs publiés ou simulés.",
+      "exitCriteria": [
+        "Le rover roule sur votre firmware Rust (quand le kit est là).",
+        "Watchdog testé : plus de trame pendant 200 ms, moteurs coupés.",
+        "Erreur de l’EKF chiffrée sur un log, pas seulement « ça a l’air stable »."
+      ],
+      "throughLine": "Du filtre complémentaire (intuition) à l’EKF (compte d’erreur). Rust no_std n’est plus un chapitre de livre : c’est le firmware.",
+      "portfolioNote": "La vidéo comparant C++ et Rust, plus un article d’EKF avec chiffres, montrent deux langages et une vraie estimation d’état.",
+      "commonPitfall": "Traiter l’IMU comme une vérité. Chaque capteur dérive ; le filtre existe parce qu’aucun n’est suffisant seul."
+    },
+    "P3": {
+      "nom": "ROS 2, simulation, dashboard web",
+      "promise": "Le même code pilote la simulation et le robot ; un tableau de bord web montre la téléopération, la batterie, l’IMU et une vidéo dont vous avez mesuré la latence.",
+      "hardwareNote": "Le kit AI n’est pas vendu comme le kit « ROS 2 » (celui-ci ajoute notamment lidar et caméra de profondeur). ROS 2 Humble s’installe néanmoins — déjà touché en P0-S9 en conteneur. L’image fournie sur la carte SD du kit AI est souvent orientée web/vision : prévoyez d’installer ou de récupérer l’image adaptée d’après le wiki, plutôt que de croire que les tutoriels ROS 2 sont déjà en place.",
+      "exitCriteria": [
+        "Bascule simulation / réel par un seul argument de lancement.",
+        "Interface ros2_control qui parle votre protocole.",
+        "Latence vidéo bout-en-bout mesurée et affichée."
+      ],
+      "throughLine": "Le dashboard est le lieu où votre métier d’origine (React, WebRTC) rejoint le robot, au service de mesures, pas d’une démo vide.",
+      "portfolioNote": "La vidéo « same code, sim and real » est un des artefacts les plus lisibles pour un recruteur robotique.",
+      "commonPitfall": "Construire un bel écran avant d’avoir tf2, l’URDF et ros2_control. L’interface vient après le modèle du robot."
+    },
+    "P4": {
+      "nom": "Perception",
+      "promise": "Calibrer la caméra grand-angle du kit, estimer la pose d’un AprilTag, faire suivre la tourelle, et publier des chiffres de FPS et de latence sur le Pi 5.",
+      "hardwareNote": "Le kit AI a une caméra 5 MP 160° sur tourelle ST3215. Il n’a pas de caméra de profondeur type OAK-D Lite : ce n’est pas requis pour cette phase. Un accélérateur Hailo est optionnel, pas un prérequis.",
+      "exitCriteria": [
+        "Erreur de pose AprilTag mesurée contre un mètre ruban.",
+        "Tableau FPS / latence publié pour le détecteur choisi sur Pi 5.",
+        "Vidéo du rover qui suit un tag."
+      ],
+      "throughLine": "Une image n’est pas une position tant que la caméra n’est pas calibrée. Les chiffres viennent après le modèle sténopé et la distorsion fisheye.",
+      "portfolioNote": "Un tableau de mesure sur Pi 5, même sans NPU, est plus convaincant qu’une démo sans unités.",
+      "commonPitfall": "Lancer un modèle de détection avant d’avoir camera_info et une calibration honnête. Le réseau n’excuse pas une géométrie fausse."
+    },
+    "P5": {
+      "nom": "Localisation, SLAM, Nav2",
+      "promise": "Construire une carte, s’y localiser, et naviguer d’un point à un autre de façon mesurable — puis dire ce qui dérive vraiment.",
+      "hardwareNote": "Cette phase exige un lidar. Le kit AI n’en a pas. Le D500 est l’achat prévu, avec la platine et la visserie prévues par Waveshare. Ne commencez pas le bloc SLAM Toolbox « avec lidar » sans ce capteur : la théorie et les comparaisons d’odométries peuvent se préparer, pas la carte réelle.",
+      "exitCriteria": [
+        "Dix navigations réussies sur dix vers trois points, avec taux et temps publiés.",
+        "Carte produite avec SLAM Toolbox.",
+        "Article « What actually drifts » appuyé sur des mesures (roues, roues+IMU, lidar)."
+      ],
+      "throughLine": "Trois odométries à comparer valent mieux qu’une carte jolie et muette.",
+      "portfolioNote": "Un article qui nomme la dérive, avec protocoles, est exactement le genre de preuve qu’on attend d’un ingénieur localisation.",
+      "commonPitfall": "Croire que Nav2 « se configure » sans avoir mesuré l’odométrie. Un planificateur ne rattrape pas une odométrie mensongère."
+    },
+    "P6": {
+      "nom": "Rigueur industrielle",
+      "promise": "Chaque commit interroge le matériel, un log rejoué devient un test, une mise à jour peut échouer sans brickage, un arrêt d’urgence a un état prévu.",
+      "hardwareNote": "Un banc HIL peut s’appuyer sur le Pi du kit. Un second ESP32 est utile mais optionnel. L’observabilité (rosbag2/MCAP, Foxglove) n’attend pas un second robot.",
+      "exitCriteria": [
+        "Un bug réel attrapé par la CI HIL et documenté.",
+        "Un log transformé en test de régression déterministe.",
+        "OTA signé avec retour arrière, expliqué."
+      ],
+      "throughLine": "Ce qui n’est pas rejouable n’est pas encore maîtrisé.",
+      "portfolioNote": "« Hardware-in-the-loop for a hobby rover » montre que vous traitez un loisir avec des réflexes d’équipe produit.",
+      "commonPitfall": "Ajouter des tests qui relisent le code au lieu de relire un comportement. Un test HIL raconte une panne ou une exigence, pas une fonction interne."
+    },
+    "P7": {
+      "nom": "Capstone",
+      "promise": "Un projet phare reproductible par un inconnu : une pile Rust, ou un contrôle appris avec écart sim-to-real mesuré, ou une coordination robot/simulation — puis une vidéo de trois minutes et un talk soumis.",
+      "hardwareNote": "Les options A et B se font avec un seul rover. L’option C peut se faire avec un rover et une simulation ; un second rover physique n’est pas obligatoire.",
+      "exitCriteria": [
+        "Un README qu’un ingénieur robotique inconnu suit jusqu’au résultat.",
+        "Vidéo de trois minutes et article long.",
+        "Talk soumis (meetup ROS, ROSCon, ou équivalent déclaré)."
+      ],
+      "throughLine": "Tout ce qui précède n’existe, pour un dossier, que s’il est raconté avec des mesures et une recette de reproduction.",
+      "portfolioNote": "C’est la pièce centrale d’une candidature US : pas « j’ai suivi un plan », mais « voici un résultat que vous pouvez relancer ».",
+      "commonPitfall": "Choisir les trois options à la fois, ou recommencer le matériel au lieu d’approfondir une question mesurable."
+    }
+  },
+  "blockBriefings": [
+    {
+      "phaseId": "P1",
+      "fromWeek": 10,
+      "toWeek": 12,
+      "title": "outillage et compilation reproductible",
+      "whyThisBlock": "Avant de toucher au PID, il faut pouvoir compiler, flasher et reproduire le firmware d’origine (ugv_base_ros) sans ruminer une recette locale.",
+      "hardwareNote": "Utile dès que le kit est là ; en attendant, documenter la chaîne (PlatformIO ou arduino-cli) et la compilation hôte autant que possible."
+    },
+    {
+      "phaseId": "P1",
+      "fromWeek": 13,
+      "toWeek": 16,
+      "title": "PID et réponse indicielle",
+      "whyThisBlock": "Mesurer d’abord : consigne en échelon, dépassement, temps de montée, erreur statique. Ensuite seulement, régler P, I et D, et montrer l’avant/après.",
+      "hardwareNote": "Les graphes réels demandent une roue et un encodeur. Sans robot, écrire le banc d’analyse (trace, métriques) sur des logs d’exemple."
+    },
+    {
+      "phaseId": "P1",
+      "fromWeek": 17,
+      "toWeek": 18,
+      "title": "temps réel et jitter",
+      "whyThisBlock": "Une boucle de contrôle n’est pas un setInterval. Priorités FreeRTOS, interruptions courtes, jitter mesuré : c’est ce qui sépare un tutoriel d’un firmware.",
+      "hardwareNote": "Un analyseur logique aide mais n’est pas obligatoire ; des horodatages internes bien faits enseignent déjà beaucoup."
+    },
+    {
+      "phaseId": "P1",
+      "fromWeek": 19,
+      "toWeek": 21,
+      "title": "protocole binaire",
+      "whyThisBlock": "Le JSON d’origine est lisible et limité. Un protocole binaire (COBS, CRC16, numéro de séquence) se juge à son taux d’erreur sur une longue trace, pas à son élégance.",
+      "hardwareNote": "Se teste d’abord PC contre PC, puis PC contre ESP32."
+    },
+    {
+      "phaseId": "P2",
+      "fromWeek": 22,
+      "toWeek": 25,
+      "title": "probabilités et filtre complémentaire",
+      "whyThisBlock": "Moyenne, variance, gaussienne, puis fusion simple gyro + accéléromètre. L’intuition avant l’EKF.",
+      "hardwareNote": "L’IMU du kit servira aux logs ; la théorie ne l’attend pas."
+    },
+    {
+      "phaseId": "P2",
+      "fromWeek": 26,
+      "toWeek": 29,
+      "title": "rotations et quaternions",
+      "whyThisBlock": "Passer des angles d’Euler à une matrice et à un quaternion, et comprendre le blocage de cardan, pour ne plus manipuler l’orientation au hasard.",
+      "hardwareNote": "Pure géométrie dans un premier temps ; l’IMU donnera un sens physique ensuite."
+    },
+    {
+      "phaseId": "P2",
+      "fromWeek": 30,
+      "toWeek": 33,
+      "title": "EKF",
+      "whyThisBlock": "Prédiction, mise à jour, linéarisation, puis une erreur chiffrée sur un log. Un filtre sans compte d’erreur n’est qu’une animation.",
+      "hardwareNote": "Un log réel d’IMU du kit est l’idéal ; un log public annoté peut servir d’échauffement."
+    },
+    {
+      "phaseId": "P2",
+      "fromWeek": 34,
+      "toWeek": 37,
+      "title": "Rust embassy et watchdog",
+      "whyThisBlock": "Porter la boucle utile en Rust embarqué et couper les moteurs si le silence dépasse 200 ms. Le watchdog est une exigence de sûreté, pas un extra.",
+      "hardwareNote": "Cible : ESP32 du kit. Le port peut se préparer en no_std sur l’hôte, le flash attend le matériel."
+    },
+    {
+      "phaseId": "P3",
+      "fromWeek": 38,
+      "toWeek": 41,
+      "title": "concepts ROS 2 et tf2",
+      "whyThisBlock": "Nœuds, topics, services, actions, QoS, launch, tf2 : le vocabulaire avec lequel tout le reste de la pile s’assemble.",
+      "hardwareNote": "Entièrement faisable en simulation / conteneur."
+    },
+    {
+      "phaseId": "P3",
+      "fromWeek": 42,
+      "toWeek": 45,
+      "title": "URDF, Gazebo, ros2_control",
+      "whyThisBlock": "Décrire le rover, le simuler, et relier ros2_control à votre protocole. C’est le pont entre le firmware de P1–P2 et le logiciel de navigation.",
+      "hardwareNote": "La simulation n’attend pas le colis ; l’interface réelle, si."
+    },
+    {
+      "phaseId": "P3",
+      "fromWeek": 46,
+      "toWeek": 50,
+      "title": "dashboard React + WebRTC",
+      "whyThisBlock": "Téléopération, télémétrie, vidéo, latence affichée. Votre expérience web devient un instrument de mesure, pas seulement une vitrine.",
+      "hardwareNote": "La caméra du kit AI suffit. Mesurer la latence dès qu’un flux existe, même imparfait."
+    },
+    {
+      "phaseId": "P4",
+      "fromWeek": 51,
+      "toWeek": 53,
+      "title": "modèle de caméra et calibration fisheye",
+      "whyThisBlock": "La caméra 160° distord beaucoup. Sans calibration et sans camera_info, aucune pose n’est défendable.",
+      "hardwareNote": "Caméra 5 MP 160° du kit AI. Pas besoin d’OAK-D Lite."
+    },
+    {
+      "phaseId": "P4",
+      "fromWeek": 54,
+      "toWeek": 56,
+      "title": "AprilTag et pan-tilt",
+      "whyThisBlock": "Détecter un tag, estimer sa pose, faire suivre la tourelle ST3215, mesurer l’erreur avec un mètre ruban.",
+      "hardwareNote": "Tourelle et caméra du kit. Un tag imprimé suffit comme cible."
+    },
+    {
+      "phaseId": "P4",
+      "fromWeek": 57,
+      "toWeek": 59,
+      "title": "inférence embarquée",
+      "whyThisBlock": "Un détecteur sur Pi 5 n’existe, pour le dossier, que par son FPS et sa latence. Hailo reste optionnel.",
+      "hardwareNote": "Pi 5 4 Go du kit AI. Ne pas traiter un NPU absent comme un prérequis."
+    },
+    {
+      "phaseId": "P5",
+      "fromWeek": 60,
+      "toWeek": 62,
+      "title": "filtre particulaire et SLAM",
+      "whyThisBlock": "Comprendre AMCL et l’idée d’un SLAM par graphe avant de tourner les boutons de Nav2.",
+      "hardwareNote": "Surtout théorique au début ; le lidar n’est pas encore obligatoire pour ce bloc de concepts."
+    },
+    {
+      "phaseId": "P5",
+      "fromWeek": 63,
+      "toWeek": 65,
+      "title": "SLAM Toolbox avec LIDAR",
+      "whyThisBlock": "Construire la carte de l’appartement avec un vrai lidar. C’est le premier bloc qui en dépend vraiment.",
+      "hardwareNote": "Acheter et monter le D500 avant ce bloc. Le kit AI ne le contient pas ; la platine officielle a les trous prévus."
+    },
+    {
+      "phaseId": "P5",
+      "fromWeek": 66,
+      "toWeek": 68,
+      "title": "Nav2 et comparaison d'odométries",
+      "whyThisBlock": "Aller d’un point à un autre, puis publier ce qui dérive : roues, roues+IMU, localisation lidar.",
+      "hardwareNote": "Rover + D500. Sans lidar, ne pas prétendre avoir « fait Nav2 »."
+    },
+    {
+      "phaseId": "P6",
+      "fromWeek": 69,
+      "toWeek": 72,
+      "title": "banc HIL et CI",
+      "whyThisBlock": "Un commit qui ne parle pas au matériel laisse passer trop de bugs. Le banc doit échouer tout seul.",
+      "hardwareNote": "Le Pi du kit peut porter le banc. Un second ESP32 est facultatif."
+    },
+    {
+      "phaseId": "P6",
+      "fromWeek": 73,
+      "toWeek": 75,
+      "title": "MCAP, Foxglove, replay",
+      "whyThisBlock": "Enregistrer, rejouer, transformer un log en test. La reproductibilité devient un réflexe.",
+      "hardwareNote": "Aucun achat supplémentaire."
+    },
+    {
+      "phaseId": "P6",
+      "fromWeek": 76,
+      "toWeek": 78,
+      "title": "sûreté et OTA",
+      "whyThisBlock": "États dégradés, arrêt d’urgence, mise à jour signée, retour arrière. Un hobby qui peut se brique n’est pas encore un système.",
+      "hardwareNote": "OTA sur l’ESP32 du kit, avec un plan de secours écrit avant le premier flash risqué."
+    },
+    {
+      "phaseId": "P7",
+      "fromWeek": 79,
+      "toWeek": 82,
+      "title": "choix et prototype",
+      "whyThisBlock": "Choisir une option A, B ou C, la borner, et produire un prototype qui pose déjà la mesure de succès.",
+      "hardwareNote": "Un rover suffit pour A et B ; C peut mêler réel et simulation."
+    },
+    {
+      "phaseId": "P7",
+      "fromWeek": 83,
+      "toWeek": 90,
+      "title": "réalisation et mesures",
+      "whyThisBlock": "Construire le résultat et le chiffrer. Pas de nouvelle idée majeure au milieu du bloc sans mettre à jour le critère de succès.",
+      "hardwareNote": "Rester sur le kit déjà en service, sauf besoin explicitement lié à l’option choisie."
+    },
+    {
+      "phaseId": "P7",
+      "fromWeek": 91,
+      "toWeek": 94,
+      "title": "article, vidéo, talk",
+      "whyThisBlock": "Rendre le travail reproductible et présentable : README, article, vidéo de trois minutes, proposition de talk.",
+      "hardwareNote": "Aucun matériel nouveau ; s’appuyer sur les mesures déjà prises."
+    }
+  ],
+  "glossary": [
+    {
+      "id": "matrice-transformation",
+      "term": "Matrice comme transformation",
+      "definition": "Une matrice 2×2 décrit une règle qui envoie chaque point du plan sur un autre point. On la comprend en regardant où vont les vecteurs de base, pas en mémorisant une grille de chiffres.",
+      "weekIds": [
+        "P0-S1"
+      ],
+      "roverLink": "Faire tourner le cap du rover, c’est appliquer une telle règle à sa direction."
+    },
+    {
+      "id": "composition",
+      "term": "Composition de matrices",
+      "definition": "Multiplier deux matrices, c’est enchaîner deux transformations. L’ordre change le résultat : ce n’est pas une opération commutative.",
+      "weekIds": [
+        "P0-S2"
+      ],
+      "roverLink": "Rotation puis translation, ou l’inverse, ne placent pas un point au même endroit dans la pièce."
+    },
+    {
+      "id": "determinant",
+      "term": "Déterminant",
+      "definition": "En 2D, le déterminant dit par quel facteur les aires sont multipliées, et si l’orientation est préservée. Un déterminant nul signifie que la transformation écrase le plan et n’est pas inversible.",
+      "weekIds": [
+        "P0-S3"
+      ],
+      "roverLink": "Une estimation qui « aplatit » l’information de direction n’est plus récupérable proprement."
+    },
+    {
+      "id": "produit-scalaire",
+      "term": "Produit scalaire",
+      "definition": "Mesure d’accord entre deux directions, liée à la projection et à l’angle. Deux vecteurs alignés donnent un résultat fort ; deux vecteurs perpendiculaires, un résultat nul.",
+      "weekIds": [
+        "P0-S4"
+      ],
+      "roverLink": "Comparer le cap actuel et la direction d’une cible."
+    },
+    {
+      "id": "produit-vectoriel",
+      "term": "Produit vectoriel",
+      "definition": "En 3D, il fournit une direction perpendiculaire à deux autres. En 2D, son signe dit de quel côté tourner pour passer d’une direction à une autre.",
+      "weekIds": [
+        "P0-S5"
+      ],
+      "roverLink": "Décider si le rover doit tourner à gauche ou à droite pour viser."
+    },
+    {
+      "id": "changement-de-base",
+      "term": "Changement de base",
+      "definition": "Exprimer les mêmes points dans un autre jeu d’axes. Il faut connaître l’origine et l’orientation du nouveau repère par rapport à l’ancien.",
+      "weekIds": [
+        "P0-S6"
+      ],
+      "roverLink": "Passer d’un point « 1 m devant le robot » à ses coordonnées dans la pièce."
+    },
+    {
+      "id": "valeur-propre",
+      "term": "Valeur propre et vecteur propre",
+      "definition": "Un vecteur propre est une direction que la transformation se contente d’étirer ou de contracter. La valeur propre est ce facteur d’étirement. Certaines rotations du plan n’ont pas de vecteur propre réel.",
+      "weekIds": [
+        "P0-S7"
+      ],
+      "roverLink": "Plus tard, ces idées reviennent dès qu’on linéarise un mouvement autour d’un point de fonctionnement."
+    },
+    {
+      "id": "pile-tas",
+      "term": "Pile et tas",
+      "definition": "Deux régions de la mémoire d’un processus. La pile accueille surtout le contexte des fonctions et les variables automatiques, le temps d’un appel. Le tas accueille les blocs demandés dynamiquement, jusqu’à ce qu’on les rende. Leurs adresses se voient expérimentalement ; à vous de les observer plutôt que de les réciter.",
+      "weekIds": [
+        "P0-S1"
+      ],
+      "roverLink": "Un tampon de réception série trop grand pour la pile se place sur le tas — et doit être libéré."
+    },
+    {
+      "id": "pointeur",
+      "term": "Pointeur",
+      "definition": "Une valeur qui contient l’adresse d’une autre valeur. p[i] et *(p+i) désignent le même élément. Un pointeur n’est pas un tableau JavaScript : il ne connaît pas tout seul sa longueur.",
+      "weekIds": [
+        "P0-S2"
+      ],
+      "roverLink": "Les buffers d’octets du lien série se manipulent ainsi."
+    },
+    {
+      "id": "tampon-circulaire",
+      "term": "Tampon circulaire",
+      "definition": "File de taille fixe où l’on écrit à une extrémité et lit à l’autre, en revenant au début une fois la fin atteinte. Il sert à absorber un flux d’octets tant qu’une trame complète n’est pas disponible.",
+      "weekIds": [
+        "P0-S3",
+        "P0-S5"
+      ],
+      "roverLink": "L’UART livre les commandes du rover par morceaux, pas d’un seul tenant."
+    },
+    {
+      "id": "asan",
+      "term": "AddressSanitizer",
+      "definition": "Outil du compilateur (-fsanitize=address) qui détecte beaucoup d’erreurs mémoire : dépassements de tampon, usages après free, fuites selon les options. À allumer tôt, pas après la première panne mystérieuse.",
+      "weekIds": [
+        "P0-S3"
+      ],
+      "roverLink": "Un parseur qui « marche » mais écrit hors limites corrompra un jour une consigne moteur."
+    },
+    {
+      "id": "endianness",
+      "term": "Endianness",
+      "definition": "Ordre dans lequel les octets d’un entier sont rangés en mémoire ou sur un bus. Petit-boutiste : l’octet de poids faible d’abord. Grand-boutiste : l’inverse. Lire dans le mauvais ordre invente un nombre.",
+      "weekIds": [
+        "P0-S4"
+      ],
+      "roverLink": "Les registres de l’INA219 et de l’IMU sont des champs multi-octets : l’ordre est dans la datasheet, pas dans l’intuition."
+    },
+    {
+      "id": "volatile",
+      "term": "volatile",
+      "definition": "Qualificatif C qui dit au compilateur qu’une variable peut changer hors du flux qu’il analyse (registre matériel, interruption). Sans cela, il peut supprimer ou réordonner des lectures qu’il croit redondantes.",
+      "weekIds": [
+        "P0-S4"
+      ],
+      "roverLink": "Dès que vous lirez un registre de périphérique, cette précaution redeviendra concrète."
+    },
+    {
+      "id": "pwm",
+      "term": "PWM",
+      "definition": "Modulation de largeur d’impulsion : on alterne rapidement entre deux niveaux, et le rapport cyclique fixe la fraction du temps à l’état haut. C’est une façon efficace de faire varier l’effet moyen d’une alimentation sur un moteur ou une LED.",
+      "weekIds": [
+        "P0-S4"
+      ],
+      "roverLink": "Les moteurs du UGV sont commandés ainsi, derrière un pont en H, côté ESP32."
+    },
+    {
+      "id": "pont-en-h",
+      "term": "Pont en H",
+      "definition": "Montage de quatre interrupteurs qui permet d’inverser le sens du courant dans un moteur, donc son sens de rotation, tout en le commandant en PWM.",
+      "weekIds": [
+        "P0-S4"
+      ],
+      "roverLink": "C’est le bloc de puissance entre la logique de l’ESP32 et les roues."
+    },
+    {
+      "id": "ohm",
+      "term": "Loi d’Ohm",
+      "definition": "U = R·I : la tension aux bornes d’une résistance est le produit de cette résistance par le courant qui la traverse. La puissance dissipée s’écrit aussi P = U·I. Toujours préciser les unités (V, Ω, A).",
+      "weekIds": [
+        "P0-S3"
+      ],
+      "roverLink": "Base pour parler ensuite de consommation, de shunt et de l’INA219, sans inventer les chiffres."
+    },
+    {
+      "id": "uart",
+      "term": "UART",
+      "definition": "Liaison série asynchrone, sans fil d’horloge dédié. Les deux côtés se mettent d’accord sur le débit. Peu de fils, simple, partout dans l’embarqué.",
+      "weekIds": [
+        "P0-S1",
+        "P0-S5",
+        "P0-S9"
+      ],
+      "roverLink": "C’est le lien de commande entre le Raspberry Pi 5 et l’ESP32 sur le kit AI, avec des trames JSON dans le firmware d’origine."
+    },
+    {
+      "id": "i2c",
+      "term": "I2C",
+      "definition": "Bus à deux fils (données et horloge) où chaque composant a une adresse, souvent sur 7 bits. Pratique pour relier plusieurs capteurs au même maître.",
+      "weekIds": [
+        "P0-S5"
+      ],
+      "roverLink": "Famille typique des capteurs ; à situer dans le schéma seulement si la documentation du kit le montre, jamais par hypothèse."
+    },
+    {
+      "id": "spi",
+      "term": "SPI",
+      "definition": "Bus plus rapide, avec une horloge, des lignes de données et une sélection de puce par composant. Pas d’adressage logique comme l’I2C.",
+      "weekIds": [
+        "P0-S5"
+      ],
+      "roverLink": "Utile comme point de comparaison ; ne l’ajoutez au schéma du rover que s’il apparaît dans le wiki ou les dépôts."
+    },
+    {
+      "id": "raii",
+      "term": "RAII",
+      "definition": "Resource Acquisition Is Initialization : un objet possède une ressource dès sa construction et la rend dans son destructeur. On n’a plus à se souvenir d’un free ou d’un close à chaque chemin de sortie.",
+      "weekIds": [
+        "P0-S5"
+      ],
+      "roverLink": "Le tampon de réception série est un bon premier objet propriétaire."
+    },
+    {
+      "id": "ownership",
+      "term": "Ownership (Rust)",
+      "definition": "Chaque valeur a un propriétaire unique. La passer peut la déplacer : l’ancien nom ne peut plus s’en servir. Emprunter permet d’y accéder sans prendre possession, pour un temps limité.",
+      "weekIds": [
+        "P0-S7"
+      ],
+      "roverLink": "Ce modèle prépare le firmware Rust de P2, où une ressource mal partagée est une panne au pire moment."
+    },
+    {
+      "id": "result-option",
+      "term": "Result et Option",
+      "definition": "Types Rust pour l’échec (Result) et l’absence (Option). Ils forcent à décider quoi faire, au lieu de lancer une exception invisible ou d’utiliser null.",
+      "weekIds": [
+        "P0-S8"
+      ],
+      "roverLink": "Une trame illisible est un échec de parseur, pas une consigne par défaut inventée."
+    },
+    {
+      "id": "nostd",
+      "term": "no_std",
+      "definition": "Compilation Rust sans la bibliothèque standard complète. Beaucoup de services habituels disparaissent : allocation dynamique par défaut, fichiers, une partie du runtime. On travaille plus près de la machine.",
+      "weekIds": [
+        "P0-S8"
+      ],
+      "roverLink": "Le firmware ESP32 en Rust visé en P2 vit dans ce monde."
+    },
+    {
+      "id": "ina219",
+      "term": "INA219",
+      "definition": "Capteur de tension et de courant utilisé pour surveiller une alimentation. On n’invente pas ses formules : on lit la datasheet Texas Instruments (brochage, registres, poids des bits, calibration) et on les implémente.",
+      "weekIds": [
+        "P0-S6"
+      ],
+      "roverLink": "Présent sur le UGV pour la batterie. Une mauvaise conversion donne de fausses alertes — ou en masque."
+    },
+    {
+      "id": "cross-compilation",
+      "term": "Cross-compilation",
+      "definition": "Produire, sur une machine, un binaire destiné à une autre architecture. Ici : compiler depuis votre PC vers ARM64, l’architecture du Raspberry Pi 5, puis vérifier avec file ou qemu.",
+      "weekIds": [
+        "P0-S6"
+      ],
+      "roverLink": "Le parseur devra un jour tourner sur le Pi, pas seulement passer les tests sur x86."
+    },
+    {
+      "id": "dialout",
+      "term": "Groupe dialout et port série",
+      "definition": "Sous Linux, un périphérique comme /dev/ttyUSB0 est un fichier avec un propriétaire et un groupe. Appartenir au groupe adapté (souvent dialout) est ce qui autorise l’ouverture du port, davantage qu’un « droit générique de développeur ».",
+      "weekIds": [
+        "P0-S1"
+      ],
+      "roverLink": "Sans cela, le Pi (ou votre PC) ne verra pas les trames de l’ESP32."
+    },
+    {
+      "id": "systemd",
+      "term": "systemd",
+      "definition": "Le gestionnaire de services de la plupart des distributions Linux modernes. systemctl et journalctl permettent de voir si un service tourne et ce qu’il a écrit dans ses journaux.",
+      "weekIds": [
+        "P0-S1"
+      ],
+      "roverLink": "Sur le Pi, un programme qui occupe déjà le port série ou la caméra se diagnostique d’abord ainsi."
+    },
+    {
+      "id": "ros2-humble",
+      "term": "ROS 2 Humble",
+      "definition": "Distribution de ROS 2 (nœuds, topics, services, actions). En P0 on l’approche en conteneur, pour le vocabulaire ; en P3 elle devient la colonne vertébrale logicielle.",
+      "weekIds": [
+        "P0-S9"
+      ],
+      "roverLink": "Le kit AI n’est pas le kit vendu « ROS 2 » (lidar et caméra de profondeur en plus). Humble s’installe quand même, d’après le wiki, sans inventer ces capteurs."
+    },
+    {
+      "id": "kit-ai",
+      "term": "Kit UGV Rover PT PI5 AI",
+      "definition": "Le robot de ce programme : Pi 5 4 Go, ESP32, IMU 9 axes, INA219, OLED, tourelle ST3215, caméra 5 MP 160°, six roues, UPS 3S. Pas de lidar ni de caméra de profondeur. Un D500 est prévu plus tard, en P5. Les accus 18650 ne sont en général pas inclus.",
+      "weekIds": [
+        "P0-S5",
+        "P0-S9"
+      ],
+      "roverLink": "Toute architecture dessinée pour ce plan doit coller à ce kit, pas à la fiche du kit ROS 2 complet."
+    }
+  ]
+}
