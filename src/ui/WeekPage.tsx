@@ -1,28 +1,56 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { copyBytes } from "../crypto/bytes";
 import { newObjectId } from "../domain/limits";
-import { parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import type { StudyQuestion } from "../domain/curriculumDocument";
+import { minutesEntered, parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import { assertNever } from "../domain/assert";
-import { formatFrenchDate } from "../domain/time";
+import { formatFrenchDate, formatFrenchNumeric, parisWeekday } from "../domain/time";
+import { enteredTimeCopy, entryKindLabel, sameDayName } from "./atelier";
+import { followAnchor, readScrollTarget, scrollToId } from "./anchor";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
+import { TimeMeter } from "./Meter";
+import { labelForHref } from "./present";
+import { saveLabel } from "./status";
+import { SlotList } from "./slots";
 import { useVault } from "./vault";
+
+const TOC = [
+  ["plan", "Plan"],
+  ["je-sais", "Je sais"],
+  ["exercices", "Exercices"],
+  ["notes", "Notes"],
+  ["bilan", "Bilan"],
+  ["preuves", "Preuves"],
+  ["seance", "Séance"],
+] as const;
 
 export function WeekPage() {
   const { weekId = "" } = useParams();
+  const location = useLocation();
   const { session, snap } = useVault();
   const [localError, setLocalError] = useState<string | null>(null);
   const [href, setHref] = useState("");
   const [visibility, setVisibility] = useState<"private" | "public">("private");
   const [consented, setConsented] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const scrolledTo = useRef<string | null>(null);
+  const scrollTo = readScrollTarget(location.state);
 
   useEffect(() => {
     if (snap.phase === "ready") void session.ensureWeek(weekId);
   }, [session, snap.phase, weekId]);
 
-  if (snap.phase !== "ready" || !snap.curriculum) return <p>{snap.errorMessage ?? "Ouverture du coffre…"}</p>;
+  const recordReady = snap.phase === "ready" && Boolean(snap.weeks[weekId]);
+  useEffect(() => {
+    if (!scrollTo || !recordReady || scrolledTo.current === scrollTo) return;
+    if (!document.getElementById(scrollTo)) return;
+    scrolledTo.current = scrollTo;
+    scrollToId(scrollTo);
+  }, [scrollTo, recordReady, weekId]);
+
+  if (snap.phase !== "ready" || !snap.curriculum || !snap.journal) return <p>{snap.errorMessage ?? "Ouverture du coffre…"}</p>;
   const plan = snap.curriculum.weeks.find((item) => item.id === weekId);
   const record = snap.weeks[weekId];
   if (!plan) return <p role="alert">Semaine inconnue.</p>;
@@ -34,145 +62,224 @@ export function WeekPage() {
   ];
   const authoredQuestions = questions.filter((item) => item.origin === "authored");
   const verificationQuestions = questions.filter((item) => item.origin === "canvas");
+  const minutes = minutesEntered(snap.journal, weekId);
+  const hours = snap.curriculum.context.hoursPerWeek;
+  const weekday = parisWeekday(new Date()).toLocaleLowerCase("fr-FR");
+  const sunday = sameDayName(weekday, "dimanche");
+  const slots = plan.detailLevel === "source-detailed" && "slots" in plan.scheduleNotes ? plan.scheduleNotes.slots : null;
+  const todaySlot = slots?.some((slot) => sameDayName(slot.c, weekday)) ?? false;
+  const declared = record.objectives.filter((item) => item.selfAssessment === "declared").length;
+  const entries = snap.journal.entries.filter((entry) => entry.weekId === weekId);
 
   return (
-    <article>
-      <h1>
-        S{plan.weekNumber} — {plan.title}
-      </h1>
-      {plan.detailLevel === "indicative-block-only" ? (
-        <p className="callout">Bloc indicatif, à détailler. Les objectifs ci-dessous sont ceux de la phase, pas un programme de semaine inventé.</p>
-      ) : (
-        <p>Semaine détaillée du programme.</p>
-      )}
-      {plan.detailLevel === "source-detailed" && "slots" in plan.scheduleNotes ? (
-        <ul>
-          {plan.scheduleNotes.slots.map((slot) => (
-            <li key={slot.c}>
-              {slot.c} · {slot.d} — {slot.contenu}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <PhaseContext phaseId={plan.phase} />
+    <article className="week">
+      <header className="week-head">
+        <h1>
+          S{plan.weekNumber} — {plan.title}
+        </h1>
+        {plan.proofs.length > 0 ? (
+          <p className="due">
+            <strong>À rendre : </strong>
+            {plan.proofs.join(" · ")}
+          </p>
+        ) : null}
+        <div className="week-meta">
+          <label htmlFor="week-state">État</label>
+          <select
+            id="week-state"
+            value={record.state}
+            disabled={locked}
+            onChange={(event) => {
+              const state = event.target.value;
+              if (state === "not_started" || state === "in_progress" || state === "handed_in") {
+                session.updateWeek(weekId, (week) => ({ ...week, state }));
+              }
+            }}
+          >
+            <option value="not_started">Pas commencée</option>
+            <option value="in_progress">En cours</option>
+            <option value="handed_in">Write-up remis</option>
+          </select>
+          <span className="pill">{saveLabel(snap.saveStatus)}</span>
+        </div>
+        <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
+        <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
+        {plan.detailLevel === "source-detailed" ? <p>Semaine détaillée du programme.</p> : null}
+      </header>
+      <Conflicts />
+      <nav className="week-toc" aria-label="Sommaire de la semaine">
+        {TOC.map(([id, label]) => (
+          <a key={id} href={`#${id}`} onClick={(event) => followAnchor(event, id)}>
+            {label}
+          </a>
+        ))}
+      </nav>
+      <section id="plan" tabIndex={-1}>
+        <h2>Plan</h2>
+        {sunday ? (
+          <p className="today-note">
+            Aujourd’hui, le bilan du write-up.{" "}
+            <a href="#bilan" onClick={(event) => followAnchor(event, "bilan")}>
+              Aller au bilan
+            </a>
+          </p>
+        ) : null}
+        {slots ? (
+          <>
+            {!todaySlot && !sunday ? <p>Pas de créneau ce {weekday}. Le livrable et le plan de la semaine restent le repère.</p> : null}
+            <SlotList slots={slots} weekday={weekday} />
+          </>
+        ) : (
+          <p className="callout">Bloc indicatif, à détailler. Les objectifs ci-dessous sont ceux de la phase, pas un programme de semaine inventé.</p>
+        )}
+      </section>
       <form
         onSubmit={(event) => {
           event.preventDefault();
           void session.saveWeek(weekId);
         }}
       >
-        <fieldset disabled={locked}>
-          <legend>Je sais…</legend>
+        <section id="je-sais" tabIndex={-1}>
+          <h2>Je sais…</h2>
           <p>Auto-évaluation. Cocher une case ne valide pas la compétence.</p>
-          {record.objectives.map((objective) => {
-            const text = plan.objectives.find((item) => item.id === objective.id)?.text ?? objective.id;
-            return (
-              <div key={objective.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={objective.selfAssessment === "declared"}
-                    onChange={(event) =>
-                      session.updateWeek(weekId, (week) => ({
-                        ...week,
-                        objectives: week.objectives.map((item) =>
-                          item.id === objective.id
-                            ? { ...item, selfAssessment: event.target.checked ? "declared" : "not_yet" }
-                            : item,
-                        ),
-                      }))
-                    }
-                  />
-                  {text}
-                </label>
-                <label htmlFor={`${objective.id}-note`}>Précision facultative</label>
-                <textarea
-                  id={`${objective.id}-note`}
-                  value={objective.explanation}
-                  onChange={(event) =>
-                    session.updateWeek(weekId, (week) => ({
-                      ...week,
-                      objectives: week.objectives.map((item) =>
-                        item.id === objective.id ? { ...item, explanation: event.target.value } : item,
-                      ),
-                    }))
-                  }
-                />
+          {record.objectives.length > 0 ? (
+            <>
+              <p>
+                {declared} sur {record.objectives.length} déclarés
+              </p>
+              <fieldset disabled={locked} className="plain-set">
+                <legend className="sr-only">Auto-évaluation</legend>
+                <ul className="know-list">
+                  {record.objectives.map((objective) => {
+                    const text = plan.objectives.find((item) => item.id === objective.id)?.text ?? objective.id;
+                    return (
+                      <li key={objective.id} className="know-card">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={objective.selfAssessment === "declared"}
+                            onChange={(event) =>
+                              session.updateWeek(weekId, (week) => ({
+                                ...week,
+                                objectives: week.objectives.map((item) =>
+                                  item.id === objective.id
+                                    ? { ...item, selfAssessment: event.target.checked ? "declared" : "not_yet" }
+                                    : item,
+                                ),
+                              }))
+                            }
+                          />
+                          {text}
+                        </label>
+                        <label htmlFor={`${objective.id}-note`}>Précision facultative</label>
+                        <textarea
+                          id={`${objective.id}-note`}
+                          value={objective.explanation}
+                          onChange={(event) =>
+                            session.updateWeek(weekId, (week) => ({
+                              ...week,
+                              objectives: week.objectives.map((item) =>
+                                item.id === objective.id ? { ...item, explanation: event.target.value } : item,
+                              ),
+                            }))
+                          }
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </fieldset>
+            </>
+          ) : (
+            <>
+              <h3>Objectifs de phase</h3>
+              <PhaseList phaseId={plan.phase} part="objectives" />
+            </>
+          )}
+        </section>
+        <section id="exercices" tabIndex={-1}>
+          <h2>Exercices</h2>
+          {verificationQuestions.map((question) => (
+            <QuestionField
+              key={question.id}
+              legend="Exercice de vérification"
+              question={question}
+              record={record}
+              disabled={locked}
+              weekId={weekId}
+            />
+          ))}
+          {authoredQuestions.length > 0 ? (
+            <>
+              <h3>Questions</h3>
+              {authoredQuestions.map((question) => (
+                <QuestionField key={question.id} legend="Questions" question={question} record={record} disabled={locked} weekId={weekId} />
+              ))}
+            </>
+          ) : null}
+          {verificationQuestions.length === 0 && authoredQuestions.length === 0 ? (
+            <>
+              <h3>Exercices de phase</h3>
+              <PhaseList phaseId={plan.phase} part="exercises" />
+            </>
+          ) : null}
+        </section>
+        <section id="notes" tabIndex={-1}>
+          <div className="notes-head">
+            <h2>
+              <label htmlFor="notes">Notes</label>
+            </h2>
+            <button type="button" className="quiet" aria-pressed={preview} disabled={locked} onClick={() => setPreview((value) => !value)}>
+              {preview ? "Masquer l’aperçu" : "Aperçu"}
+            </button>
+          </div>
+          <div className={preview ? "notes-stage is-preview" : "notes-stage"}>
+            <textarea
+              id="notes"
+              className="writing"
+              value={record.notes}
+              disabled={locked}
+              onChange={(event) => session.updateWeek(weekId, (week) => ({ ...week, notes: event.target.value }))}
+            />
+            {preview ? (
+              <div className="markdown-preview">
+                {record.notes ? <MarkdownText text={record.notes} /> : <p>Rien à prévisualiser.</p>}
               </div>
-            );
-          })}
-        </fieldset>
-        {verificationQuestions.map((question) => (
-          <QuestionField
-            key={question.id}
-            legend="Exercice de vérification"
-            question={question}
-            record={record}
+            ) : null}
+          </div>
+        </section>
+        <section id="bilan" className="ritual" tabIndex={-1}>
+          <h2>Bilan du dimanche</h2>
+          <p>Appris, blocages, prochaine action — le write-up de la semaine.</p>
+          <label htmlFor="learned">Appris</label>
+          <textarea
+            id="learned"
+            value={record.writeUp.learned}
             disabled={locked}
-            weekId={weekId}
+            onChange={(event) => session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, learned: event.target.value } }))}
           />
-        ))}
-        {authoredQuestions.length > 0 ? (
-          <section>
-            <h2>Questions</h2>
-            {authoredQuestions.map((question) => (
-              <QuestionField key={question.id} legend="Questions" question={question} record={record} disabled={locked} weekId={weekId} />
-            ))}
-          </section>
-        ) : null}
-        <label htmlFor="notes">Notes</label>
-        <textarea
-          id="notes"
-          value={record.notes}
-          disabled={locked}
-          onChange={(event) => session.updateWeek(weekId, (week) => ({ ...week, notes: event.target.value }))}
-        />
-        {record.notes ? <MarkdownText text={record.notes} /> : null}
-        <h2>Bilan du dimanche</h2>
-        <label htmlFor="learned">Appris</label>
-        <textarea
-          id="learned"
-          value={record.writeUp.learned}
-          disabled={locked}
-          onChange={(event) => session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, learned: event.target.value } }))}
-        />
-        <label htmlFor="difficulties">Blocages</label>
-        <textarea
-          id="difficulties"
-          value={record.writeUp.difficulties}
-          disabled={locked}
-          onChange={(event) =>
-            session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, difficulties: event.target.value } }))
-          }
-        />
-        <label htmlFor="next-steps">Prochaine action</label>
-        <textarea
-          id="next-steps"
-          value={record.writeUp.nextSteps}
-          disabled={locked}
-          onChange={(event) =>
-            session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, nextSteps: event.target.value } }))
-          }
-        />
-        <label htmlFor="week-state">État</label>
-        <select
-          id="week-state"
-          value={record.state}
-          disabled={locked}
-          onChange={(event) => {
-            const state = event.target.value;
-            if (state === "not_started" || state === "in_progress" || state === "handed_in") {
-              session.updateWeek(weekId, (week) => ({ ...week, state }));
+          <label htmlFor="difficulties">Blocages</label>
+          <textarea
+            id="difficulties"
+            value={record.writeUp.difficulties}
+            disabled={locked}
+            onChange={(event) =>
+              session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, difficulties: event.target.value } }))
             }
-          }}
-        >
-          <option value="not_started">Pas commencée</option>
-          <option value="in_progress">En cours</option>
-          <option value="handed_in">Write-up remis</option>
-        </select>
+          />
+          <label htmlFor="next-steps">Prochaine action</label>
+          <textarea
+            id="next-steps"
+            value={record.writeUp.nextSteps}
+            disabled={locked}
+            onChange={(event) =>
+              session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, nextSteps: event.target.value } }))
+            }
+          />
+        </section>
         <button type="submit">Enregistrer</button>
       </form>
-      <section>
+      <section id="preuves" className="panel" tabIndex={-1}>
         <h2>Preuves</h2>
         <p>10 Mio maximum. Le nom du fichier reste dans le coffre chiffré.</p>
         <input
@@ -184,13 +291,16 @@ export function WeekPage() {
             event.target.value = "";
             if (!file) return;
             void file.arrayBuffer().then((buffer) =>
-              session.uploadEvidence(weekId, {
-                filename: file.name,
-                mimeType: file.type || "application/octet-stream",
-                bytes: new Uint8Array(buffer),
-              }).then(() => setLocalError(null)).catch((error: unknown) => {
-                setLocalError(error instanceof Error ? error.message : "Envoi impossible");
-              }),
+              session
+                .uploadEvidence(weekId, {
+                  filename: file.name,
+                  mimeType: file.type || "application/octet-stream",
+                  bytes: new Uint8Array(buffer),
+                })
+                .then(() => setLocalError(null))
+                .catch((error: unknown) => {
+                  setLocalError(error instanceof Error ? error.message : "Envoi impossible");
+                }),
             );
           }}
         />
@@ -232,11 +342,13 @@ export function WeekPage() {
           Ajouter le lien
         </button>
         {localError ? <p role="alert">{localError}</p> : null}
-        <ul>
+        <ul className="evidence-list">
           {record.evidence.map((item) =>
             item.kind === "file" ? (
               <li key={item.id}>
-                {item.filename} · {item.byteLength} octets
+                <span>
+                  {item.filename} · {item.byteLength} octets
+                </span>
                 <button
                   type="button"
                   onClick={() => {
@@ -256,53 +368,72 @@ export function WeekPage() {
               </li>
             ) : (
               <li key={item.id}>
-                Lien ({item.visibility}) : {item.href}
+                <a href={item.href} rel="noreferrer noopener" target="_blank">
+                  {labelForHref(item.href)}
+                </a>
+                <span>{visibilityLabel(item.visibility)}</span>
               </li>
             ),
           )}
         </ul>
       </section>
-      <Conflicts />
-      <ul>
-        {snap.journal?.entries
-          .filter((entry) => entry.weekId === weekId)
-          .map((entry) => (
-            <li key={entry.id}>
-              {formatFrenchDate(entry.localDate)} · {entry.minutes} min · {entry.summary}
-            </li>
-          ))}
-      </ul>
-      <SessionForm
-        weekId={weekId}
-        weeks={[weekId]}
-        onAdd={(entry) => {
-          void session.addJournalEntry(entry);
-        }}
-      />
+      <section id="seance" className="ritual" tabIndex={-1}>
+        <p>La séance se note ici, à la fin, pendant que c’est encore frais.</p>
+        {entries.length === 0 ? (
+          <p>Rien n’est encore noté pour cette semaine.</p>
+        ) : (
+          <ol className="timeline">
+            {entries.map((entry) => (
+              <li key={entry.id}>
+                <p className="timeline-date">
+                  <time dateTime={entry.localDate}>{formatFrenchDate(entry.localDate)}</time>
+                  <span className="muted"> · {formatFrenchNumeric(entry.localDate)}</span>
+                </p>
+                <p className="timeline-meta">
+                  {entry.minutes} min · {entryKindLabel(entry.kind)}
+                </p>
+                <p>{entry.summary}</p>
+              </li>
+            ))}
+          </ol>
+        )}
+        <SessionForm
+          weekId={weekId}
+          weeks={[weekId]}
+          onAdd={(entry) => {
+            void session.addJournalEntry(entry);
+          }}
+        />
+      </section>
     </article>
   );
 }
 
-function PhaseContext({ phaseId }: { phaseId: string }) {
+function visibilityLabel(visibility: "private" | "public"): string {
+  switch (visibility) {
+    case "private":
+      return "privée";
+    case "public":
+      return "publique";
+    default: {
+      const neverVisibility: never = visibility;
+      return neverVisibility;
+    }
+  }
+}
+
+function PhaseList({ phaseId, part }: { phaseId: string; part: "objectives" | "exercises" }) {
   const { snap } = useVault();
   const phase = snap.curriculum?.phases.find((item) => item.id === phaseId);
-  const week = snap.curriculum?.weeks.find((item) => item.phase === phaseId && item.detailLevel === "indicative-block-only");
-  if (!phase || !week || week.detailLevel === "source-detailed") return null;
+  const indicative = snap.curriculum?.weeks.some((item) => item.phase === phaseId && item.detailLevel === "indicative-block-only") ?? false;
+  if (!phase || !indicative) return null;
+  const items = part === "objectives" ? phase.objectives : phase.exercices;
   return (
-    <section>
-      <h2>Objectifs de phase</h2>
-      <ul>
-        {phase.objectives.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-      <h2>Exercices de phase</h2>
-      <ul>
-        {phase.exercices.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </section>
+    <ul>
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -322,7 +453,7 @@ function QuestionField({
   const { session } = useVault();
   const [hints, setHints] = useState(0);
   return (
-    <fieldset disabled={disabled}>
+    <fieldset className="exercise-card" disabled={disabled}>
       <legend>{legend}</legend>
       <p>{question.prompt}</p>
       {renderAnswer(question, record, (value) =>
@@ -382,8 +513,8 @@ function Conflicts() {
   const { session, snap } = useVault();
   if (snap.conflicts.length === 0) return null;
   return (
-    <section>
-      <h2>Conflit</h2>
+    <section id="conflit" className="conflict" tabIndex={-1} aria-labelledby="conflit-title">
+      <h2 id="conflit-title">Conflit</h2>
       {snap.conflicts.map((conflict) => (
         <div key={conflict.key}>
           <p>{conflict.label}</p>

@@ -1,14 +1,28 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import type { PhaseDocument, WeekDocument } from "../domain/curriculumDocument";
+import type { Journal } from "../domain/schemas";
+import { minutesForWeeks, phaseTimeCopy } from "./atelier";
+import { prefersReducedMotion } from "./anchor";
+import { TimeMeter } from "./Meter";
 import { useVault } from "./vault";
 
 export function ProgramPage() {
   const { session, snap } = useVault();
-  if (snap.phase !== "ready" || !snap.curriculum || !snap.manifest) {
+  useEffect(() => {
+    if (snap.phase !== "ready") return;
+    if (prefersReducedMotion()) return;
+    const node = document.getElementById("semaine-en-cours");
+    if (!node || typeof node.scrollIntoView !== "function") return;
+    node.scrollIntoView({ block: "nearest" });
+  }, [snap.phase]);
+
+  if (snap.phase !== "ready" || !snap.curriculum || !snap.manifest || !snap.journal) {
     return <p>{snap.phase === "error" ? snap.errorMessage : "Ouverture du coffre…"}</p>;
   }
   const curriculum = snap.curriculum;
   const activeId = snap.manifest.activeWeekId;
+  const journal = snap.journal;
   return (
     <article>
       <h1>Programme</h1>
@@ -34,17 +48,14 @@ export function ProgramPage() {
         </select>
       </details>
       {curriculum.phases.map((phase) => (
-        <section key={phase.id}>
-          <h2>
-            {phase.id} — {phase.nom}
-          </h2>
-          <p>
-            {phase.mois} · {phase.heures} h estimées.
-          </p>
-          <p>{phase.livrable}</p>
-          <p>Terminé quand : {phase.done}</p>
-          <PhaseWeeks phase={phase} weeks={curriculum.weeks.filter((week) => week.phase === phase.id)} activeId={activeId} />
-        </section>
+        <PhaseChapter
+          key={phase.id}
+          phase={phase}
+          weeks={curriculum.weeks.filter((week) => week.phase === phase.id)}
+          activeId={activeId}
+          journal={journal}
+          handedIn={(weekId) => snap.weeks[weekId]?.state === "handed_in"}
+        />
       ))}
     </article>
   );
@@ -63,15 +74,59 @@ function weekOptionLabel(week: WeekDocument): string {
   }
 }
 
-function PhaseWeeks({ phase, weeks, activeId }: { phase: PhaseDocument; weeks: WeekDocument[]; activeId: string }) {
+function PhaseChapter({
+  phase,
+  weeks,
+  activeId,
+  journal,
+  handedIn,
+}: {
+  phase: PhaseDocument;
+  weeks: WeekDocument[];
+  activeId: string;
+  journal: Journal;
+  handedIn: (weekId: string) => boolean;
+}) {
+  const minutes = minutesForWeeks(journal, new Set(weeks.map((week) => week.id)));
+  return (
+    <section className="chapter">
+      <header className="chapter-head">
+        <h2>
+          {phase.id} — {phase.nom}
+        </h2>
+        <p>
+          {phase.mois} · {phase.heures} h estimées.
+        </p>
+        <p className="progress-copy">{phaseTimeCopy(minutes, phase.heures)}</p>
+        <TimeMeter minutes={minutes} hours={phase.heures} label={`Temps saisi pour ${phase.id}`} />
+        <p>{phase.livrable}</p>
+        <p className="muted">Terminé quand : {phase.done}</p>
+      </header>
+      <PhaseWeeks phase={phase} weeks={weeks} activeId={activeId} handedIn={handedIn} />
+    </section>
+  );
+}
+
+function PhaseWeeks({
+  phase,
+  weeks,
+  activeId,
+  handedIn,
+}: {
+  phase: PhaseDocument;
+  weeks: WeekDocument[];
+  activeId: string;
+  handedIn: (weekId: string) => boolean;
+}) {
   if (phase.blocks.length === 0) {
     return (
-      <ul className="week-list">
+      <ul className="week-cards">
         {weeks.map((week) => (
-          <li key={week.id}>
+          <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
             <WeekLink week={week} />
             <DetailPill week={week} />
             {week.id === activeId ? <CurrentPill /> : null}
+            {handedIn(week.id) ? <HandedPill /> : null}
           </li>
         ))}
       </ul>
@@ -88,16 +143,17 @@ function PhaseWeeks({ phase, weeks, activeId }: { phase: PhaseDocument; weeks: W
     <>
       <ul className="block-list">
         {groups.map(({ block, members }) => (
-          <li key={block.sourceText}>
+          <li key={block.sourceText} className="block-card">
             <p className="block-title">
               {block.sourceText}
               <span className="pill">bloc indicatif</span>
             </p>
             <ul className="week-links">
               {members.map((week) => (
-                <li key={week.id}>
+                <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "is-current" : undefined}>
                   <Link to={`/semaine/${week.id}`}>S{week.weekNumber}</Link>
                   {week.id === activeId ? <CurrentPill /> : null}
+                  {handedIn(week.id) ? <HandedPill /> : null}
                 </li>
               ))}
             </ul>
@@ -105,12 +161,13 @@ function PhaseWeeks({ phase, weeks, activeId }: { phase: PhaseDocument; weeks: W
         ))}
       </ul>
       {rest.length > 0 ? (
-        <ul className="week-list">
+        <ul className="week-cards">
           {rest.map((week) => (
-            <li key={week.id}>
+            <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
               <WeekLink week={week} />
               <DetailPill week={week} />
               {week.id === activeId ? <CurrentPill /> : null}
+              {handedIn(week.id) ? <HandedPill /> : null}
             </li>
           ))}
         </ul>
@@ -146,4 +203,8 @@ function detailLabel(level: WeekDocument["detailLevel"]): string {
 
 function CurrentPill() {
   return <span className="pill pill-current">en cours</span>;
+}
+
+function HandedPill() {
+  return <span className="pill">write-up remis</span>;
 }

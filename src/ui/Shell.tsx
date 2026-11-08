@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
+import { SkipLink } from "./anchor";
 import { saveLabel } from "./status";
 import { useVault } from "./vault";
 
@@ -20,6 +21,7 @@ export function Shell() {
 
   return (
     <div className="app">
+      <SkipLink />
       <header className="top">
         <p className="brand">rover-notes</p>
         <nav aria-label="Navigation">
@@ -43,7 +45,7 @@ export function Shell() {
           {snap.saveDetail ? ` — ${snap.saveDetail}` : ""}
         </p>
       </header>
-      <main>
+      <main id="contenu" tabIndex={-1}>
         <Outlet />
       </main>
     </div>

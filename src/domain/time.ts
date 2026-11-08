@@ -25,6 +25,13 @@ export function parisToday(date: Date): string {
   }).format(date);
 }
 
+export function parisWeekday(date: Date): string {
+  return new Intl.DateTimeFormat("fr-FR", {
+    timeZone: "Europe/Paris",
+    weekday: "long",
+  }).format(date);
+}
+
 export function formatFrenchDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map((part) => Number(part));
   if (!year || !month || !day) return isoDate;

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { minutesEntered, type JournalEntry } from "../domain/schemas";
 import { formatFrenchDate, formatFrenchNumeric, parisTimestamp, parisToday, parseFrenchNumeric } from "../domain/time";
+import { activePhaseMinutes, entryKindLabel, journalTimeline, minutesOnDate, weekLabel } from "./atelier";
 import { useVault } from "./vault";
 
 export function JournalPage() {
@@ -8,22 +9,54 @@ export function JournalPage() {
   if (snap.phase !== "ready" || !snap.journal || !snap.curriculum || !snap.manifest) {
     return <p>{snap.phase === "error" ? snap.errorMessage : "Ouverture du coffre…"}</p>;
   }
-  const total = minutesEntered(snap.journal);
+  const journal = snap.journal;
+  const curriculum = snap.curriculum;
+  const activeId = snap.manifest.activeWeekId;
+  const today = parisToday(new Date());
+  const entries = journalTimeline(journal.entries);
   return (
     <article>
       <h1>Journal</h1>
-      <p>Temps saisi : {total} min. Une séance n’est enregistrée que lorsque vous l’ajoutez.</p>
-      {snap.journal.entries.length === 0 ? <p>Aucune entrée sauvegardée.</p> : null}
-      <ul>
-        {snap.journal.entries.map((entry) => (
-          <li key={entry.id}>
-            {formatFrenchDate(entry.localDate)} · {entry.weekId} · {entry.minutes} min · {entry.kind === "study_session" ? "séance" : "bilan"} — {entry.summary}
-          </li>
-        ))}
-      </ul>
+      <p>Une séance n’est enregistrée que lorsque vous l’ajoutez.</p>
+      <dl className="totals">
+        <div>
+          <dt>Aujourd’hui</dt>
+          <dd>{minutesOnDate(journal, today)} min</dd>
+        </div>
+        <div>
+          <dt>Cette semaine</dt>
+          <dd>{minutesEntered(journal, activeId)} min</dd>
+        </div>
+        <div>
+          <dt>Cette phase</dt>
+          <dd>{activePhaseMinutes(journal, curriculum, activeId)} min</dd>
+        </div>
+        <div>
+          <dt>Total</dt>
+          <dd>{minutesEntered(journal)} min</dd>
+        </div>
+      </dl>
+      {entries.length === 0 ? (
+        <p className="empty-journal">Rien n’est encore noté. La première séance, même courte, a sa place ici.</p>
+      ) : (
+        <ol className="timeline">
+          {entries.map((entry) => (
+            <li key={entry.id}>
+              <p className="timeline-date">
+                <time dateTime={entry.localDate}>{formatFrenchDate(entry.localDate)}</time>
+                <span className="muted"> · {formatFrenchNumeric(entry.localDate)}</span>
+              </p>
+              <p className="timeline-meta">
+                {weekLabel(curriculum, entry.weekId)} · {entry.minutes} min · {entryKindLabel(entry.kind)}
+              </p>
+              <p>{entry.summary}</p>
+            </li>
+          ))}
+        </ol>
+      )}
       <SessionForm
-        weekId={snap.manifest.activeWeekId}
-        weeks={snap.curriculum.weeks.map((week) => week.id)}
+        weekId={activeId}
+        weeks={curriculum.weeks.map((week) => week.id)}
         onAdd={(entry) => void session.addJournalEntry(entry)}
       />
     </article>
@@ -44,21 +77,28 @@ export function SessionForm({
   const [minutes, setMinutes] = useState("");
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [errorField, setErrorField] = useState<"date" | "minutes" | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const localDate = parseFrenchNumeric(dateText);
 
   function onSubmit(event?: FormEvent) {
     event?.preventDefault();
     const parsedDate = parseFrenchNumeric(dateText);
     if (!parsedDate) {
+      setNotice(null);
+      setErrorField("date");
       setError("Indiquez la date au format JJ/MM/AAAA.");
       return;
     }
     const value = Number(minutes);
     if (!Number.isInteger(value) || value < 0 || value > 1440) {
+      setNotice(null);
+      setErrorField("minutes");
       setError("Indiquez un nombre entier de minutes entre 0 et 1440.");
       return;
     }
     setError(null);
+    setErrorField(null);
     onAdd({
       id: crypto.randomUUID(),
       weekId: currentWeek,
@@ -72,7 +112,11 @@ export function SessionForm({
     });
     setMinutes("");
     setSummary("");
+    setNotice("Séance notée.");
   }
+
+  const dateDescribedBy = errorField === "date" ? "journal-date-readout journal-date-error" : "journal-date-readout";
+  const minutesDescribedBy = errorField === "minutes" ? "journal-minutes-unit journal-minutes-error" : "journal-minutes-unit";
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -94,7 +138,8 @@ export function SessionForm({
         spellCheck={false}
         placeholder="JJ/MM/AAAA"
         value={dateText}
-        aria-describedby="journal-date-readout"
+        aria-invalid={errorField === "date" || undefined}
+        aria-describedby={dateDescribedBy}
         onChange={(event) => setDateText(event.target.value)}
         required
       />
@@ -105,7 +150,8 @@ export function SessionForm({
           id="journal-minutes"
           inputMode="numeric"
           placeholder="90"
-          aria-describedby="journal-minutes-unit"
+          aria-invalid={errorField === "minutes" || undefined}
+          aria-describedby={minutesDescribedBy}
           value={minutes}
           onChange={(event) => setMinutes(event.target.value)}
           required
@@ -114,7 +160,12 @@ export function SessionForm({
       </div>
       <label htmlFor="journal-summary">Résumé</label>
       <textarea id="journal-summary" value={summary} onChange={(event) => setSummary(event.target.value)} />
-      {error ? <p role="alert">{error}</p> : null}
+      {notice ? <p role="status">{notice}</p> : null}
+      {error ? (
+        <p id={errorField === "date" ? "journal-date-error" : "journal-minutes-error"} role="alert">
+          {error}
+        </p>
+      ) : null}
       <button type="submit">Ajouter la séance</button>
     </form>
   );
