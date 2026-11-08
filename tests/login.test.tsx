@@ -96,7 +96,16 @@ describe("login", () => {
     expect(await screen.findByRole("heading", { name: "Maintenant : S1" })).toBeInTheDocument();
     expect(screen.getByText(/0 h au/)).toBeInTheDocument();
     expect(screen.getByText(/Robot non acheté/)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "18 mois et S94" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Calendrier" })).toBeInTheDocument();
+    expect(screen.getByText(/environ 22 mois, pas 18/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "18 mois et S94" })).toBeNull();
+    expect(screen.queryByText(/ne décrivent pas le même calendrier/)).toBeNull();
+    expect(screen.queryByText(/sans arbitrage/)).toBeNull();
+    await user.click(screen.getByRole("link", { name: "Programme" }));
+    expect(await screen.findByRole("heading", { name: "Programme" })).toBeInTheDocument();
+    expect(screen.getByText(/S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs/)).toBeInTheDocument();
+    expect(screen.queryByText(/planning de 18 mois daté/)).toBeNull();
+    await user.click(screen.getByRole("link", { name: "Accueil" }));
     expect(window.localStorage.length).toBe(0);
     expect(window.sessionStorage.length).toBe(0);
     await user.click(screen.getByRole("button", { name: "Verrouiller" }));

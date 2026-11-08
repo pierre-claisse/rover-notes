@@ -12,7 +12,9 @@ export function ProgramPage() {
     <article>
       <h1>Programme</h1>
       <p className="callout">{snap.curriculum.inconsistency.summary}</p>
-      <p>S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs, pas un planning de 18 mois daté.</p>
+      <p>
+        S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs. 94 semaines × 9 h, environ 22 mois (846 h) : on ne compacte pas le syllabus pour coller à 18 mois. Aucune date n’est inventée pour S10–S94.
+      </p>
       {curriculum.phases.map((phase) => (
         <section key={phase.id}>
           <h2>

@@ -33,7 +33,11 @@ describe("formulaire S1", () => {
     await screen.findByText(/30 min/);
     await user.click(screen.getByRole("button", { name: "Enregistrer" }));
     await waitFor(() => expect(current.getSnapshot().saveStatus).toBe("saved"));
-    expect(screen.getByText(/origin: authored/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Questions" })).toBeInTheDocument();
+    expect(screen.getAllByText("Exercice de vérification").length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Question ajoutée/)).toBeNull();
+    expect(screen.queryByText(/Ce n’est pas le Canvas/)).toBeNull();
+    expect(screen.queryByText(/origin: authored/)).toBeNull();
     expect(screen.queryByText(/Indice 1/)).toBeNull();
     await user.click(screen.getAllByRole("button", { name: "Afficher l’indice 1" })[0]!);
     expect(screen.getByText(/Indice 1/)).toBeInTheDocument();

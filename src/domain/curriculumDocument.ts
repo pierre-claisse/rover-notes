@@ -1,4 +1,9 @@
+import { sha256Hex, utf8 } from "../crypto/bytes";
+import { canonicalJson } from "./json";
 import { CURRICULUM_VERSION } from "./limits";
+
+/** Versions encore lisibles dans un coffre déjà ouvert. CURRICULUM_VERSION reste la version écrite. */
+export const READABLE_CURRICULUM_VERSIONS: readonly string[] = [CURRICULUM_VERSION];
 
 export type DetailLevel = "source-detailed" | "indicative-block-only";
 
@@ -56,6 +61,7 @@ export type WeekDocument = {
 export type CurriculumDocument = {
   schemaVersion: 1;
   curriculumVersion: typeof CURRICULUM_VERSION;
+  programRevision: number;
   language: "fr";
   provenance: { overview: string; program: string; extraction: string };
   gaps: string[];
@@ -77,14 +83,13 @@ export type CurriculumDocument = {
   inconsistency: { origin: "authored"; summary: string };
 };
 
-const INCONSISTENCY =
-  "Le plan annoncé couvre 18 mois, mais les blocs du programme vont jusqu’à S94. Ces deux chiffres ne décrivent pas le même calendrier. Aucune date n’a été inventée pour S10–S94.";
-
 export function buildCurriculumDocument(source: unknown, authored: unknown): CurriculumDocument {
   const root = record(source, "curriculum");
   if (root.schemaVersion !== 1 || root.language !== "fr") throw new Error("Curriculum source refusé");
   const provenance = record(root.provenance, "provenance");
+  const inconsistency = record(root.inconsistency, "inconsistency");
   const context = record(root.context, "context");
+  const programRevision = integer(root.programRevision, "programRevision", 1, 1_000_000);
   if (context.timezone !== "Europe/Paris") throw new Error("Fuseau du curriculum refusé");
   const weeks = array(root.weeks, "weeks").map((item) => buildWeek(item));
   const phases = array(root.phases, "phases").map((item) => buildPhase(item));
@@ -93,6 +98,7 @@ export function buildCurriculumDocument(source: unknown, authored: unknown): Cur
   return {
     schemaVersion: 1,
     curriculumVersion: CURRICULUM_VERSION,
+    programRevision,
     language: "fr",
     provenance: {
       overview: text(provenance.overview, "provenance.overview"),
@@ -124,20 +130,60 @@ export function buildCurriculumDocument(source: unknown, authored: unknown): Cur
     ),
     sourceQuestions,
     authoredComplement,
-    inconsistency: { origin: "authored", summary: INCONSISTENCY },
+    inconsistency: { origin: "authored", summary: text(inconsistency.summary, "inconsistency.summary") },
   };
 }
 
 export function parseCurriculumDocument(value: unknown): CurriculumDocument {
+  if (!isCurrentCurriculum(value)) throw new Error("Programme chiffré refusé");
   const built = value as CurriculumDocument;
-  if (!built || built.schemaVersion !== 1 || built.language !== "fr" || built.curriculumVersion !== CURRICULUM_VERSION) {
-    throw new Error("Programme chiffré refusé");
-  }
-  if (!Array.isArray(built.weeks) || built.weeks.length < 90) throw new Error("Programme chiffré refusé");
-  if (built.authoredComplement?.origin !== "authored" || built.inconsistency?.origin !== "authored") {
-    throw new Error("Programme chiffré refusé");
-  }
-  return built;
+  const programRevision = revisionOrZero(built.programRevision);
+  if (programRevision === null) throw new Error("Programme chiffré refusé");
+  if (built.programRevision === programRevision) return built;
+  return { ...built, programRevision };
+}
+
+/** Révision d’un programme de coffre. 0 si le champ n’existe pas encore. null si l’objet est illisible. */
+export function readProgramRevision(value: unknown): number | null {
+  if (!isReadableCurriculum(value)) return null;
+  return revisionOrZero((value as { programRevision?: unknown }).programRevision);
+}
+
+/** Le seed empaqueté remplace le programme du coffre quand sa révision est plus haute, ou quand le contenu diffère à révision égale. */
+export async function packagedCurriculumWins(stored: unknown, packaged: CurriculumDocument): Promise<boolean> {
+  const storedRevision = readProgramRevision(stored);
+  if (storedRevision === null) return false;
+  if (packaged.programRevision > storedRevision) return true;
+  if (packaged.programRevision < storedRevision) return false;
+  const storedHash = await sha256Hex(utf8(canonicalJson(stored)));
+  const packagedHash = await sha256Hex(utf8(canonicalJson(packaged)));
+  return storedHash !== packagedHash;
+}
+
+function isCurrentCurriculum(value: unknown): boolean {
+  return isReadableCurriculum(value) && (value as CurriculumDocument).curriculumVersion === CURRICULUM_VERSION;
+}
+
+function isReadableCurriculum(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (value.schemaVersion !== 1 || value.language !== "fr") return false;
+  if (typeof value.curriculumVersion !== "string" || !READABLE_CURRICULUM_VERSIONS.includes(value.curriculumVersion)) return false;
+  if (!Array.isArray(value.weeks) || value.weeks.length < 90) return false;
+  const authored = value.authoredComplement;
+  const inconsistency = value.inconsistency;
+  if (!isRecord(authored) || authored.origin !== "authored") return false;
+  if (!isRecord(inconsistency) || inconsistency.origin !== "authored") return false;
+  return true;
+}
+
+function revisionOrZero(value: unknown): number | null {
+  if (value == null) return 0;
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 1_000_000) return null;
+  return value;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function buildWeek(value: unknown): WeekDocument {
@@ -302,6 +348,12 @@ function strings(value: unknown, label: string): string[] {
 function number(value: unknown, label: string): number {
   if (typeof value !== "number" || !Number.isFinite(value)) throw new Error(label);
   return value;
+}
+
+function integer(value: unknown, label: string, min: number, max: number): number {
+  const parsed = number(value, label);
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) throw new Error(label);
+  return parsed;
 }
 
 function bool(value: unknown, label: string): boolean {

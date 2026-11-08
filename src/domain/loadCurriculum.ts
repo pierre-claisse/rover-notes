@@ -5,6 +5,6 @@ import { buildCurriculumDocument, type CurriculumDocument } from "./curriculumDo
 export function loadCurriculumDocument(): CurriculumDocument {
   const root = join(process.cwd(), "curriculum");
   const source = JSON.parse(readFileSync(join(root, "curriculum.json"), "utf8")) as unknown;
-  const authored = JSON.parse(readFileSync(join(root, "authored-s1.json"), "utf8")) as unknown;
+  const authored = JSON.parse(readFileSync(join(root, "authored-p0.json"), "utf8")) as unknown;
   return buildCurriculumDocument(source, authored);
 }
