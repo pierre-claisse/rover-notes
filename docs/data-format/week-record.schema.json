@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pierre-claisse.github.io/rover-notes/schemas/week-record.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "weekId", "curriculumVersion", "revision", "state", "objectives", "answers", "notes", "writeUp", "evidence", "updatedAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "weekId": { "type": "string", "pattern": "^P\\d+-S\\d+$" },
+    "curriculumVersion": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "state": { "enum": ["not_started", "in_progress", "handed_in"] },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "selfAssessment", "explanation"],
+        "properties": {
+          "id": { "type": "string" },
+          "selfAssessment": { "enum": ["not_yet", "declared"] },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "answers": { "type": "array" },
+    "notes": { "type": "string" },
+    "writeUp": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learned", "difficulties", "nextSteps"],
+      "properties": {
+        "learned": { "type": "string" },
+        "difficulties": { "type": "string" },
+        "nextSteps": { "type": "string" }
+      }
+    },
+    "evidence": { "type": "array" },
+    "updatedAt": { "type": "string" }
+  }
+}

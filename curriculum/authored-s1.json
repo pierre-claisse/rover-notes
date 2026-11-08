@@ -1,0 +1,90 @@
+{
+  "origin": "authored",
+  "note": "Questions et indices ajoutés pour faire travailler S1. Ils ne figurent pas dans le Canvas : les listes detailedQuestions et hints d’origine sont vides.",
+  "questions": [
+    {
+      "id": "P0-S1-q-bases",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o1", "P0-S1-o2"],
+      "prompt": "Images des vecteurs de base. Calculez le produit de la matrice [[0,-1],[1,0]] par (1,0), puis par (0,1). Décrivez dans quel quadrant et dans quel sens chaque image se place.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "La première colonne d’une matrice est l’image du premier vecteur de base (1,0).",
+        "(1,0) part sur (0,1) ; (0,1) part sur (−1,0).",
+        "C’est un quart de tour dans le sens antihoraire : l’axe x vient sur l’axe y."
+      ]
+    },
+    {
+      "id": "P0-S1-q-rotation-robot",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o2"],
+      "prompt": "Pourquoi un robot qui tourne a besoin de cette matrice ? Après un quart de tour à gauche, où se trouve, dans l’ancien repère, un point qui était 1 m devant lui ?",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Si x pointe vers l’avant, « devant » est le vecteur (1,0).",
+        "Appliquez la même matrice à ce vecteur.",
+        "Le point qui était devant se retrouve à gauche de l’ancien repère, à 1 m."
+      ]
+    },
+    {
+      "id": "P0-S1-q-stack-heap",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o3", "P0-S1-o4"],
+      "prompt": "Pile, tas, pointeur, adresses. Collez deux adresses réelles de votre programme C : une variable locale et un bloc malloc. Indiquez laquelle est la plus haute, ce qui vit sur la pile, ce qui vit sur le tas, et ce que le pointeur contient.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Affichez les adresses avec printf(\"%p\", (void*)&locale) et printf(\"%p\", bloc).",
+        "Comparez vos deux nombres. Ne récitez pas « la pile est en haut » si vos adresses disent autre chose.",
+        "Le pointeur est une variable qui contient l’adresse du bloc. L’adresse de cette variable, elle, est sur la pile."
+      ]
+    },
+    {
+      "id": "P0-S1-q-linux",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o5"],
+      "prompt": "SSH, systemd, dialout. Décrivez comment vous ouvrez une session SSH, comment vous lisez l’état d’un service systemd, et pourquoi ouvrir /dev/ttyUSB0 exige le groupe dialout.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "systemctl status et journalctl -u montrent l’état d’un service et ses journaux.",
+        "ls -l /dev/ttyUSB0 affiche le propriétaire, le groupe et le mode. Le groupe attendu est souvent dialout.",
+        "L’utilisateur doit appartenir à ce groupe. Les règles udev reposent ces droits : un chmod manuel ne survit pas au rebranchement."
+      ]
+    },
+    {
+      "id": "P0-S1-q-parser",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o6"],
+      "prompt": "Contrat du parseur, sans IA pour cette première version. Pour la trame {\"T\":1,\"L\":0.5,\"R\":0.5} : champs obligatoires, types, trames refusées (au moins une accolade manquante et un nombre mal formé), et trois tests avec l’entrée exacte et le résultat attendu.",
+      "answerKind": "text",
+      "multiline": true,
+      "hints": [
+        "Écrivez le contrat que votre fonction garantit : T entier, L et R nombres, et ce qui est rejeté.",
+        "Une trame invalide doit échouer proprement, pas renvoyer des champs à moitié lus.",
+        "Trois lignes suffisent : nominale acceptée ; accolade manquante refusée ; nombre mal formé refusé. Écrivez l’oracle avant de lancer le test."
+      ]
+    },
+    {
+      "id": "P0-S1-q-parser-checks",
+      "weekId": "P0-S1",
+      "linkedObjectiveIds": ["P0-S1-o6"],
+      "prompt": "Cochez uniquement ce que vous avez déjà exécuté vous-même.",
+      "answerKind": "checkboxes",
+      "multiline": false,
+      "options": [
+        { "id": "valid-nominal", "label": "Trame nominale {\"T\":1,\"L\":0.5,\"R\":0.5} acceptée" },
+        { "id": "invalid-brace", "label": "Accolade manquante refusée" },
+        { "id": "invalid-number", "label": "Nombre mal formé refusé" },
+        { "id": "three-tests", "label": "Au moins trois tests lancés sans IA" }
+      ],
+      "hints": [
+        "Ne cochez pas un cas que vous n’avez pas exécuté.",
+        "Le troisième test doit être lancé par votre binaire ou votre make.",
+        "Si un test est rouge, laissez la case vide et notez-le dans les blocages."
+      ]
+    }
+  ]
+}
