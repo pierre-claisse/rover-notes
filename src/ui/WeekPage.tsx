@@ -12,7 +12,6 @@ import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
 import { TimeMeter } from "./Meter";
 import { labelForHref } from "./present";
-import { saveLabel } from "./status";
 import { SlotList } from "./slots";
 import { useVault } from "./vault";
 
@@ -35,6 +34,7 @@ export function WeekPage() {
   const [visibility, setVisibility] = useState<"private" | "public">("private");
   const [consented, setConsented] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [noted, setNoted] = useState(false);
   const scrolledTo = useRef<string | null>(null);
   const scrollTo = readScrollTarget(location.state);
 
@@ -68,6 +68,7 @@ export function WeekPage() {
   const sunday = sameDayName(weekday, "dimanche");
   const slots = plan.detailLevel === "source-detailed" && "slots" in plan.scheduleNotes ? plan.scheduleNotes.slots : null;
   const todaySlot = slots?.some((slot) => sameDayName(slot.c, weekday)) ?? false;
+  const currentWeek = snap.manifest?.activeWeekId === weekId;
   const declared = record.objectives.filter((item) => item.selfAssessment === "declared").length;
   const entries = snap.journal.entries.filter((entry) => entry.weekId === weekId);
 
@@ -99,8 +100,7 @@ export function WeekPage() {
             <option value="not_started">Pas commencée</option>
             <option value="in_progress">En cours</option>
             <option value="handed_in">Write-up remis</option>
-          </select>
-          <span className="pill">{saveLabel(snap.saveStatus)}</span>
+            </select>
         </div>
         <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
         <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
@@ -116,11 +116,11 @@ export function WeekPage() {
       </nav>
       <section id="plan" tabIndex={-1}>
         <h2>Plan</h2>
-        {sunday ? (
+        {sunday && currentWeek ? (
           <p className="today-note">
             Aujourd’hui, le bilan du write-up.{" "}
             <a href="#bilan" onClick={(event) => followAnchor(event, "bilan")}>
-              Aller au bilan
+              Ouvrir le bilan
             </a>
           </p>
         ) : null}
@@ -171,19 +171,23 @@ export function WeekPage() {
                           />
                           {text}
                         </label>
-                        <label htmlFor={`${objective.id}-note`}>Précision facultative</label>
-                        <textarea
-                          id={`${objective.id}-note`}
-                          value={objective.explanation}
-                          onChange={(event) =>
-                            session.updateWeek(weekId, (week) => ({
-                              ...week,
-                              objectives: week.objectives.map((item) =>
-                                item.id === objective.id ? { ...item, explanation: event.target.value } : item,
-                              ),
-                            }))
-                          }
-                        />
+                        {objective.selfAssessment === "declared" || objective.explanation.trim().length > 0 ? (
+                          <>
+                            <label htmlFor={`${objective.id}-note`}>Précision facultative</label>
+                            <textarea
+                              id={`${objective.id}-note`}
+                              value={objective.explanation}
+                              onChange={(event) =>
+                                session.updateWeek(weekId, (week) => ({
+                                  ...week,
+                                  objectives: week.objectives.map((item) =>
+                                    item.id === objective.id ? { ...item, explanation: event.target.value } : item,
+                                  ),
+                                }))
+                              }
+                            />
+                          </>
+                        ) : null}
                       </li>
                     );
                   })}
@@ -379,6 +383,11 @@ export function WeekPage() {
       </section>
       <section id="seance" className="ritual" tabIndex={-1}>
         <p>La séance se note ici, à la fin, pendant que c’est encore frais.</p>
+        {noted ? (
+          <p className="session-note" role="status">
+            Séance notée.
+          </p>
+        ) : null}
         {entries.length === 0 ? (
           <p>Rien n’est encore noté pour cette semaine.</p>
         ) : (
@@ -403,6 +412,7 @@ export function WeekPage() {
           onAdd={(entry) => {
             void session.addJournalEntry(entry);
           }}
+          onNoted={() => setNoted(true)}
         />
       </section>
     </article>

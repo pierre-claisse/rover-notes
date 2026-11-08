@@ -44,6 +44,14 @@ export function HomePage() {
           </Link>
         </p>
       ) : null}
+      <p className="actions">
+        <Link className="button" to={`/semaine/${week.id}`}>
+          Ouvrir l’atelier de la semaine
+        </Link>
+        <Link className="button button-quiet" to={`/semaine/${week.id}`} state={{ scrollTo: "seance" }}>
+          Noter une séance
+        </Link>
+      </p>
       <section>
         <h2>À lire, à faire</h2>
         {slots ? (
@@ -57,14 +65,6 @@ export function HomePage() {
           <p>Bloc indicatif, à détailler. Pas de créneaux inventés pour cette semaine.</p>
         )}
       </section>
-      <p className="actions">
-        <Link className="button" to={`/semaine/${week.id}`}>
-          Ouvrir l’atelier de la semaine
-        </Link>
-        <Link className="button button-quiet" to={`/semaine/${week.id}`} state={{ scrollTo: "seance" }}>
-          Noter une séance
-        </Link>
-      </p>
       <details className="tracking">
         <summary>Détails du suivi</summary>
         <p>
