@@ -30,7 +30,8 @@ describe("formulaire S1", () => {
     await user.type(screen.getByLabelText("Minutes"), "30");
     await user.type(screen.getByLabelText("Résumé"), "épisodes 1 à 3");
     await user.click(screen.getByRole("button", { name: "Ajouter la séance" }));
-    await screen.findByText(/30 min/);
+    await screen.findByText("Séance notée.");
+    expect(screen.getAllByText(/30 min/).length).toBeGreaterThan(0);
     await user.click(screen.getByRole("button", { name: "Enregistrer" }));
     await waitFor(() => expect(current.getSnapshot().saveStatus).toBe("saved"));
     expect(screen.getByRole("heading", { name: "Questions" })).toBeInTheDocument();
@@ -49,7 +50,7 @@ describe("formulaire S1", () => {
     expect(await screen.findByRole("checkbox", { name: /matrice 2×2/ })).toBeChecked();
     expect(screen.getByRole("textbox", { name: /Images des vecteurs de base/ })).toHaveValue("(1,0) vers (0,1)");
     expect(screen.getByLabelText("Appris")).toHaveValue("rotation");
-    expect(screen.getByText(/30 min/)).toBeInTheDocument();
+    expect(screen.getAllByText(/30 min/).length).toBeGreaterThan(0);
     expect(reloaded.getSnapshot().journal?.entries).toHaveLength(1);
   });
 });

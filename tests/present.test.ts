@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
-import { formatFrenchDate, formatFrenchNumeric, parseFrenchNumeric } from "../src/domain/time";
+import { formatFrenchDate, formatFrenchNumeric, parisWeekday, parseFrenchNumeric } from "../src/domain/time";
 import { labelForHref, resourceParts, richPieces, slotTasks } from "../src/ui/present";
 import { saveLabel } from "../src/ui/status";
 
@@ -64,6 +64,8 @@ describe("libellés et dates", () => {
     expect(parseFrenchNumeric("11/08/2026")).toBe("2026-08-11");
     expect(parseFrenchNumeric("31/02/2026")).toBeNull();
     expect(parseFrenchNumeric("2026-11-08")).toBeNull();
+    expect(parisWeekday(new Date("2026-11-08T18:00:00Z"))).toBe("dimanche");
+    expect(parisWeekday(new Date("2026-11-09T12:00:00Z"))).toBe("lundi");
   });
 
   it("présente l’enregistrement comme un état", () => {

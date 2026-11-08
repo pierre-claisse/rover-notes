@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { SkipLink } from "../ui/anchor";
 import { useAuth } from "./AuthProvider";
 
 const MISSING =
@@ -13,12 +14,15 @@ export function LoginScreen() {
 
   if (auth.configIssue) {
     return (
-      <main className="gate">
+      <>
+        <SkipLink />
+        <main id="contenu" className="gate" tabIndex={-1}>
         <section className="gate-card">
           <h1>{auth.configIssue === "missing" ? "Configuration manquante" : "Configuration refusée"}</h1>
           <p>{auth.configIssue === "missing" ? MISSING : INVALID}</p>
         </section>
-      </main>
+        </main>
+      </>
     );
   }
 
@@ -31,7 +35,9 @@ export function LoginScreen() {
 
   const busy = auth.status === "unlocking";
   return (
-    <main className="gate">
+    <>
+      <SkipLink />
+      <main id="contenu" className="gate" tabIndex={-1}>
       <form className="gate-card" onSubmit={onSubmit}>
         <h1>rover-notes</h1>
         <p>Identifiez-vous pour ouvrir le coffre.</p>
@@ -47,7 +53,7 @@ export function LoginScreen() {
           disabled={busy}
         />
         <label htmlFor="password">Mot de passe</label>
-        <div className="field-row">
+        <div className="password-field">
           <input
             id="password"
             name="password"
@@ -76,6 +82,7 @@ export function LoginScreen() {
           {busy ? "Déverrouillage…" : "Déverrouiller"}
         </button>
       </form>
-    </main>
+      </main>
+    </>
   );
 }
