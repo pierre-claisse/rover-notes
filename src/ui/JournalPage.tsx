@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { minutesEntered, type JournalEntry } from "../domain/schemas";
-import { parisTimestamp, parisToday } from "../domain/time";
+import { formatFrenchDate, formatFrenchNumeric, parisTimestamp, parisToday, parseFrenchNumeric } from "../domain/time";
 import { useVault } from "./vault";
 
 export function JournalPage() {
@@ -17,7 +17,7 @@ export function JournalPage() {
       <ul>
         {snap.journal.entries.map((entry) => (
           <li key={entry.id}>
-            {entry.localDate} · {entry.weekId} · {entry.minutes} min · {entry.kind === "study_session" ? "séance" : "bilan"} — {entry.summary}
+            {formatFrenchDate(entry.localDate)} · {entry.weekId} · {entry.minutes} min · {entry.kind === "study_session" ? "séance" : "bilan"} — {entry.summary}
           </li>
         ))}
       </ul>
@@ -40,13 +40,19 @@ export function SessionForm({
   onAdd: (entry: JournalEntry) => void;
 }) {
   const [currentWeek, setCurrentWeek] = useState(weekId);
-  const [localDate, setLocalDate] = useState(() => parisToday(new Date()));
+  const [dateText, setDateText] = useState(() => formatFrenchNumeric(parisToday(new Date())));
   const [minutes, setMinutes] = useState("");
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const localDate = parseFrenchNumeric(dateText);
 
   function onSubmit(event?: FormEvent) {
     event?.preventDefault();
+    const parsedDate = parseFrenchNumeric(dateText);
+    if (!parsedDate) {
+      setError("Indiquez la date au format JJ/MM/AAAA.");
+      return;
+    }
     const value = Number(minutes);
     if (!Number.isInteger(value) || value < 0 || value > 1440) {
       setError("Indiquez un nombre entier de minutes entre 0 et 1440.");
@@ -57,7 +63,7 @@ export function SessionForm({
       id: crypto.randomUUID(),
       weekId: currentWeek,
       kind: "study_session",
-      localDate,
+      localDate: parsedDate,
       timezone: "Europe/Paris",
       minutes: value,
       summary,
@@ -69,8 +75,8 @@ export function SessionForm({
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <h2>Ajouter des minutes</h2>
+    <form noValidate onSubmit={onSubmit}>
+      <h2>Ajouter une séance</h2>
       <label htmlFor="journal-week">Semaine</label>
       <select id="journal-week" value={currentWeek} onChange={(event) => setCurrentWeek(event.target.value)}>
         {weeks.map((id) => (
@@ -80,15 +86,36 @@ export function SessionForm({
         ))}
       </select>
       <label htmlFor="journal-date">Date</label>
-      <input id="journal-date" type="date" value={localDate} onChange={(event) => setLocalDate(event.target.value)} required />
+      <input
+        id="journal-date"
+        type="text"
+        inputMode="numeric"
+        autoComplete="off"
+        spellCheck={false}
+        placeholder="JJ/MM/AAAA"
+        value={dateText}
+        aria-describedby="journal-date-readout"
+        onChange={(event) => setDateText(event.target.value)}
+        required
+      />
+      <p id="journal-date-readout">{localDate ? formatFrenchDate(localDate) : "Format JJ/MM/AAAA."}</p>
       <label htmlFor="journal-minutes">Minutes</label>
-      <input id="journal-minutes" inputMode="numeric" value={minutes} onChange={(event) => setMinutes(event.target.value)} required />
+      <div className="suffix-field">
+        <input
+          id="journal-minutes"
+          inputMode="numeric"
+          placeholder="90"
+          aria-describedby="journal-minutes-unit"
+          value={minutes}
+          onChange={(event) => setMinutes(event.target.value)}
+          required
+        />
+        <span id="journal-minutes-unit">min</span>
+      </div>
       <label htmlFor="journal-summary">Résumé</label>
       <textarea id="journal-summary" value={summary} onChange={(event) => setSummary(event.target.value)} />
       {error ? <p role="alert">{error}</p> : null}
-      <button type="button" onClick={() => onSubmit()}>
-        Ajouter la séance
-      </button>
+      <button type="submit">Ajouter la séance</button>
     </form>
   );
 }

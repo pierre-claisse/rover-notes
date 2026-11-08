@@ -9,6 +9,7 @@ export function LoginScreen() {
   const auth = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   if (auth.configIssue) {
     return (
@@ -46,20 +47,32 @@ export function LoginScreen() {
           disabled={busy}
         />
         <label htmlFor="password">Mot de passe</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          disabled={busy}
-        />
+        <div className="field-row">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            disabled={busy}
+          />
+          <button
+            type="button"
+            className="text-button"
+            aria-controls="password"
+            aria-pressed={showPassword}
+            onClick={() => setShowPassword((value) => !value)}
+            disabled={busy}
+          >
+            {showPassword ? "Masquer" : "Afficher"}
+          </button>
+        </div>
         {auth.loginError ? (
           <p role="alert">{auth.loginError}</p>
         ) : null}
-        <button type="submit" disabled={busy}>
+        <button className="wide" type="submit" disabled={busy}>
           {busy ? "Déverrouillage…" : "Déverrouiller"}
         </button>
       </form>
