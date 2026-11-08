@@ -6,6 +6,7 @@ import { useVault } from "./vault";
 
 export function JournalPage() {
   const { session, snap } = useVault();
+  const [noted, setNoted] = useState(false);
   if (snap.phase !== "ready" || !snap.journal || !snap.curriculum || !snap.manifest) {
     return <p>{snap.phase === "error" ? snap.errorMessage : "Ouverture du coffre…"}</p>;
   }
@@ -36,6 +37,11 @@ export function JournalPage() {
           <dd>{minutesEntered(journal)} min</dd>
         </div>
       </dl>
+      {noted ? (
+        <p className="session-note" role="status">
+          Séance notée.
+        </p>
+      ) : null}
       {entries.length === 0 ? (
         <p className="empty-journal">Rien n’est encore noté. La première séance, même courte, a sa place ici.</p>
       ) : (
@@ -58,6 +64,7 @@ export function JournalPage() {
         weekId={activeId}
         weeks={curriculum.weeks.map((week) => week.id)}
         onAdd={(entry) => void session.addJournalEntry(entry)}
+        onNoted={() => setNoted(true)}
       />
     </article>
   );
@@ -67,10 +74,12 @@ export function SessionForm({
   weekId,
   weeks,
   onAdd,
+  onNoted,
 }: {
   weekId: string;
   weeks: string[];
   onAdd: (entry: JournalEntry) => void;
+  onNoted?: () => void;
 }) {
   const [currentWeek, setCurrentWeek] = useState(weekId);
   const [dateText, setDateText] = useState(() => formatFrenchNumeric(parisToday(new Date())));
@@ -78,21 +87,18 @@ export function SessionForm({
   const [summary, setSummary] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [errorField, setErrorField] = useState<"date" | "minutes" | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
   const localDate = parseFrenchNumeric(dateText);
 
   function onSubmit(event?: FormEvent) {
     event?.preventDefault();
     const parsedDate = parseFrenchNumeric(dateText);
     if (!parsedDate) {
-      setNotice(null);
       setErrorField("date");
       setError("Indiquez la date au format JJ/MM/AAAA.");
       return;
     }
     const value = Number(minutes);
     if (!Number.isInteger(value) || value < 0 || value > 1440) {
-      setNotice(null);
       setErrorField("minutes");
       setError("Indiquez un nombre entier de minutes entre 0 et 1440.");
       return;
@@ -112,11 +118,14 @@ export function SessionForm({
     });
     setMinutes("");
     setSummary("");
-    setNotice("Séance notée.");
+    onNoted?.();
   }
 
   const dateDescribedBy = errorField === "date" ? "journal-date-readout journal-date-error" : "journal-date-readout";
-  const minutesDescribedBy = errorField === "minutes" ? "journal-minutes-unit journal-minutes-error" : "journal-minutes-unit";
+  const minutesDescribedBy =
+    errorField === "minutes"
+      ? "journal-minutes-example journal-minutes-unit journal-minutes-error"
+      : "journal-minutes-example journal-minutes-unit";
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -149,18 +158,19 @@ export function SessionForm({
         <input
           id="journal-minutes"
           inputMode="numeric"
-          placeholder="90"
           aria-invalid={errorField === "minutes" || undefined}
           aria-describedby={minutesDescribedBy}
           value={minutes}
           onChange={(event) => setMinutes(event.target.value)}
           required
         />
+        <span id="journal-minutes-example" className="hint">
+          ex. 90
+        </span>
         <span id="journal-minutes-unit">min</span>
       </div>
       <label htmlFor="journal-summary">Résumé</label>
       <textarea id="journal-summary" value={summary} onChange={(event) => setSummary(event.target.value)} />
-      {notice ? <p role="status">{notice}</p> : null}
       {error ? (
         <p id={errorField === "date" ? "journal-date-error" : "journal-minutes-error"} role="alert">
           {error}

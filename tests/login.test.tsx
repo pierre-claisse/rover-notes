@@ -185,7 +185,8 @@ describe("login", () => {
     expect(screen.getByText("8 novembre 2026")).toBeInTheDocument();
     expect(screen.queryByDisplayValue("11/08/2026")).not.toBeInTheDocument();
     expect(screen.queryByText("11/08/2026")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Minutes")).toHaveAttribute("placeholder", "90");
+    expect(screen.getByLabelText("Minutes")).not.toHaveAttribute("placeholder");
+    expect(screen.getByText("ex. 90")).toBeInTheDocument();
     expect(screen.getByText("min")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ajouter la séance" })).toHaveAttribute("type", "submit");
     expect(window.localStorage.length).toBe(0);

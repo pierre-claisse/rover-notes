@@ -38,6 +38,9 @@ describe("atelier", () => {
     expect(progress.textContent ?? "").not.toMatch(/retard/i);
     expect(screen.getByRole("link", { name: "Ouvrir l’atelier de la semaine" })).toHaveAttribute("href", "/semaine/P0-S1");
     expect(screen.getByRole("link", { name: "Noter une séance" })).toBeInTheDocument();
+    const atelier = screen.getByRole("link", { name: "Ouvrir l’atelier de la semaine" });
+    const plan = screen.getByRole("heading", { name: "À lire, à faire" });
+    expect(atelier.compareDocumentPosition(plan) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
   });
 
   it("met en avant le créneau dont le jour est celui de Paris, sans date inventée", async () => {
@@ -76,7 +79,11 @@ describe("atelier", () => {
     await user.type(screen.getByLabelText("Résumé"), "lecture calme");
     await user.click(screen.getByRole("button", { name: "Ajouter la séance" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Séance notée.");
+    const noted = screen.getByRole("status");
+    const written = await screen.findByText("lecture calme");
+    expect(noted.compareDocumentPosition(written) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
     expect(screen.getByLabelText("Minutes")).toHaveValue("");
+    expect(screen.getByText("ex. 90")).toBeInTheDocument();
     expect(screen.getByLabelText("Résumé")).toHaveValue("");
     expect(await screen.findByText("lecture calme")).toBeInTheDocument();
     await waitFor(() => expect(within(totals()).getByText("Total").closest("div")).toHaveTextContent("45 min"));
@@ -102,7 +109,19 @@ describe("atelier", () => {
     }
     expect(screen.getByText("0 sur 6 déclarés")).toBeInTheDocument();
     expect(screen.getByText(/Cocher une case ne valide pas la compétence/)).toBeInTheDocument();
+    expect(screen.queryByText("Précision facultative")).not.toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("checkbox", { name: /matrice 2×2/ }));
+    expect(screen.getByLabelText("Précision facultative")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Bilan du dimanche" })).toBeInTheDocument();
+  });
+
+  it("réserve l’encart du dimanche à la semaine en cours", async () => {
+    const session = await open();
+    render(week(session, "P1-S10"));
+    expect(await screen.findByText(/Bloc indicatif, à détailler/)).toBeInTheDocument();
+    expect(screen.queryByText(/Aujourd’hui, le bilan/)).not.toBeInTheDocument();
+    expect(screen.queryByText("Enregistré")).not.toBeInTheDocument();
   });
 
   it("ramène la semaine en cours dans le champ, sauf si le mouvement est réduit", async () => {
