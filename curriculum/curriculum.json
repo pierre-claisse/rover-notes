@@ -1,0 +1,3622 @@
+{
+  "schemaVersion": 1,
+  "language": "fr",
+  "provenance": {
+    "overview": "https://cursor.com/canvas/store-5b26d037-b305-4870-8d2e-d59cc2d6977f/db1bb61e-f76c-4448-96a4-302ffb6c6f4c",
+    "program": "https://cursor.com/canvas/store-5b26d037-b305-4870-8d2e-d59cc2d6977f/ea922683-b26f-4176-a146-496ce9401bb7",
+    "extraction": "Lossless French strings from ReadCanvas. Original JSX preserved in overview.md/program.md. No invented week-level detail."
+  },
+  "gaps": [
+    "Les Canvas ne contiennent pas de questions détaillées ou d’indices pédagogiques distincts : seuls les exercices de vérification sont fournis. Les listes detailedQuestions et hints restent vides.",
+    "P1–P7 : les objectifs sont définis par phase et les semaines par blocs indicatifs ; pas de programme individuel détaillé pour S10–S94.",
+    "Les blocs vont jusqu’à S94 malgré un objectif annoncé de 18 mois ; à 9 h/semaine, ne pas transformer ces estimations en calendrier daté sans arbitrage.",
+    "Dates S1 originales : 2 nov. 2026 ; contexte utilisateur au 8 nov. 2026 : 0 h et S1 toujours en cours. Ne pas avancer automatiquement à S2."
+  ],
+  "context": {
+    "asOf": "2026-11-08",
+    "timezone": "Europe/Paris",
+    "completedHours": 0,
+    "hoursPerWeek": 9,
+    "robotPurchased": false,
+    "activeWeek": "P0-S1",
+    "scheduleNotes": [
+      "Robot pas encore acheté : les samedis se font sans robot (Linux, C/C++, Rust, maths, ROS 2 en simulation).",
+      "Une semaine sur quatre peut être allégée ; prévoyez 20 % de marge."
+    ]
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "nom": "Fondations",
+      "mois": "M1–M2",
+      "heures": 80,
+      "theorie": [
+        "Linux (systemd, udev, permissions série), shell, SSH, cross-compilation : c'est l'OS de 90 % des robots",
+        "C/C++ moderne : pointeurs, stack vs heap, RAII, `volatile`, endianness : la mémoire que le web cache",
+        "Électronique de base : loi d'Ohm, PWM, pont en H, UART/I2C/SPI, lire une datasheet (INA219, IMU)",
+        "Rust : ownership, traits, `no_std` (lecture du Rust Book en parallèle)"
+      ],
+      "exercices": [
+        "Installer l'image ROS 2 du Rover, cartographier son architecture (Pi 5 ↔ UART ↔ ESP32) dans un schéma",
+        "Piloter le Rover depuis un script Python en envoyant les commandes JSON documentées sur le wiki",
+        "Écrire en C un parseur de trames avec tests unitaires, sans IA pour la première version",
+        "Lire la datasheet de l'INA219 et recalculer à la main la tension/courant affichés"
+      ],
+      "livrable": "Repo `rover-notes` + article EN « Reverse-engineering my rover's architecture »",
+      "done": "Tu sais expliquer sans notes chaque fil entre le Pi et l'ESP32 et tu as un test C qui passe en CI",
+      "phase": "P0",
+      "objectives": [
+        "Je sais dire ce que fait une matrice 2×2 à un vecteur, en regardant où vont (1,0) et (0,1)",
+        "Je sais expliquer pourquoi [[0,-1],[1,0]] est une rotation de 90° et à quoi elle sert pour un robot qui tourne",
+        "Je sais compiler et déboguer un programme C avec gcc, make et gdb sans droits admin",
+        "Je sais expliquer la différence entre pile et tas en montrant deux adresses réelles",
+        "Je sais me connecter en SSH, lire l'état d'un service systemd et expliquer pourquoi /dev/ttyUSB0 exige le groupe dialout",
+        "Je sais écrire sans IA un parseur C pour {\"T\":1,\"L\":0.5,\"R\":0.5} et le tester",
+        "Je sais expliquer qu'un produit de matrices est l'enchaînement de deux transformations, et que l'ordre compte",
+        "Je sais manipuler pointeurs, pointeurs de pointeurs et tableaux en C, et expliquer p[i] == *(p+i)",
+        "Je sais écrire un script bash avec variables, boucles, pipes et redirections",
+        "Je sais utiliser grep, find, chmod, chown et lire ls -l",
+        "Je sais dire ce que mesure un déterminant (facteur d'aire) et ce que signifie un déterminant nul",
+        "Je sais allouer, libérer et détecter une fuite mémoire (valgrind ou -fsanitize=address)",
+        "Je sais appliquer la loi d'Ohm U = R·I et la puissance P = U·I sur un circuit simple",
+        "Je sais expliquer tension, courant et résistance avec mes propres mots",
+        "Je sais calculer un produit scalaire et l'interpréter comme une projection",
+        "Je sais expliquer la PWM : rapport cyclique, fréquence, et pourquoi elle règle la vitesse d'un moteur",
+        "Je sais ce qu'est l'endianness et lire un entier 16 bits petit-boutiste dans un tableau d'octets",
+        "Je sais quand utiliser volatile en C et pourquoi",
+        "Je sais calculer un produit vectoriel et dire à quoi il sert (normale, sens de rotation)",
+        "Je sais expliquer UART, I2C et SPI : fils, horloge, adressage, débit, et lequel relie le Pi à l'ESP32",
+        "Je sais écrire une classe C++ qui libère sa ressource dans son destructeur (RAII)",
+        "Je sais utiliser std::vector, std::string et std::unique_ptr à la place de malloc",
+        "Je sais passer un point du repère du robot au repère du monde (changement de base)",
+        "Je sais lire une datasheet : brochage, registres, formules de conversion",
+        "Je sais recalculer à la main tension et courant à partir des registres bruts de l'INA219",
+        "Je sais ce qu'est la cross-compilation et compiler un binaire ARM64 depuis mon PC",
+        "Je sais dire ce qu'est un vecteur propre et pourquoi une rotation 2D n'en a pas de réel",
+        "Je sais expliquer ownership, emprunt et durée de vie en Rust sur un exemple",
+        "Je sais écrire une fonction Rust testée avec cargo test",
+        "Je sais mettre en place une CI GitHub Actions qui compile et teste le code C",
+        "Je sais gérer les erreurs en Rust avec Result, Option et l'opérateur ?",
+        "Je sais définir et implémenter un trait",
+        "Je sais porter le parseur de trames en Rust avec tests",
+        "Je sais expliquer ce que signifie no_std et ce qu'on perd sans la bibliothèque standard",
+        "Je sais résoudre un petit système linéaire par élimination (vue « lignes » et vue « colonnes »)",
+        "Je sais installer ROS 2 Humble (conteneur) et lancer un nœud talker/listener",
+        "Je sais expliquer chaque fil entre le Pi et l'ESP32 d'après la documentation",
+        "Je sais rédiger en anglais une page technique claire avec schéma"
+      ],
+      "sources": [],
+      "blocks": []
+    },
+    {
+      "id": "P1",
+      "nom": "Firmware ESP32 en C++",
+      "mois": "M3–M4",
+      "heures": 100,
+      "theorie": [
+        "Contrôle : boucle fermée, PID, réponse indicielle, saturation et anti-windup (vidéos Brian Douglas)",
+        "Temps réel : FreeRTOS, priorités, jitter, ISR courtes",
+        "Encodeurs, échantillonnage, filtrage de vitesse"
+      ],
+      "exercices": [
+        "Forker `ugv_base_ros`, le compiler et le flasher ; rendre la compilation reproductible (PlatformIO ou arduino-cli)",
+        "Mesurer la réponse indicielle d'une roue, la tracer (Python/matplotlib), régler le PID et montrer avant/après",
+        "Mesurer le jitter de la boucle de contrôle à l'oscilloscope logique ou par timestamps",
+        "Remplacer le JSON par un protocole binaire maison (COBS + CRC16) avec numéro de séquence"
+      ],
+      "livrable": "Fork documenté + article « Tuning wheel PID with real step responses » + graphes",
+      "done": "Dépassement < 10 % mesuré, protocole binaire avec taux d'erreur mesuré sur 1 h de trafic",
+      "phase": "P1",
+      "objectives": [
+        "Je sais expliquer une boucle fermée : consigne, mesure, erreur, commande",
+        "Je sais dire le rôle de P, I et D et l'effet de chaque gain sur une réponse indicielle",
+        "Je sais mesurer dépassement, temps de montée et erreur statique sur un graphe",
+        "Je sais ce qu'est la saturation et corriger le windup de l'intégrale",
+        "Je sais créer des tâches FreeRTOS et choisir leurs priorités",
+        "Je sais pourquoi une ISR doit être courte et comment passer une donnée d'une ISR à une tâche",
+        "Je sais mesurer le jitter d'une boucle par timestamps ou analyseur logique",
+        "Je sais lire un encodeur en quadrature et en déduire une vitesse filtrée",
+        "Je sais encoder/décoder une trame COBS et calculer un CRC16",
+        "Je sais détecter les trames perdues avec un numéro de séquence et mesurer un taux d'erreur",
+        "Je sais compiler et flasher ugv_base_ros de façon reproductible (PlatformIO ou arduino-cli)",
+        "Je sais tracer des mesures avec Python/matplotlib"
+      ],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 10,
+          "toWeek": 12,
+          "title": "outillage et compilation reproductible",
+          "sourceText": "S10–S12 outillage et compilation reproductible"
+        },
+        {
+          "fromWeek": 13,
+          "toWeek": 16,
+          "title": "PID et réponse indicielle",
+          "sourceText": "S13–S16 PID et réponse indicielle"
+        },
+        {
+          "fromWeek": 17,
+          "toWeek": 18,
+          "title": "temps réel et jitter",
+          "sourceText": "S17–S18 temps réel et jitter"
+        },
+        {
+          "fromWeek": 19,
+          "toWeek": 21,
+          "title": "protocole binaire",
+          "sourceText": "S19–S21 protocole binaire"
+        }
+      ],
+      "programDetail": {
+        "id": "P1",
+        "titre": "Firmware ESP32 en C++ (100 h, M3–M4)",
+        "blocs": "S10–S12 outillage et compilation reproductible · S13–S16 PID et réponse indicielle · S17–S18 temps réel et jitter · S19–S21 protocole binaire",
+        "themes": [
+          {
+            "t": "Contrôle",
+            "items": [
+              "Je sais expliquer une boucle fermée : consigne, mesure, erreur, commande",
+              "Je sais dire le rôle de P, I et D et l'effet de chaque gain sur une réponse indicielle",
+              "Je sais mesurer dépassement, temps de montée et erreur statique sur un graphe",
+              "Je sais ce qu'est la saturation et corriger le windup de l'intégrale"
+            ]
+          },
+          {
+            "t": "Temps réel",
+            "items": [
+              "Je sais créer des tâches FreeRTOS et choisir leurs priorités",
+              "Je sais pourquoi une ISR doit être courte et comment passer une donnée d'une ISR à une tâche",
+              "Je sais mesurer le jitter d'une boucle par timestamps ou analyseur logique"
+            ]
+          },
+          {
+            "t": "Capteurs et protocole",
+            "items": [
+              "Je sais lire un encodeur en quadrature et en déduire une vitesse filtrée",
+              "Je sais encoder/décoder une trame COBS et calculer un CRC16",
+              "Je sais détecter les trames perdues avec un numéro de séquence et mesurer un taux d'erreur"
+            ]
+          },
+          {
+            "t": "Outillage",
+            "items": [
+              "Je sais compiler et flasher ugv_base_ros de façon reproductible (PlatformIO ou arduino-cli)",
+              "Je sais tracer des mesures avec Python/matplotlib"
+            ]
+          }
+        ],
+        "res": "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      }
+    },
+    {
+      "id": "P2",
+      "nom": "IMU, fusion de capteurs, Rust embarqué",
+      "mois": "M5–M7",
+      "heures": 140,
+      "theorie": [
+        "Probabilités, gaussiennes, filtre complémentaire puis filtre de Kalman étendu (Labbe)",
+        "Rotations : quaternions, angles d'Euler, gimbal lock (Modern Robotics ch. 3)",
+        "Rust embarqué : esp-hal, embassy (async sans OS), HAL et traits embedded-hal"
+      ],
+      "exercices": [
+        "Driver IMU 9 axes en Rust `no_std`, calibration magnétomètre (hard/soft iron)",
+        "Filtre complémentaire puis EKF pour l'orientation ; comparer les deux sur un même log",
+        "Porter la boucle moteur + PID + protocole binaire en Rust/embassy sur l'ESP32",
+        "Watchdog : moteurs coupés si plus de trame depuis 200 ms"
+      ],
+      "livrable": "Repo `rover-fw-rs` (firmware Rust complet) + vidéo comparatif C++ vs Rust + article EKF",
+      "done": "Le Rover roule sur ton firmware Rust, avec watchdog testé et un EKF dont l'erreur est chiffrée",
+      "phase": "P2",
+      "objectives": [
+        "Je sais ce que représentent moyenne, variance et gaussienne",
+        "Je sais écrire un filtre complémentaire gyroscope + accéléromètre",
+        "Je sais dérouler les étapes prédiction / mise à jour d'un filtre de Kalman",
+        "Je sais linéariser un modèle pour un EKF et chiffrer son erreur sur un log",
+        "Je sais passer d'angles d'Euler à une matrice de rotation et à un quaternion",
+        "Je sais expliquer le blocage de cardan (gimbal lock)",
+        "Je sais calibrer un magnétomètre (hard iron, soft iron)",
+        "Je sais écrire un driver I2C no_std avec les traits embedded-hal",
+        "Je sais écrire des tâches async avec embassy",
+        "Je sais porter boucle moteur + PID + protocole binaire en Rust",
+        "Je sais implémenter un watchdog qui coupe les moteurs après 200 ms sans trame"
+      ],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 22,
+          "toWeek": 25,
+          "title": "probabilités et filtre complémentaire",
+          "sourceText": "S22–S25 probabilités et filtre complémentaire"
+        },
+        {
+          "fromWeek": 26,
+          "toWeek": 29,
+          "title": "rotations et quaternions",
+          "sourceText": "S26–S29 rotations et quaternions"
+        },
+        {
+          "fromWeek": 30,
+          "toWeek": 33,
+          "title": "EKF",
+          "sourceText": "S30–S33 EKF"
+        },
+        {
+          "fromWeek": 34,
+          "toWeek": 37,
+          "title": "Rust embassy et watchdog",
+          "sourceText": "S34–S37 Rust embassy et watchdog"
+        }
+      ],
+      "programDetail": {
+        "id": "P2",
+        "titre": "IMU, fusion de capteurs, Rust embarqué (140 h, M5–M7)",
+        "blocs": "S22–S25 probabilités et filtre complémentaire · S26–S29 rotations et quaternions · S30–S33 EKF · S34–S37 Rust embassy et watchdog",
+        "themes": [
+          {
+            "t": "Probabilités et filtrage",
+            "items": [
+              "Je sais ce que représentent moyenne, variance et gaussienne",
+              "Je sais écrire un filtre complémentaire gyroscope + accéléromètre",
+              "Je sais dérouler les étapes prédiction / mise à jour d'un filtre de Kalman",
+              "Je sais linéariser un modèle pour un EKF et chiffrer son erreur sur un log"
+            ]
+          },
+          {
+            "t": "Rotations",
+            "items": [
+              "Je sais passer d'angles d'Euler à une matrice de rotation et à un quaternion",
+              "Je sais expliquer le blocage de cardan (gimbal lock)",
+              "Je sais calibrer un magnétomètre (hard iron, soft iron)"
+            ]
+          },
+          {
+            "t": "Rust embarqué",
+            "items": [
+              "Je sais écrire un driver I2C no_std avec les traits embedded-hal",
+              "Je sais écrire des tâches async avec embassy",
+              "Je sais porter boucle moteur + PID + protocole binaire en Rust",
+              "Je sais implémenter un watchdog qui coupe les moteurs après 200 ms sans trame"
+            ]
+          }
+        ],
+        "res": "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      }
+    },
+    {
+      "id": "P3",
+      "nom": "ROS 2, simulation, dashboard web",
+      "mois": "M7–M9",
+      "heures": 120,
+      "theorie": [
+        "ROS 2 : nœuds, topics, services, actions, QoS, launch, tf2",
+        "URDF/xacro, Gazebo, ros2_control (hardware interface)",
+        "WebRTC, latence vidéo, sérialisation"
+      ],
+      "exercices": [
+        "Écrire un `hardware_interface` ros2_control qui parle ton protocole binaire",
+        "URDF exact du Rover, même code en simulation Gazebo et sur le vrai robot",
+        "Dashboard React : téléopération, télémétrie batterie/IMU, vidéo WebRTC, latence affichée"
+      ],
+      "livrable": "Repo `rover_ros2` + dashboard + vidéo « same code, sim and real »",
+      "done": "Bascule sim/réel par un seul argument de launch ; latence vidéo bout-en-bout mesurée",
+      "phase": "P3",
+      "objectives": [
+        "Je sais écrire nœuds, topics, services et actions",
+        "Je sais choisir une QoS et expliquer reliable vs best effort",
+        "Je sais écrire un fichier launch avec arguments",
+        "Je sais publier et lire des transformations tf2",
+        "Je sais décrire le Rover en URDF/xacro",
+        "Je sais lancer le même code en Gazebo et sur le robot",
+        "Je sais écrire un hardware_interface ros2_control pour mon protocole",
+        "Je sais streamer la vidéo en WebRTC et mesurer la latence bout en bout",
+        "Je sais afficher télémétrie batterie/IMU et téléopérer depuis React"
+      ],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 38,
+          "toWeek": 41,
+          "title": "concepts ROS 2 et tf2",
+          "sourceText": "S38–S41 concepts ROS 2 et tf2"
+        },
+        {
+          "fromWeek": 42,
+          "toWeek": 45,
+          "title": "URDF, Gazebo, ros2_control",
+          "sourceText": "S42–S45 URDF, Gazebo, ros2_control"
+        },
+        {
+          "fromWeek": 46,
+          "toWeek": 50,
+          "title": "dashboard React + WebRTC",
+          "sourceText": "S46–S50 dashboard React + WebRTC"
+        }
+      ],
+      "programDetail": {
+        "id": "P3",
+        "titre": "ROS 2, simulation, dashboard web (120 h, M7–M9)",
+        "blocs": "S38–S41 concepts ROS 2 et tf2 · S42–S45 URDF, Gazebo, ros2_control · S46–S50 dashboard React + WebRTC",
+        "themes": [
+          {
+            "t": "ROS 2",
+            "items": [
+              "Je sais écrire nœuds, topics, services et actions",
+              "Je sais choisir une QoS et expliquer reliable vs best effort",
+              "Je sais écrire un fichier launch avec arguments",
+              "Je sais publier et lire des transformations tf2"
+            ]
+          },
+          {
+            "t": "Modélisation et simulation",
+            "items": [
+              "Je sais décrire le Rover en URDF/xacro",
+              "Je sais lancer le même code en Gazebo et sur le robot",
+              "Je sais écrire un hardware_interface ros2_control pour mon protocole"
+            ]
+          },
+          {
+            "t": "Web",
+            "items": [
+              "Je sais streamer la vidéo en WebRTC et mesurer la latence bout en bout",
+              "Je sais afficher télémétrie batterie/IMU et téléopérer depuis React"
+            ]
+          }
+        ],
+        "res": "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      }
+    },
+    {
+      "id": "P4",
+      "nom": "Perception",
+      "mois": "M10–M11",
+      "heures": 100,
+      "theorie": [
+        "Modèle sténopé, distorsion fisheye (caméra 160°), calibration",
+        "Géométrie multi-vues, odométrie visuelle",
+        "Inférence embarquée : quantification, profiling CPU/NPU"
+      ],
+      "exercices": [
+        "Calibrer la caméra fisheye, publier `camera_info`",
+        "Détection AprilTag et estimation de pose ; suivi de tag par la tourelle pan-tilt",
+        "Détecteur type YOLO sur Pi 5 : mesurer FPS/latence CPU, puis avec Hailo (option)"
+      ],
+      "livrable": "Vidéo du Rover qui suit un tag + article benchmark d'inférence sur Pi 5",
+      "done": "Erreur de pose AprilTag mesurée contre un mètre ruban ; tableau FPS/latence publié",
+      "phase": "P4",
+      "objectives": [
+        "Je sais expliquer le modèle sténopé et les paramètres intrinsèques",
+        "Je sais calibrer une caméra fisheye et publier camera_info",
+        "Je sais ce qu'est la distorsion et la corriger",
+        "Je sais estimer la pose d'un AprilTag et mesurer son erreur",
+        "Je sais expliquer le principe de l'odométrie visuelle",
+        "Je sais mesurer FPS et latence d'un détecteur sur Pi 5",
+        "Je sais ce que la quantification change en vitesse et en précision"
+      ],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 51,
+          "toWeek": 53,
+          "title": "modèle de caméra et calibration fisheye",
+          "sourceText": "S51–S53 modèle de caméra et calibration fisheye"
+        },
+        {
+          "fromWeek": 54,
+          "toWeek": 56,
+          "title": "AprilTag et pan-tilt",
+          "sourceText": "S54–S56 AprilTag et pan-tilt"
+        },
+        {
+          "fromWeek": 57,
+          "toWeek": 59,
+          "title": "inférence embarquée",
+          "sourceText": "S57–S59 inférence embarquée"
+        }
+      ],
+      "programDetail": {
+        "id": "P4",
+        "titre": "Perception (100 h, M10–M11)",
+        "blocs": "S51–S53 modèle de caméra et calibration fisheye · S54–S56 AprilTag et pan-tilt · S57–S59 inférence embarquée",
+        "themes": [
+          {
+            "t": "Caméra",
+            "items": [
+              "Je sais expliquer le modèle sténopé et les paramètres intrinsèques",
+              "Je sais calibrer une caméra fisheye et publier camera_info",
+              "Je sais ce qu'est la distorsion et la corriger"
+            ]
+          },
+          {
+            "t": "Géométrie",
+            "items": [
+              "Je sais estimer la pose d'un AprilTag et mesurer son erreur",
+              "Je sais expliquer le principe de l'odométrie visuelle"
+            ]
+          },
+          {
+            "t": "Inférence",
+            "items": [
+              "Je sais mesurer FPS et latence d'un détecteur sur Pi 5",
+              "Je sais ce que la quantification change en vitesse et en précision"
+            ]
+          }
+        ],
+        "res": "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      }
+    },
+    {
+      "id": "P5",
+      "nom": "Localisation, SLAM, Nav2",
+      "mois": "M12–M13",
+      "heures": 100,
+      "theorie": [
+        "Filtre particulaire, SLAM par graphe (Probabilistic Robotics)",
+        "Planification globale/locale, costmaps, behavior trees",
+        "Fusion odométrie roues + IMU (robot_localization)"
+      ],
+      "exercices": [
+        "Monter le LIDAR D500, carte de l'appartement avec SLAM Toolbox",
+        "Nav2 : navigation autonome point à point, puis patrouille",
+        "Comparer odométrie roues, roues+IMU (EKF), et localisation LIDAR"
+      ],
+      "livrable": "Vidéo de navigation autonome + carte + article « What actually drifts »",
+      "done": "10 navigations sur 10 réussies vers 3 points, taux de réussite et temps publiés",
+      "phase": "P5",
+      "objectives": [
+        "Je sais expliquer un filtre particulaire (AMCL)",
+        "Je sais fusionner roues + IMU avec robot_localization",
+        "Je sais mesurer la dérive de chaque source d'odométrie",
+        "Je sais expliquer le SLAM par graphe et la fermeture de boucle",
+        "Je sais construire une carte avec SLAM Toolbox",
+        "Je sais configurer costmaps, planificateurs global/local et behavior trees dans Nav2"
+      ],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 60,
+          "toWeek": 62,
+          "title": "filtre particulaire et SLAM",
+          "sourceText": "S60–S62 filtre particulaire et SLAM"
+        },
+        {
+          "fromWeek": 63,
+          "toWeek": 65,
+          "title": "SLAM Toolbox avec LIDAR",
+          "sourceText": "S63–S65 SLAM Toolbox avec LIDAR"
+        },
+        {
+          "fromWeek": 66,
+          "toWeek": 68,
+          "title": "Nav2 et comparaison d'odométries",
+          "sourceText": "S66–S68 Nav2 et comparaison d'odométries"
+        }
+      ],
+      "programDetail": {
+        "id": "P5",
+        "titre": "Localisation, SLAM, Nav2 (100 h, M12–M13)",
+        "blocs": "S60–S62 filtre particulaire et SLAM · S63–S65 SLAM Toolbox avec LIDAR · S66–S68 Nav2 et comparaison d'odométries",
+        "themes": [
+          {
+            "t": "Localisation",
+            "items": [
+              "Je sais expliquer un filtre particulaire (AMCL)",
+              "Je sais fusionner roues + IMU avec robot_localization",
+              "Je sais mesurer la dérive de chaque source d'odométrie"
+            ]
+          },
+          {
+            "t": "SLAM et navigation",
+            "items": [
+              "Je sais expliquer le SLAM par graphe et la fermeture de boucle",
+              "Je sais construire une carte avec SLAM Toolbox",
+              "Je sais configurer costmaps, planificateurs global/local et behavior trees dans Nav2"
+            ]
+          }
+        ],
+        "res": "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      }
+    },
+    {
+      "id": "P6",
+      "nom": "Rigueur industrielle",
+      "mois": "M14–M15",
+      "heures": 90,
+      "theorie": [
+        "Tests (unitaires, intégration, hardware-in-the-loop), CI",
+        "Observabilité : rosbag2/MCAP, Foxglove, replay déterministe",
+        "Sûreté : watchdogs, états dégradés, arrêt d'urgence ; mises à jour OTA"
+      ],
+      "exercices": [
+        "Banc HIL : un second ESP32 ou le Pi teste le firmware à chaque commit",
+        "Pipeline log → MCAP → Foxglove → test de régression rejoué",
+        "OTA signé du firmware ESP32 avec rollback"
+      ],
+      "livrable": "CI publique avec badge HIL + article « Hardware-in-the-loop for a hobby rover »",
+      "done": "Un bug réel attrapé par la CI HIL et documenté",
+      "phase": "P6",
+      "objectives": [
+        "Je sais distinguer tests unitaires, d'intégration et HIL",
+        "Je sais faire tourner un banc HIL à chaque commit",
+        "Je sais enregistrer en rosbag2/MCAP et rejouer un log de façon déterministe",
+        "Je sais transformer un log en test de régression",
+        "Je sais définir des états dégradés et un arrêt d'urgence",
+        "Je sais faire une mise à jour OTA signée avec retour arrière"
+      ],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 69,
+          "toWeek": 72,
+          "title": "banc HIL et CI",
+          "sourceText": "S69–S72 banc HIL et CI"
+        },
+        {
+          "fromWeek": 73,
+          "toWeek": 75,
+          "title": "MCAP, Foxglove, replay",
+          "sourceText": "S73–S75 MCAP, Foxglove, replay"
+        },
+        {
+          "fromWeek": 76,
+          "toWeek": 78,
+          "title": "sûreté et OTA",
+          "sourceText": "S76–S78 sûreté et OTA"
+        }
+      ],
+      "programDetail": {
+        "id": "P6",
+        "titre": "Rigueur industrielle (90 h, M14–M15)",
+        "blocs": "S69–S72 banc HIL et CI · S73–S75 MCAP, Foxglove, replay · S76–S78 sûreté et OTA",
+        "themes": [
+          {
+            "t": "Tests",
+            "items": [
+              "Je sais distinguer tests unitaires, d'intégration et HIL",
+              "Je sais faire tourner un banc HIL à chaque commit"
+            ]
+          },
+          {
+            "t": "Observabilité",
+            "items": [
+              "Je sais enregistrer en rosbag2/MCAP et rejouer un log de façon déterministe",
+              "Je sais transformer un log en test de régression"
+            ]
+          },
+          {
+            "t": "Sûreté",
+            "items": [
+              "Je sais définir des états dégradés et un arrêt d'urgence",
+              "Je sais faire une mise à jour OTA signée avec retour arrière"
+            ]
+          }
+        ],
+        "res": "MCAP · Foxglove docs"
+      }
+    },
+    {
+      "id": "P7",
+      "nom": "Capstone",
+      "mois": "M16–M18",
+      "heures": 130,
+      "theorie": [
+        "Selon le capstone : sim-to-real, apprentissage par renforcement, coordination multi-robot",
+        "Écriture technique et présentation"
+      ],
+      "exercices": [
+        "Option A : pile temps réel 100 % Rust (firmware embassy + nœuds ros2_rust)",
+        "Option B : contrôle appris en simulation transféré sur le vrai Rover, avec mesure du gap sim-to-real",
+        "Option C : 2 rovers (ou rover + sim) coordonnés, partage de carte"
+      ],
+      "livrable": "Projet phare : repo, vidéo 3 min, article long, talk soumis (meetup ROS, ROSCon)",
+      "done": "Un ingénieur robotique inconnu comprend et reproduit le résultat depuis ton README",
+      "phase": "P7",
+      "objectives": [
+        "A : je sais construire une pile 100 % Rust (embassy + ros2_rust)",
+        "B : je sais entraîner un contrôle en simulation et mesurer l'écart sim-to-real",
+        "C : je sais coordonner deux robots et partager une carte",
+        "Je sais écrire un README qu'un inconnu reproduit",
+        "Je sais présenter un résultat en 3 minutes de vidéo et en talk"
+      ],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "blocks": [
+        {
+          "fromWeek": 79,
+          "toWeek": 82,
+          "title": "choix et prototype",
+          "sourceText": "S79–S82 choix et prototype"
+        },
+        {
+          "fromWeek": 83,
+          "toWeek": 90,
+          "title": "réalisation et mesures",
+          "sourceText": "S83–S90 réalisation et mesures"
+        },
+        {
+          "fromWeek": 91,
+          "toWeek": 94,
+          "title": "article, vidéo, talk",
+          "sourceText": "S91–S94 article, vidéo, talk"
+        }
+      ],
+      "programDetail": {
+        "id": "P7",
+        "titre": "Capstone (130 h, M16–M18)",
+        "blocs": "S79–S82 choix et prototype · S83–S90 réalisation et mesures · S91–S94 article, vidéo, talk",
+        "themes": [
+          {
+            "t": "Selon l'option",
+            "items": [
+              "A : je sais construire une pile 100 % Rust (embassy + ros2_rust)",
+              "B : je sais entraîner un contrôle en simulation et mesurer l'écart sim-to-real",
+              "C : je sais coordonner deux robots et partager une carte"
+            ]
+          },
+          {
+            "t": "Communication",
+            "items": [
+              "Je sais écrire un README qu'un inconnu reproduit",
+              "Je sais présenter un résultat en 3 minutes de vidéo et en talk"
+            ]
+          }
+        ],
+        "res": "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      }
+    }
+  ],
+  "weeks": [
+    {
+      "id": "P0-S1",
+      "phase": "P0",
+      "weekNumber": 1,
+      "title": "Vecteurs, mémoire C, Linux série, premier parseur",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais dire ce que fait une matrice 2×2 à un vecteur, en regardant où vont (1,0) et (0,1)",
+        "Je sais expliquer pourquoi [[0,-1],[1,0]] est une rotation de 90° et à quoi elle sert pour un robot qui tourne",
+        "Je sais compiler et déboguer un programme C avec gcc, make et gdb sans droits admin",
+        "Je sais expliquer la différence entre pile et tas en montrant deux adresses réelles",
+        "Je sais me connecter en SSH, lire l'état d'un service systemd et expliquer pourquoi /dev/ttyUSB0 exige le groupe dialout",
+        "Je sais écrire sans IA un parseur C pour {\"T\":1,\"L\":0.5,\"R\":0.5} et le tester"
+      ],
+      "sources": [
+        "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+        "Documentation gcc/gdb ; conda-forge ou image Docker gcc",
+        "https://missing.csail.mit.edu/ ; wiki UGV Rover (format JSON)",
+        "Votre dépôt rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Maths : épisodes 1 à 3 de « Essence of linear algebra ». Exercice papier : ce que fait [[0,-1],[1,0]] à (1,0) et (0,1), et pourquoi un robot qui tourne en a besoin",
+        "C : installer gcc, make, gdb sans droits admin (conda ou conteneur). Programme qui affiche l'adresse d'une variable locale et d'un bloc malloc ; expliquer pile vs tas",
+        "1 h 30 Linux : SSH, systemd, permissions du port série /dev/ttyUSB0, groupe dialout. Puis 2 h 30 : parseur de trames C sans IA pour {\"T\":1,\"L\":0.5,\"R\":0.5}, au moins 3 tests",
+        "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
+        "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute"
+      ],
+      "verification": "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute",
+      "proofs": [
+        "Commit 1 : parseur + 3 tests verts + notes S1"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "2 nov. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Maths : épisodes 1 à 3 de « Essence of linear algebra ». Exercice papier : ce que fait [[0,-1],[1,0]] à (1,0) et (0,1), et pourquoi un robot qui tourne en a besoin",
+            "res": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : installer gcc, make, gdb sans droits admin (conda ou conteneur). Programme qui affiche l'adresse d'une variable locale et d'un bloc malloc ; expliquer pile vs tas",
+            "res": "Documentation gcc/gdb ; conda-forge ou image Docker gcc"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 Linux : SSH, systemd, permissions du port série /dev/ttyUSB0, groupe dialout. Puis 2 h 30 : parseur de trames C sans IA pour {\"T\":1,\"L\":0.5,\"R\":0.5}, au moins 3 tests",
+            "res": "https://missing.csail.mit.edu/ ; wiki UGV Rover (format JSON)"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
+            "res": "Votre dépôt rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S1",
+        "date": "2 nov. 2026",
+        "theme": "Vecteurs, mémoire C, Linux série, premier parseur",
+        "sais": [
+          "Je sais dire ce que fait une matrice 2×2 à un vecteur, en regardant où vont (1,0) et (0,1)",
+          "Je sais expliquer pourquoi [[0,-1],[1,0]] est une rotation de 90° et à quoi elle sert pour un robot qui tourne",
+          "Je sais compiler et déboguer un programme C avec gcc, make et gdb sans droits admin",
+          "Je sais expliquer la différence entre pile et tas en montrant deux adresses réelles",
+          "Je sais me connecter en SSH, lire l'état d'un service systemd et expliquer pourquoi /dev/ttyUSB0 exige le groupe dialout",
+          "Je sais écrire sans IA un parseur C pour {\"T\":1,\"L\":0.5,\"R\":0.5} et le tester"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Maths : épisodes 1 à 3 de « Essence of linear algebra ». Exercice papier : ce que fait [[0,-1],[1,0]] à (1,0) et (0,1), et pourquoi un robot qui tourne en a besoin",
+            "res": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : installer gcc, make, gdb sans droits admin (conda ou conteneur). Programme qui affiche l'adresse d'une variable locale et d'un bloc malloc ; expliquer pile vs tas",
+            "res": "Documentation gcc/gdb ; conda-forge ou image Docker gcc"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 Linux : SSH, systemd, permissions du port série /dev/ttyUSB0, groupe dialout. Puis 2 h 30 : parseur de trames C sans IA pour {\"T\":1,\"L\":0.5,\"R\":0.5}, au moins 3 tests",
+            "res": "https://missing.csail.mit.edu/ ; wiki UGV Rover (format JSON)"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine",
+            "res": "Votre dépôt rover-notes"
+          }
+        ],
+        "verif": "Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute",
+        "preuve": "Commit 1 : parseur + 3 tests verts + notes S1"
+      }
+    },
+    {
+      "id": "P0-S2",
+      "phase": "P0",
+      "weekNumber": 2,
+      "title": "Composition de matrices, pointeurs, shell",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais expliquer qu'un produit de matrices est l'enchaînement de deux transformations, et que l'ordre compte",
+        "Je sais manipuler pointeurs, pointeurs de pointeurs et tableaux en C, et expliquer p[i] == *(p+i)",
+        "Je sais écrire un script bash avec variables, boucles, pipes et redirections",
+        "Je sais utiliser grep, find, chmod, chown et lire ls -l"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "Missing Semester (outils) + man pages",
+        "https://missing.csail.mit.edu/",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 4 et 5 (multiplication = composition, transformations 3D). Exercice : rotation de 90° puis symétrie, contre symétrie puis rotation : comparer les résultats",
+        "C : pointeurs et tableaux ; fonction qui inverse un tableau en place ; passer une structure par pointeur",
+        "1 h 30 shell (Missing Semester : shell, scripts) ; 2 h 30 : étendre le parseur aux trames invalides (accolade manquante, nombre mal formé), 5 tests de plus",
+        "Notes : schéma pile/tas/pointeurs ; script bash qui lance les tests ; planifier S3",
+        "Prédire à la main le résultat de A·B et B·A pour deux matrices 2×2 simples, puis vérifier en Python"
+      ],
+      "verification": "Prédire à la main le résultat de A·B et B·A pour deux matrices 2×2 simples, puis vérifier en Python",
+      "proofs": [
+        "Commit : tests d'erreurs + script run_tests.sh"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "9 nov. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 4 et 5 (multiplication = composition, transformations 3D). Exercice : rotation de 90° puis symétrie, contre symétrie puis rotation : comparer les résultats",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : pointeurs et tableaux ; fonction qui inverse un tableau en place ; passer une structure par pointeur",
+            "res": "Missing Semester (outils) + man pages"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 shell (Missing Semester : shell, scripts) ; 2 h 30 : étendre le parseur aux trames invalides (accolade manquante, nombre mal formé), 5 tests de plus",
+            "res": "https://missing.csail.mit.edu/"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes : schéma pile/tas/pointeurs ; script bash qui lance les tests ; planifier S3",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S2",
+        "date": "9 nov. 2026",
+        "theme": "Composition de matrices, pointeurs, shell",
+        "sais": [
+          "Je sais expliquer qu'un produit de matrices est l'enchaînement de deux transformations, et que l'ordre compte",
+          "Je sais manipuler pointeurs, pointeurs de pointeurs et tableaux en C, et expliquer p[i] == *(p+i)",
+          "Je sais écrire un script bash avec variables, boucles, pipes et redirections",
+          "Je sais utiliser grep, find, chmod, chown et lire ls -l"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 4 et 5 (multiplication = composition, transformations 3D). Exercice : rotation de 90° puis symétrie, contre symétrie puis rotation : comparer les résultats",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : pointeurs et tableaux ; fonction qui inverse un tableau en place ; passer une structure par pointeur",
+            "res": "Missing Semester (outils) + man pages"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 shell (Missing Semester : shell, scripts) ; 2 h 30 : étendre le parseur aux trames invalides (accolade manquante, nombre mal formé), 5 tests de plus",
+            "res": "https://missing.csail.mit.edu/"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes : schéma pile/tas/pointeurs ; script bash qui lance les tests ; planifier S3",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Prédire à la main le résultat de A·B et B·A pour deux matrices 2×2 simples, puis vérifier en Python",
+        "preuve": "Commit : tests d'erreurs + script run_tests.sh"
+      }
+    },
+    {
+      "id": "P0-S3",
+      "phase": "P0",
+      "weekNumber": 3,
+      "title": "Déterminant, mémoire dynamique, électricité de base",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais dire ce que mesure un déterminant (facteur d'aire) et ce que signifie un déterminant nul",
+        "Je sais allouer, libérer et détecter une fuite mémoire (valgrind ou -fsanitize=address)",
+        "Je sais appliquer la loi d'Ohm U = R·I et la puissance P = U·I sur un circuit simple",
+        "Je sais expliquer tension, courant et résistance avec mes propres mots"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "Documentation gcc (sanitizers)",
+        "https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 6 et 7 (déterminant ; inverse, espace colonne, noyau). Exercice : déterminant de la rotation de 90° et pourquoi il vaut 1",
+        "C : malloc/free, tampon circulaire pour recevoir des octets série ; compiler avec -fsanitize=address",
+        "1 h 30 électricité : tension, courant, résistance, loi d'Ohm. 2 h 30 : brancher le tampon circulaire au parseur (lecture octet par octet)",
+        "Notes : 5 calculs de loi d'Ohm à la main ; commit ; planifier S4",
+        "Calculer le courant dans une LED avec résistance de 220 Ω sous 3,3 V (chute LED 2 V)"
+      ],
+      "verification": "Calculer le courant dans une LED avec résistance de 220 Ω sous 3,3 V (chute LED 2 V)",
+      "proofs": [
+        "Commit : tampon circulaire + tests, zéro erreur ASan"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "16 nov. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 6 et 7 (déterminant ; inverse, espace colonne, noyau). Exercice : déterminant de la rotation de 90° et pourquoi il vaut 1",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : malloc/free, tampon circulaire pour recevoir des octets série ; compiler avec -fsanitize=address",
+            "res": "Documentation gcc (sanitizers)"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 électricité : tension, courant, résistance, loi d'Ohm. 2 h 30 : brancher le tampon circulaire au parseur (lecture octet par octet)",
+            "res": "https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes : 5 calculs de loi d'Ohm à la main ; commit ; planifier S4",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S3",
+        "date": "16 nov. 2026",
+        "theme": "Déterminant, mémoire dynamique, électricité de base",
+        "sais": [
+          "Je sais dire ce que mesure un déterminant (facteur d'aire) et ce que signifie un déterminant nul",
+          "Je sais allouer, libérer et détecter une fuite mémoire (valgrind ou -fsanitize=address)",
+          "Je sais appliquer la loi d'Ohm U = R·I et la puissance P = U·I sur un circuit simple",
+          "Je sais expliquer tension, courant et résistance avec mes propres mots"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 6 et 7 (déterminant ; inverse, espace colonne, noyau). Exercice : déterminant de la rotation de 90° et pourquoi il vaut 1",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : malloc/free, tampon circulaire pour recevoir des octets série ; compiler avec -fsanitize=address",
+            "res": "Documentation gcc (sanitizers)"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 électricité : tension, courant, résistance, loi d'Ohm. 2 h 30 : brancher le tampon circulaire au parseur (lecture octet par octet)",
+            "res": "https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes : 5 calculs de loi d'Ohm à la main ; commit ; planifier S4",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Calculer le courant dans une LED avec résistance de 220 Ω sous 3,3 V (chute LED 2 V)",
+        "preuve": "Commit : tampon circulaire + tests, zéro erreur ASan"
+      }
+    },
+    {
+      "id": "P0-S4",
+      "phase": "P0",
+      "weekNumber": 4,
+      "title": "Matrices non carrées, produit scalaire, PWM, endianness",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais calculer un produit scalaire et l'interpréter comme une projection",
+        "Je sais expliquer la PWM : rapport cyclique, fréquence, et pourquoi elle règle la vitesse d'un moteur",
+        "Je sais ce qu'est l'endianness et lire un entier 16 bits petit-boutiste dans un tableau d'octets",
+        "Je sais quand utiliser volatile en C et pourquoi"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "man pages ; Missing Semester",
+        "https://learn.sparkfun.com/tutorials/pulse-width-modulation",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 8 et 9 (matrices non carrées ; produit scalaire et dualité). Exercice : angle entre le cap du robot et la direction d'une cible",
+        "C : opérations bit à bit, masques, décalages ; fonctions read_u16_le / read_u16_be testées ; volatile",
+        "1 h 30 PWM et pont en H (principe). 2 h 30 : simuler en C une PWM logicielle (tableau de niveaux) et tracer le signal en Python",
+        "Semaine allégeable (1 semaine sur 4 selon le plan) : notes, commit, rattrapage",
+        "Expliquer sans notes pourquoi une PWM à 25 % donne en moyenne un quart de la tension d'alimentation"
+      ],
+      "verification": "Expliquer sans notes pourquoi une PWM à 25 % donne en moyenne un quart de la tension d'alimentation",
+      "proofs": [
+        "Commit : fonctions d'endianness testées + graphe PWM"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "23 nov. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 8 et 9 (matrices non carrées ; produit scalaire et dualité). Exercice : angle entre le cap du robot et la direction d'une cible",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : opérations bit à bit, masques, décalages ; fonctions read_u16_le / read_u16_be testées ; volatile",
+            "res": "man pages ; Missing Semester"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 PWM et pont en H (principe). 2 h 30 : simuler en C une PWM logicielle (tableau de niveaux) et tracer le signal en Python",
+            "res": "https://learn.sparkfun.com/tutorials/pulse-width-modulation"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Semaine allégeable (1 semaine sur 4 selon le plan) : notes, commit, rattrapage",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S4",
+        "date": "23 nov. 2026",
+        "theme": "Matrices non carrées, produit scalaire, PWM, endianness",
+        "sais": [
+          "Je sais calculer un produit scalaire et l'interpréter comme une projection",
+          "Je sais expliquer la PWM : rapport cyclique, fréquence, et pourquoi elle règle la vitesse d'un moteur",
+          "Je sais ce qu'est l'endianness et lire un entier 16 bits petit-boutiste dans un tableau d'octets",
+          "Je sais quand utiliser volatile en C et pourquoi"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 8 et 9 (matrices non carrées ; produit scalaire et dualité). Exercice : angle entre le cap du robot et la direction d'une cible",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C : opérations bit à bit, masques, décalages ; fonctions read_u16_le / read_u16_be testées ; volatile",
+            "res": "man pages ; Missing Semester"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "1 h 30 PWM et pont en H (principe). 2 h 30 : simuler en C une PWM logicielle (tableau de niveaux) et tracer le signal en Python",
+            "res": "https://learn.sparkfun.com/tutorials/pulse-width-modulation"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Semaine allégeable (1 semaine sur 4 selon le plan) : notes, commit, rattrapage",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Expliquer sans notes pourquoi une PWM à 25 % donne en moyenne un quart de la tension d'alimentation",
+        "preuve": "Commit : fonctions d'endianness testées + graphe PWM"
+      }
+    },
+    {
+      "id": "P0-S5",
+      "phase": "P0",
+      "weekNumber": 5,
+      "title": "Produit vectoriel, bus série, C++ et RAII",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais calculer un produit vectoriel et dire à quoi il sert (normale, sens de rotation)",
+        "Je sais expliquer UART, I2C et SPI : fils, horloge, adressage, débit, et lequel relie le Pi à l'ESP32",
+        "Je sais écrire une classe C++ qui libère sa ressource dans son destructeur (RAII)",
+        "Je sais utiliser std::vector, std::string et std::unique_ptr à la place de malloc"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "Documentation cppreference",
+        "https://learn.sparkfun.com/tutorials/serial-communication ; https://learn.sparkfun.com/tutorials/i2c ; wiki UGV Rover",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 10 et 11 (produit vectoriel). Exercice : le robot doit-il tourner à gauche ou à droite pour viser une cible ? (signe du produit vectoriel 2D)",
+        "C++ : réécrire le tampon circulaire en classe RAII ; tests",
+        "2 h bus série : UART puis I2C. 2 h : tableau comparatif UART/I2C/SPI dans les notes ; schéma Pi 5 ↔ UART ↔ ESP32 d'après le wiki",
+        "Commit ; première version du schéma d'architecture (sur papier puis en image)",
+        "Dire sans notes quel bus utilise une adresse sur 7 bits et lequel n'a pas de fil d'horloge"
+      ],
+      "verification": "Dire sans notes quel bus utilise une adresse sur 7 bits et lequel n'a pas de fil d'horloge",
+      "proofs": [
+        "Commit : classe C++ RAII + schéma d'architecture v1"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "30 nov. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 10 et 11 (produit vectoriel). Exercice : le robot doit-il tourner à gauche ou à droite pour viser une cible ? (signe du produit vectoriel 2D)",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C++ : réécrire le tampon circulaire en classe RAII ; tests",
+            "res": "Documentation cppreference"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "2 h bus série : UART puis I2C. 2 h : tableau comparatif UART/I2C/SPI dans les notes ; schéma Pi 5 ↔ UART ↔ ESP32 d'après le wiki",
+            "res": "https://learn.sparkfun.com/tutorials/serial-communication ; https://learn.sparkfun.com/tutorials/i2c ; wiki UGV Rover"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Commit ; première version du schéma d'architecture (sur papier puis en image)",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S5",
+        "date": "30 nov. 2026",
+        "theme": "Produit vectoriel, bus série, C++ et RAII",
+        "sais": [
+          "Je sais calculer un produit vectoriel et dire à quoi il sert (normale, sens de rotation)",
+          "Je sais expliquer UART, I2C et SPI : fils, horloge, adressage, débit, et lequel relie le Pi à l'ESP32",
+          "Je sais écrire une classe C++ qui libère sa ressource dans son destructeur (RAII)",
+          "Je sais utiliser std::vector, std::string et std::unique_ptr à la place de malloc"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 10 et 11 (produit vectoriel). Exercice : le robot doit-il tourner à gauche ou à droite pour viser une cible ? (signe du produit vectoriel 2D)",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "C++ : réécrire le tampon circulaire en classe RAII ; tests",
+            "res": "Documentation cppreference"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "2 h bus série : UART puis I2C. 2 h : tableau comparatif UART/I2C/SPI dans les notes ; schéma Pi 5 ↔ UART ↔ ESP32 d'après le wiki",
+            "res": "https://learn.sparkfun.com/tutorials/serial-communication ; https://learn.sparkfun.com/tutorials/i2c ; wiki UGV Rover"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Commit ; première version du schéma d'architecture (sur papier puis en image)",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Dire sans notes quel bus utilise une adresse sur 7 bits et lequel n'a pas de fil d'horloge",
+        "preuve": "Commit : classe C++ RAII + schéma d'architecture v1"
+      }
+    },
+    {
+      "id": "P0-S6",
+      "phase": "P0",
+      "weekNumber": 6,
+      "title": "Changement de base, datasheet INA219, cross-compilation",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais passer un point du repère du robot au repère du monde (changement de base)",
+        "Je sais lire une datasheet : brochage, registres, formules de conversion",
+        "Je sais recalculer à la main tension et courant à partir des registres bruts de l'INA219",
+        "Je sais ce qu'est la cross-compilation et compiler un binaire ARM64 depuis mon PC"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "Documentation gcc",
+        "https://www.ti.com/lit/ds/symlink/ina219.pdf",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 12 et 13 (règle de Cramer ; changement de base). Exercice : robot en (2,1) orienté à 90°, où est dans le monde un point situé à 1 m devant lui ?",
+        "Cross-compilation : chaîne aarch64 (conda ou conteneur), compiler le parseur pour ARM64, vérifier avec file / qemu",
+        "Datasheet INA219 : registres shunt/bus, calibration. Exercice : à partir de valeurs brutes d'exemple, recalculer la tension et le courant à la main puis en C",
+        "Notes « comment lire une datasheet » ; commit",
+        "Convertir à la main une valeur brute de registre bus de l'INA219 en volts"
+      ],
+      "verification": "Convertir à la main une valeur brute de registre bus de l'INA219 en volts",
+      "proofs": [
+        "Commit : convertisseur INA219 en C + tests, binaire ARM64"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "7 déc. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 12 et 13 (règle de Cramer ; changement de base). Exercice : robot en (2,1) orienté à 90°, où est dans le monde un point situé à 1 m devant lui ?",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Cross-compilation : chaîne aarch64 (conda ou conteneur), compiler le parseur pour ARM64, vérifier avec file / qemu",
+            "res": "Documentation gcc"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Datasheet INA219 : registres shunt/bus, calibration. Exercice : à partir de valeurs brutes d'exemple, recalculer la tension et le courant à la main puis en C",
+            "res": "https://www.ti.com/lit/ds/symlink/ina219.pdf"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes « comment lire une datasheet » ; commit",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S6",
+        "date": "7 déc. 2026",
+        "theme": "Changement de base, datasheet INA219, cross-compilation",
+        "sais": [
+          "Je sais passer un point du repère du robot au repère du monde (changement de base)",
+          "Je sais lire une datasheet : brochage, registres, formules de conversion",
+          "Je sais recalculer à la main tension et courant à partir des registres bruts de l'INA219",
+          "Je sais ce qu'est la cross-compilation et compiler un binaire ARM64 depuis mon PC"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 12 et 13 (règle de Cramer ; changement de base). Exercice : robot en (2,1) orienté à 90°, où est dans le monde un point situé à 1 m devant lui ?",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Cross-compilation : chaîne aarch64 (conda ou conteneur), compiler le parseur pour ARM64, vérifier avec file / qemu",
+            "res": "Documentation gcc"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Datasheet INA219 : registres shunt/bus, calibration. Exercice : à partir de valeurs brutes d'exemple, recalculer la tension et le courant à la main puis en C",
+            "res": "https://www.ti.com/lit/ds/symlink/ina219.pdf"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes « comment lire une datasheet » ; commit",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Convertir à la main une valeur brute de registre bus de l'INA219 en volts",
+        "preuve": "Commit : convertisseur INA219 en C + tests, binaire ARM64"
+      }
+    },
+    {
+      "id": "P0-S7",
+      "phase": "P0",
+      "weekNumber": 7,
+      "title": "Valeurs propres, Rust (ownership), CI",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais dire ce qu'est un vecteur propre et pourquoi une rotation 2D n'en a pas de réel",
+        "Je sais expliquer ownership, emprunt et durée de vie en Rust sur un exemple",
+        "Je sais écrire une fonction Rust testée avec cargo test",
+        "Je sais mettre en place une CI GitHub Actions qui compile et teste le code C"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "https://doc.rust-lang.org/book/",
+        "Documentation GitHub Actions ; Rust Book",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisodes 14 et 15 (vecteurs et valeurs propres). Exercice : valeurs propres de [[2,0],[0,3]] et de la rotation de 90°",
+        "Rust Book ch. 1 à 4 (installation, ownership)",
+        "2 h : workflow GitHub Actions qui lance make test sur le parseur C. 2 h : Rust Book ch. 5 et 6 (struct, enum, match)",
+        "Notes ; commit ; badge CI",
+        "Expliquer pourquoi un code Rust qui utilise une String après l'avoir déplacée ne compile pas"
+      ],
+      "verification": "Expliquer pourquoi un code Rust qui utilise une String après l'avoir déplacée ne compile pas",
+      "proofs": [
+        "Commit : CI verte sur le test C (moitié du critère de fin P0)"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "14 déc. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 14 et 15 (vecteurs et valeurs propres). Exercice : valeurs propres de [[2,0],[0,3]] et de la rotation de 90°",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Rust Book ch. 1 à 4 (installation, ownership)",
+            "res": "https://doc.rust-lang.org/book/"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "2 h : workflow GitHub Actions qui lance make test sur le parseur C. 2 h : Rust Book ch. 5 et 6 (struct, enum, match)",
+            "res": "Documentation GitHub Actions ; Rust Book"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes ; commit ; badge CI",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S7",
+        "date": "14 déc. 2026",
+        "theme": "Valeurs propres, Rust (ownership), CI",
+        "sais": [
+          "Je sais dire ce qu'est un vecteur propre et pourquoi une rotation 2D n'en a pas de réel",
+          "Je sais expliquer ownership, emprunt et durée de vie en Rust sur un exemple",
+          "Je sais écrire une fonction Rust testée avec cargo test",
+          "Je sais mettre en place une CI GitHub Actions qui compile et teste le code C"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisodes 14 et 15 (vecteurs et valeurs propres). Exercice : valeurs propres de [[2,0],[0,3]] et de la rotation de 90°",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Rust Book ch. 1 à 4 (installation, ownership)",
+            "res": "https://doc.rust-lang.org/book/"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "2 h : workflow GitHub Actions qui lance make test sur le parseur C. 2 h : Rust Book ch. 5 et 6 (struct, enum, match)",
+            "res": "Documentation GitHub Actions ; Rust Book"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Notes ; commit ; badge CI",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Expliquer pourquoi un code Rust qui utilise une String après l'avoir déplacée ne compile pas",
+        "preuve": "Commit : CI verte sur le test C (moitié du critère de fin P0)"
+      }
+    },
+    {
+      "id": "P0-S8",
+      "phase": "P0",
+      "weekNumber": 8,
+      "title": "Rust : erreurs, traits ; parseur en Rust",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais gérer les erreurs en Rust avec Result, Option et l'opérateur ?",
+        "Je sais définir et implémenter un trait",
+        "Je sais porter le parseur de trames en Rust avec tests",
+        "Je sais expliquer ce que signifie no_std et ce qu'on perd sans la bibliothèque standard"
+      ],
+      "sources": [
+        "Playlist 3Blue1Brown",
+        "https://doc.rust-lang.org/book/",
+        "https://docs.rust-embedded.org/book/",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "Épisode 16 (espaces vectoriels abstraits) + révision des 15 premiers avec 5 exercices papier",
+        "Rust Book ch. 8 à 10 (collections, erreurs, traits et génériques)",
+        "Porter le parseur C en Rust, mêmes tests ; lire l'introduction et no_std dans The Embedded Rust Book",
+        "Semaine de fêtes, allégeable : notes C vs Rust, commit",
+        "Donner sans notes deux choses indisponibles en no_std (allocation dynamique par défaut, std::fs…)"
+      ],
+      "verification": "Donner sans notes deux choses indisponibles en no_std (allocation dynamique par défaut, std::fs…)",
+      "proofs": [
+        "Commit : parseur Rust + tests"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "21 déc. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisode 16 (espaces vectoriels abstraits) + révision des 15 premiers avec 5 exercices papier",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Rust Book ch. 8 à 10 (collections, erreurs, traits et génériques)",
+            "res": "https://doc.rust-lang.org/book/"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Porter le parseur C en Rust, mêmes tests ; lire l'introduction et no_std dans The Embedded Rust Book",
+            "res": "https://docs.rust-embedded.org/book/"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Semaine de fêtes, allégeable : notes C vs Rust, commit",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S8",
+        "date": "21 déc. 2026",
+        "theme": "Rust : erreurs, traits ; parseur en Rust",
+        "sais": [
+          "Je sais gérer les erreurs en Rust avec Result, Option et l'opérateur ?",
+          "Je sais définir et implémenter un trait",
+          "Je sais porter le parseur de trames en Rust avec tests",
+          "Je sais expliquer ce que signifie no_std et ce qu'on perd sans la bibliothèque standard"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "Épisode 16 (espaces vectoriels abstraits) + révision des 15 premiers avec 5 exercices papier",
+            "res": "Playlist 3Blue1Brown"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "Rust Book ch. 8 à 10 (collections, erreurs, traits et génériques)",
+            "res": "https://doc.rust-lang.org/book/"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Porter le parseur C en Rust, mêmes tests ; lire l'introduction et no_std dans The Embedded Rust Book",
+            "res": "https://docs.rust-embedded.org/book/"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Semaine de fêtes, allégeable : notes C vs Rust, commit",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Donner sans notes deux choses indisponibles en no_std (allocation dynamique par défaut, std::fs…)",
+        "preuve": "Commit : parseur Rust + tests"
+      }
+    },
+    {
+      "id": "P0-S9",
+      "phase": "P0",
+      "weekNumber": 9,
+      "title": "MIT 18.06, ROS 2 en simulation, bilan P0",
+      "detailLevel": "source-detailed",
+      "objectives": [
+        "Je sais résoudre un petit système linéaire par élimination (vue « lignes » et vue « colonnes »)",
+        "Je sais installer ROS 2 Humble (conteneur) et lancer un nœud talker/listener",
+        "Je sais expliquer chaque fil entre le Pi et l'ESP32 d'après la documentation",
+        "Je sais rédiger en anglais une page technique claire avec schéma"
+      ],
+      "sources": [
+        "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+        "https://docs.ros.org/en/humble/Tutorials.html",
+        "Wiki UGV Rover ; github.com/waveshareteam",
+        "rover-notes"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [
+        "MIT 18.06, cours 1 et 2 (géométrie des équations, élimination)",
+        "ROS 2 Humble dans un conteneur : tutoriels CLI (nœuds, topics)",
+        "Brouillon de l'article EN « Reverse-engineering my rover's architecture » à partir du wiki et des dépôts ugv_base_ros / ugv_rpi",
+        "Bilan P0 : relire les « Je sais… », noter ce qui manque ; planifier P1",
+        "Expliquer à voix haute, sans notes, l'architecture Pi 5 ↔ UART ↔ ESP32 en 3 minutes (enregistrement)"
+      ],
+      "verification": "Expliquer à voix haute, sans notes, l'architecture Pi 5 ↔ UART ↔ ESP32 en 3 minutes (enregistrement)",
+      "proofs": [
+        "Commit : brouillon d'article + bilan P0"
+      ],
+      "scheduleNotes": {
+        "sourceMondayDate": "28 déc. 2026",
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "MIT 18.06, cours 1 et 2 (géométrie des équations, élimination)",
+            "res": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "ROS 2 Humble dans un conteneur : tutoriels CLI (nœuds, topics)",
+            "res": "https://docs.ros.org/en/humble/Tutorials.html"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Brouillon de l'article EN « Reverse-engineering my rover's architecture » à partir du wiki et des dépôts ugv_base_ros / ugv_rpi",
+            "res": "Wiki UGV Rover ; github.com/waveshareteam"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Bilan P0 : relire les « Je sais… », noter ce qui manque ; planifier P1",
+            "res": "rover-notes"
+          }
+        ]
+      },
+      "sourceRecord": {
+        "n": "S9",
+        "date": "28 déc. 2026",
+        "theme": "MIT 18.06, ROS 2 en simulation, bilan P0",
+        "sais": [
+          "Je sais résoudre un petit système linéaire par élimination (vue « lignes » et vue « colonnes »)",
+          "Je sais installer ROS 2 Humble (conteneur) et lancer un nœud talker/listener",
+          "Je sais expliquer chaque fil entre le Pi et l'ESP32 d'après la documentation",
+          "Je sais rédiger en anglais une page technique claire avec schéma"
+        ],
+        "slots": [
+          {
+            "c": "Mardi",
+            "d": "1 h 30",
+            "contenu": "MIT 18.06, cours 1 et 2 (géométrie des équations, élimination)",
+            "res": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+          },
+          {
+            "c": "Jeudi",
+            "d": "1 h 30",
+            "contenu": "ROS 2 Humble dans un conteneur : tutoriels CLI (nœuds, topics)",
+            "res": "https://docs.ros.org/en/humble/Tutorials.html"
+          },
+          {
+            "c": "Samedi",
+            "d": "4 h",
+            "contenu": "Brouillon de l'article EN « Reverse-engineering my rover's architecture » à partir du wiki et des dépôts ugv_base_ros / ugv_rpi",
+            "res": "Wiki UGV Rover ; github.com/waveshareteam"
+          },
+          {
+            "c": "Dimanche",
+            "d": "2 h",
+            "contenu": "Bilan P0 : relire les « Je sais… », noter ce qui manque ; planifier P1",
+            "res": "rover-notes"
+          }
+        ],
+        "verif": "Expliquer à voix haute, sans notes, l'architecture Pi 5 ↔ UART ↔ ESP32 en 3 minutes (enregistrement)",
+        "preuve": "Commit : brouillon d'article + bilan P0"
+      }
+    },
+    {
+      "id": "P1-S10",
+      "phase": "P1",
+      "weekNumber": 10,
+      "title": "outillage et compilation reproductible",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S10–S12 outillage et compilation reproductible",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S11",
+      "phase": "P1",
+      "weekNumber": 11,
+      "title": "outillage et compilation reproductible",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S10–S12 outillage et compilation reproductible",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S12",
+      "phase": "P1",
+      "weekNumber": 12,
+      "title": "outillage et compilation reproductible",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S10–S12 outillage et compilation reproductible",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S13",
+      "phase": "P1",
+      "weekNumber": 13,
+      "title": "PID et réponse indicielle",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S13–S16 PID et réponse indicielle",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S14",
+      "phase": "P1",
+      "weekNumber": 14,
+      "title": "PID et réponse indicielle",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S13–S16 PID et réponse indicielle",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S15",
+      "phase": "P1",
+      "weekNumber": 15,
+      "title": "PID et réponse indicielle",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S13–S16 PID et réponse indicielle",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S16",
+      "phase": "P1",
+      "weekNumber": 16,
+      "title": "PID et réponse indicielle",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S13–S16 PID et réponse indicielle",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S17",
+      "phase": "P1",
+      "weekNumber": 17,
+      "title": "temps réel et jitter",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S17–S18 temps réel et jitter",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S18",
+      "phase": "P1",
+      "weekNumber": 18,
+      "title": "temps réel et jitter",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S17–S18 temps réel et jitter",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S19",
+      "phase": "P1",
+      "weekNumber": 19,
+      "title": "protocole binaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S19–S21 protocole binaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S20",
+      "phase": "P1",
+      "weekNumber": 20,
+      "title": "protocole binaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S19–S21 protocole binaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P1-S21",
+      "phase": "P1",
+      "weekNumber": 21,
+      "title": "protocole binaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P1",
+      "phaseExercisesRef": "P1",
+      "phaseProofRef": "P1",
+      "scheduleNotes": {
+        "blockSourceText": "S19–S21 protocole binaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S22",
+      "phase": "P2",
+      "weekNumber": 22,
+      "title": "probabilités et filtre complémentaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S23",
+      "phase": "P2",
+      "weekNumber": 23,
+      "title": "probabilités et filtre complémentaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S24",
+      "phase": "P2",
+      "weekNumber": 24,
+      "title": "probabilités et filtre complémentaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S25",
+      "phase": "P2",
+      "weekNumber": 25,
+      "title": "probabilités et filtre complémentaire",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S22–S25 probabilités et filtre complémentaire",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S26",
+      "phase": "P2",
+      "weekNumber": 26,
+      "title": "rotations et quaternions",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S26–S29 rotations et quaternions",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S27",
+      "phase": "P2",
+      "weekNumber": 27,
+      "title": "rotations et quaternions",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S26–S29 rotations et quaternions",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S28",
+      "phase": "P2",
+      "weekNumber": 28,
+      "title": "rotations et quaternions",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S26–S29 rotations et quaternions",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S29",
+      "phase": "P2",
+      "weekNumber": 29,
+      "title": "rotations et quaternions",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S26–S29 rotations et quaternions",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S30",
+      "phase": "P2",
+      "weekNumber": 30,
+      "title": "EKF",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S30–S33 EKF",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S31",
+      "phase": "P2",
+      "weekNumber": 31,
+      "title": "EKF",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S30–S33 EKF",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S32",
+      "phase": "P2",
+      "weekNumber": 32,
+      "title": "EKF",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S30–S33 EKF",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S33",
+      "phase": "P2",
+      "weekNumber": 33,
+      "title": "EKF",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S30–S33 EKF",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S34",
+      "phase": "P2",
+      "weekNumber": 34,
+      "title": "Rust embassy et watchdog",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S34–S37 Rust embassy et watchdog",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S35",
+      "phase": "P2",
+      "weekNumber": 35,
+      "title": "Rust embassy et watchdog",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S34–S37 Rust embassy et watchdog",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S36",
+      "phase": "P2",
+      "weekNumber": 36,
+      "title": "Rust embassy et watchdog",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S34–S37 Rust embassy et watchdog",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P2-S37",
+      "phase": "P2",
+      "weekNumber": 37,
+      "title": "Rust embassy et watchdog",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P2",
+      "phaseExercisesRef": "P2",
+      "phaseProofRef": "P2",
+      "scheduleNotes": {
+        "blockSourceText": "S34–S37 Rust embassy et watchdog",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S38",
+      "phase": "P3",
+      "weekNumber": 38,
+      "title": "concepts ROS 2 et tf2",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S39",
+      "phase": "P3",
+      "weekNumber": 39,
+      "title": "concepts ROS 2 et tf2",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S40",
+      "phase": "P3",
+      "weekNumber": 40,
+      "title": "concepts ROS 2 et tf2",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S41",
+      "phase": "P3",
+      "weekNumber": 41,
+      "title": "concepts ROS 2 et tf2",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S38–S41 concepts ROS 2 et tf2",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S42",
+      "phase": "P3",
+      "weekNumber": 42,
+      "title": "URDF, Gazebo, ros2_control",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S43",
+      "phase": "P3",
+      "weekNumber": 43,
+      "title": "URDF, Gazebo, ros2_control",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S44",
+      "phase": "P3",
+      "weekNumber": 44,
+      "title": "URDF, Gazebo, ros2_control",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S45",
+      "phase": "P3",
+      "weekNumber": 45,
+      "title": "URDF, Gazebo, ros2_control",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S42–S45 URDF, Gazebo, ros2_control",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S46",
+      "phase": "P3",
+      "weekNumber": 46,
+      "title": "dashboard React + WebRTC",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S46–S50 dashboard React + WebRTC",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S47",
+      "phase": "P3",
+      "weekNumber": 47,
+      "title": "dashboard React + WebRTC",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S46–S50 dashboard React + WebRTC",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S48",
+      "phase": "P3",
+      "weekNumber": 48,
+      "title": "dashboard React + WebRTC",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S46–S50 dashboard React + WebRTC",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S49",
+      "phase": "P3",
+      "weekNumber": 49,
+      "title": "dashboard React + WebRTC",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S46–S50 dashboard React + WebRTC",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P3-S50",
+      "phase": "P3",
+      "weekNumber": 50,
+      "title": "dashboard React + WebRTC",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P3",
+      "phaseExercisesRef": "P3",
+      "phaseProofRef": "P3",
+      "scheduleNotes": {
+        "blockSourceText": "S46–S50 dashboard React + WebRTC",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S51",
+      "phase": "P4",
+      "weekNumber": 51,
+      "title": "modèle de caméra et calibration fisheye",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S52",
+      "phase": "P4",
+      "weekNumber": 52,
+      "title": "modèle de caméra et calibration fisheye",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S53",
+      "phase": "P4",
+      "weekNumber": 53,
+      "title": "modèle de caméra et calibration fisheye",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S51–S53 modèle de caméra et calibration fisheye",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S54",
+      "phase": "P4",
+      "weekNumber": 54,
+      "title": "AprilTag et pan-tilt",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S54–S56 AprilTag et pan-tilt",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S55",
+      "phase": "P4",
+      "weekNumber": 55,
+      "title": "AprilTag et pan-tilt",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S54–S56 AprilTag et pan-tilt",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S56",
+      "phase": "P4",
+      "weekNumber": 56,
+      "title": "AprilTag et pan-tilt",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S54–S56 AprilTag et pan-tilt",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S57",
+      "phase": "P4",
+      "weekNumber": 57,
+      "title": "inférence embarquée",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S57–S59 inférence embarquée",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S58",
+      "phase": "P4",
+      "weekNumber": 58,
+      "title": "inférence embarquée",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S57–S59 inférence embarquée",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P4-S59",
+      "phase": "P4",
+      "weekNumber": 59,
+      "title": "inférence embarquée",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "OpenCV docs · AprilTag · Hailo RPi5 examples"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P4",
+      "phaseExercisesRef": "P4",
+      "phaseProofRef": "P4",
+      "scheduleNotes": {
+        "blockSourceText": "S57–S59 inférence embarquée",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S60",
+      "phase": "P5",
+      "weekNumber": 60,
+      "title": "filtre particulaire et SLAM",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S60–S62 filtre particulaire et SLAM",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S61",
+      "phase": "P5",
+      "weekNumber": 61,
+      "title": "filtre particulaire et SLAM",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S60–S62 filtre particulaire et SLAM",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S62",
+      "phase": "P5",
+      "weekNumber": 62,
+      "title": "filtre particulaire et SLAM",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S60–S62 filtre particulaire et SLAM",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S63",
+      "phase": "P5",
+      "weekNumber": 63,
+      "title": "SLAM Toolbox avec LIDAR",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S64",
+      "phase": "P5",
+      "weekNumber": 64,
+      "title": "SLAM Toolbox avec LIDAR",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S65",
+      "phase": "P5",
+      "weekNumber": 65,
+      "title": "SLAM Toolbox avec LIDAR",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S63–S65 SLAM Toolbox avec LIDAR",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S66",
+      "phase": "P5",
+      "weekNumber": 66,
+      "title": "Nav2 et comparaison d'odométries",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S67",
+      "phase": "P5",
+      "weekNumber": 67,
+      "title": "Nav2 et comparaison d'odométries",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P5-S68",
+      "phase": "P5",
+      "weekNumber": 68,
+      "title": "Nav2 et comparaison d'odométries",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P5",
+      "phaseExercisesRef": "P5",
+      "phaseProofRef": "P5",
+      "scheduleNotes": {
+        "blockSourceText": "S66–S68 Nav2 et comparaison d'odométries",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S69",
+      "phase": "P6",
+      "weekNumber": 69,
+      "title": "banc HIL et CI",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S69–S72 banc HIL et CI",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S70",
+      "phase": "P6",
+      "weekNumber": 70,
+      "title": "banc HIL et CI",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S69–S72 banc HIL et CI",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S71",
+      "phase": "P6",
+      "weekNumber": 71,
+      "title": "banc HIL et CI",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S69–S72 banc HIL et CI",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S72",
+      "phase": "P6",
+      "weekNumber": 72,
+      "title": "banc HIL et CI",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S69–S72 banc HIL et CI",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S73",
+      "phase": "P6",
+      "weekNumber": 73,
+      "title": "MCAP, Foxglove, replay",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S74",
+      "phase": "P6",
+      "weekNumber": 74,
+      "title": "MCAP, Foxglove, replay",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S75",
+      "phase": "P6",
+      "weekNumber": 75,
+      "title": "MCAP, Foxglove, replay",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S73–S75 MCAP, Foxglove, replay",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S76",
+      "phase": "P6",
+      "weekNumber": 76,
+      "title": "sûreté et OTA",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S76–S78 sûreté et OTA",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S77",
+      "phase": "P6",
+      "weekNumber": 77,
+      "title": "sûreté et OTA",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S76–S78 sûreté et OTA",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P6-S78",
+      "phase": "P6",
+      "weekNumber": 78,
+      "title": "sûreté et OTA",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "MCAP · Foxglove docs"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P6",
+      "phaseExercisesRef": "P6",
+      "phaseProofRef": "P6",
+      "scheduleNotes": {
+        "blockSourceText": "S76–S78 sûreté et OTA",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S79",
+      "phase": "P7",
+      "weekNumber": 79,
+      "title": "choix et prototype",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S79–S82 choix et prototype",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S80",
+      "phase": "P7",
+      "weekNumber": 80,
+      "title": "choix et prototype",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S79–S82 choix et prototype",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S81",
+      "phase": "P7",
+      "weekNumber": 81,
+      "title": "choix et prototype",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S79–S82 choix et prototype",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S82",
+      "phase": "P7",
+      "weekNumber": 82,
+      "title": "choix et prototype",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S79–S82 choix et prototype",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S83",
+      "phase": "P7",
+      "weekNumber": 83,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S84",
+      "phase": "P7",
+      "weekNumber": 84,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S85",
+      "phase": "P7",
+      "weekNumber": 85,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S86",
+      "phase": "P7",
+      "weekNumber": 86,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S87",
+      "phase": "P7",
+      "weekNumber": 87,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S88",
+      "phase": "P7",
+      "weekNumber": 88,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S89",
+      "phase": "P7",
+      "weekNumber": 89,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S90",
+      "phase": "P7",
+      "weekNumber": 90,
+      "title": "réalisation et mesures",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S83–S90 réalisation et mesures",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S91",
+      "phase": "P7",
+      "weekNumber": 91,
+      "title": "article, vidéo, talk",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S91–S94 article, vidéo, talk",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S92",
+      "phase": "P7",
+      "weekNumber": 92,
+      "title": "article, vidéo, talk",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S91–S94 article, vidéo, talk",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S93",
+      "phase": "P7",
+      "weekNumber": 93,
+      "title": "article, vidéo, talk",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S91–S94 article, vidéo, talk",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    },
+    {
+      "id": "P7-S94",
+      "phase": "P7",
+      "weekNumber": 94,
+      "title": "article, vidéo, talk",
+      "detailLevel": "indicative-block-only",
+      "objectives": [],
+      "sources": [
+        "ros2_rust · Underactuated Robotics · ROSCon · F1TENTH"
+      ],
+      "detailedQuestions": [],
+      "hints": [],
+      "exercises": [],
+      "proofs": [],
+      "phaseObjectivesRef": "P7",
+      "phaseExercisesRef": "P7",
+      "phaseProofRef": "P7",
+      "scheduleNotes": {
+        "blockSourceText": "S91–S94 article, vidéo, talk",
+        "note": "Objectifs, exercices et livrables au niveau de la phase ; aucune affectation précise par semaine dans le Canvas."
+      }
+    }
+  ],
+  "competencyReference": [
+    [
+      "Linux",
+      [
+        "SSH, systemd, journalctl",
+        "Permissions, groupes, dialout, udev",
+        "Scripts bash",
+        "Cross-compilation ARM64"
+      ]
+    ],
+    [
+      "C/C++",
+      [
+        "Pointeurs, pile vs tas",
+        "Mémoire dynamique sans fuite",
+        "Bits, endianness, volatile",
+        "RAII, conteneurs standard",
+        "Tests unitaires et CI"
+      ]
+    ],
+    [
+      "Électronique",
+      [
+        "Loi d'Ohm, puissance",
+        "PWM, pont en H",
+        "UART, I2C, SPI",
+        "Lire une datasheet (INA219, IMU)",
+        "Encodeurs"
+      ]
+    ],
+    [
+      "Rust",
+      [
+        "Ownership, emprunt",
+        "Result, Option, traits",
+        "no_std, embedded-hal",
+        "embassy async"
+      ]
+    ],
+    [
+      "Maths",
+      [
+        "Transformations, matrices, déterminant",
+        "Changement de base, valeurs propres",
+        "Probabilités, gaussiennes",
+        "Kalman, EKF",
+        "Rotations, quaternions",
+        "PID, réponse indicielle"
+      ]
+    ],
+    [
+      "ROS 2",
+      [
+        "Nœuds, topics, services, actions, QoS",
+        "Launch, tf2",
+        "URDF, Gazebo",
+        "ros2_control"
+      ]
+    ],
+    [
+      "Perception",
+      [
+        "Modèle sténopé, calibration fisheye",
+        "Pose AprilTag",
+        "Inférence embarquée mesurée"
+      ]
+    ],
+    [
+      "SLAM/Nav2",
+      [
+        "Filtre particulaire",
+        "SLAM Toolbox",
+        "Nav2 : costmaps, planificateurs, BT",
+        "robot_localization"
+      ]
+    ],
+    [
+      "Tests/CI/HIL",
+      [
+        "CI GitHub Actions",
+        "Banc HIL",
+        "MCAP, Foxglove, replay",
+        "Watchdog, OTA signé"
+      ]
+    ],
+    [
+      "Portfolio",
+      [
+        "Un article EN par phase",
+        "Une vidéo de mesure par phase",
+        "Contribution upstream",
+        "Talk soumis"
+      ]
+    ]
+  ],
+  "programPhaseRows": [
+    [
+      "P0",
+      "Fondations",
+      "M1–M2",
+      "80 h",
+      "Repo rover-notes + article EN « Reverse-engineering my rover's architecture »",
+      "Vous expliquez sans notes chaque fil entre le Pi et l'ESP32 et un test C passe en CI"
+    ],
+    [
+      "P1",
+      "Firmware ESP32 en C++",
+      "M3–M4",
+      "100 h",
+      "Fork documenté + article « Tuning wheel PID with real step responses »",
+      "Dépassement < 10 % mesuré, protocole binaire avec taux d'erreur mesuré sur 1 h"
+    ],
+    [
+      "P2",
+      "IMU, fusion, Rust embarqué",
+      "M5–M7",
+      "140 h",
+      "Repo rover-fw-rs + vidéo C++ vs Rust + article EKF",
+      "Le Rover roule sur votre firmware Rust, watchdog testé, erreur EKF chiffrée"
+    ],
+    [
+      "P3",
+      "ROS 2, simulation, dashboard",
+      "M7–M9",
+      "120 h",
+      "Repo rover_ros2 + dashboard + vidéo « same code, sim and real »",
+      "Bascule sim/réel par un argument de launch ; latence vidéo mesurée"
+    ],
+    [
+      "P4",
+      "Perception",
+      "M10–M11",
+      "100 h",
+      "Vidéo de suivi de tag + benchmark d'inférence Pi 5",
+      "Erreur de pose AprilTag mesurée ; tableau FPS/latence publié"
+    ],
+    [
+      "P5",
+      "Localisation, SLAM, Nav2",
+      "M12–M13",
+      "100 h",
+      "Vidéo de navigation + carte + article « What actually drifts »",
+      "10 navigations sur 10 vers 3 points, résultats publiés"
+    ],
+    [
+      "P6",
+      "Rigueur industrielle",
+      "M14–M15",
+      "90 h",
+      "CI publique avec badge HIL + article HIL",
+      "Un bug réel attrapé par la CI HIL et documenté"
+    ],
+    [
+      "P7",
+      "Capstone",
+      "M16–M18",
+      "130 h",
+      "Repo, vidéo 3 min, article long, talk soumis",
+      "Un ingénieur inconnu reproduit le résultat depuis votre README"
+    ]
+  ],
+  "rawCanvasSources": {
+    "overview": "import { Page, Section, Text, Callout, Table, Steps, BulletList, NumberedList, Checklist, LinkCards, Properties, Segmented, Grid, ProsCons, TableOfContents, Columns, Diagram, useState } from \"grok/canvas\";\n\ntype Phase = { id: string; nom: string; mois: string; heures: number; theorie: string[]; exercices: string[]; livrable: string; done: string };\n\nconst phases: Phase[] = [\n  { id: \"P0\", nom: \"Fondations\", mois: \"M1–M2\", heures: 80,\n    theorie: [\"Linux (systemd, udev, permissions série), shell, SSH, cross-compilation : c'est l'OS de 90 % des robots\", \"C/C++ moderne : pointeurs, stack vs heap, RAII, `volatile`, endianness : la mémoire que le web cache\", \"Électronique de base : loi d'Ohm, PWM, pont en H, UART/I2C/SPI, lire une datasheet (INA219, IMU)\", \"Rust : ownership, traits, `no_std` (lecture du Rust Book en parallèle)\"],\n    exercices: [\"Installer l'image ROS 2 du Rover, cartographier son architecture (Pi 5 ↔ UART ↔ ESP32) dans un schéma\", \"Piloter le Rover depuis un script Python en envoyant les commandes JSON documentées sur le wiki\", \"Écrire en C un parseur de trames avec tests unitaires, sans IA pour la première version\", \"Lire la datasheet de l'INA219 et recalculer à la main la tension/courant affichés\"],\n    livrable: \"Repo `rover-notes` + article EN « Reverse-engineering my rover's architecture »\", done: \"Tu sais expliquer sans notes chaque fil entre le Pi et l'ESP32 et tu as un test C qui passe en CI\" },\n  { id: \"P1\", nom: \"Firmware ESP32 en C++\", mois: \"M3–M4\", heures: 100,\n    theorie: [\"Contrôle : boucle fermée, PID, réponse indicielle, saturation et anti-windup (vidéos Brian Douglas)\", \"Temps réel : FreeRTOS, priorités, jitter, ISR courtes\", \"Encodeurs, échantillonnage, filtrage de vitesse\"],\n    exercices: [\"Forker `ugv_base_ros`, le compiler et le flasher ; rendre la compilation reproductible (PlatformIO ou arduino-cli)\", \"Mesurer la réponse indicielle d'une roue, la tracer (Python/matplotlib), régler le PID et montrer avant/après\", \"Mesurer le jitter de la boucle de contrôle à l'oscilloscope logique ou par timestamps\", \"Remplacer le JSON par un protocole binaire maison (COBS + CRC16) avec numéro de séquence\"],\n    livrable: \"Fork documenté + article « Tuning wheel PID with real step responses » + graphes\", done: \"Dépassement < 10 % mesuré, protocole binaire avec taux d'erreur mesuré sur 1 h de trafic\" },\n  { id: \"P2\", nom: \"IMU, fusion de capteurs, Rust embarqué\", mois: \"M5–M7\", heures: 140,\n    theorie: [\"Probabilités, gaussiennes, filtre complémentaire puis filtre de Kalman étendu (Labbe)\", \"Rotations : quaternions, angles d'Euler, gimbal lock (Modern Robotics ch. 3)\", \"Rust embarqué : esp-hal, embassy (async sans OS), HAL et traits embedded-hal\"],\n    exercices: [\"Driver IMU 9 axes en Rust `no_std`, calibration magnétomètre (hard/soft iron)\", \"Filtre complémentaire puis EKF pour l'orientation ; comparer les deux sur un même log\", \"Porter la boucle moteur + PID + protocole binaire en Rust/embassy sur l'ESP32\", \"Watchdog : moteurs coupés si plus de trame depuis 200 ms\"],\n    livrable: \"Repo `rover-fw-rs` (firmware Rust complet) + vidéo comparatif C++ vs Rust + article EKF\", done: \"Le Rover roule sur ton firmware Rust, avec watchdog testé et un EKF dont l'erreur est chiffrée\" },\n  { id: \"P3\", nom: \"ROS 2, simulation, dashboard web\", mois: \"M7–M9\", heures: 120,\n    theorie: [\"ROS 2 : nœuds, topics, services, actions, QoS, launch, tf2\", \"URDF/xacro, Gazebo, ros2_control (hardware interface)\", \"WebRTC, latence vidéo, sérialisation\"],\n    exercices: [\"Écrire un `hardware_interface` ros2_control qui parle ton protocole binaire\", \"URDF exact du Rover, même code en simulation Gazebo et sur le vrai robot\", \"Dashboard React : téléopération, télémétrie batterie/IMU, vidéo WebRTC, latence affichée\"],\n    livrable: \"Repo `rover_ros2` + dashboard + vidéo « same code, sim and real »\", done: \"Bascule sim/réel par un seul argument de launch ; latence vidéo bout-en-bout mesurée\" },\n  { id: \"P4\", nom: \"Perception\", mois: \"M10–M11\", heures: 100,\n    theorie: [\"Modèle sténopé, distorsion fisheye (caméra 160°), calibration\", \"Géométrie multi-vues, odométrie visuelle\", \"Inférence embarquée : quantification, profiling CPU/NPU\"],\n    exercices: [\"Calibrer la caméra fisheye, publier `camera_info`\", \"Détection AprilTag et estimation de pose ; suivi de tag par la tourelle pan-tilt\", \"Détecteur type YOLO sur Pi 5 : mesurer FPS/latence CPU, puis avec Hailo (option)\"],\n    livrable: \"Vidéo du Rover qui suit un tag + article benchmark d'inférence sur Pi 5\", done: \"Erreur de pose AprilTag mesurée contre un mètre ruban ; tableau FPS/latence publié\" },\n  { id: \"P5\", nom: \"Localisation, SLAM, Nav2\", mois: \"M12–M13\", heures: 100,\n    theorie: [\"Filtre particulaire, SLAM par graphe (Probabilistic Robotics)\", \"Planification globale/locale, costmaps, behavior trees\", \"Fusion odométrie roues + IMU (robot_localization)\"],\n    exercices: [\"Monter le LIDAR D500, carte de l'appartement avec SLAM Toolbox\", \"Nav2 : navigation autonome point à point, puis patrouille\", \"Comparer odométrie roues, roues+IMU (EKF), et localisation LIDAR\"],\n    livrable: \"Vidéo de navigation autonome + carte + article « What actually drifts »\", done: \"10 navigations sur 10 réussies vers 3 points, taux de réussite et temps publiés\" },\n  { id: \"P6\", nom: \"Rigueur industrielle\", mois: \"M14–M15\", heures: 90,\n    theorie: [\"Tests (unitaires, intégration, hardware-in-the-loop), CI\", \"Observabilité : rosbag2/MCAP, Foxglove, replay déterministe\", \"Sûreté : watchdogs, états dégradés, arrêt d'urgence ; mises à jour OTA\"],\n    exercices: [\"Banc HIL : un second ESP32 ou le Pi teste le firmware à chaque commit\", \"Pipeline log → MCAP → Foxglove → test de régression rejoué\", \"OTA signé du firmware ESP32 avec rollback\"],\n    livrable: \"CI publique avec badge HIL + article « Hardware-in-the-loop for a hobby rover »\", done: \"Un bug réel attrapé par la CI HIL et documenté\" },\n  { id: \"P7\", nom: \"Capstone\", mois: \"M16–M18\", heures: 130,\n    theorie: [\"Selon le capstone : sim-to-real, apprentissage par renforcement, coordination multi-robot\", \"Écriture technique et présentation\"],\n    exercices: [\"Option A : pile temps réel 100 % Rust (firmware embassy + nœuds ros2_rust)\", \"Option B : contrôle appris en simulation transféré sur le vrai Rover, avec mesure du gap sim-to-real\", \"Option C : 2 rovers (ou rover + sim) coordonnés, partage de carte\"],\n    livrable: \"Projet phare : repo, vidéo 3 min, article long, talk soumis (meetup ROS, ROSCon)\", done: \"Un ingénieur robotique inconnu comprend et reproduit le résultat depuis ton README\" },\n];\n\nconst diff: Record<string, string> = { P0: \"Moyenne\", P1: \"Élevée\", P2: \"Très élevée\", P3: \"Moyenne\", P4: \"Élevée\", P5: \"Élevée\", P6: \"Élevée\", P7: \"Très élevée\" };\n\nexport default function App() {\n  const [sel, setSel] = useState<string>(\"P0\");\n  const p = phases.find((x: Phase) => x.id === sel) ?? phases[0];\n  return (\n    <Page title=\"UGV Rover – plan d'auto-formation et de portfolio robotique\" summary=\"18 mois, 8 à 12 h par semaine, pour passer du web aux robots avec le Waveshare UGV Rover PT PI5 AI Kit, et construire des preuves publiques lisibles par un employeur robotique américain.\" width=\"column\" lang=\"fr\">\n      <TableOfContents items={[{ label: \"Verdict honnête\" }, { label: \"Ce que le matériel permet vraiment\" }, { label: \"Feuille de route\" }, { label: \"Détail des phases\" }, { label: \"Piste maths et théorie\" }, { label: \"Options matérielles\" }, { label: \"Stratégie portfolio\" }, { label: \"Stratégie emploi et visa\" }, { label: \"Semaine type\" }, { label: \"Tracker\" }, { label: \"Ressources\" }]} />\n\n      <Section heading=\"Verdict honnête\">\n        <Callout lead=\"Faisable, mais pas magique.\">Environ 960 h sur 18 mois suffisent pour un profil crédible d'ingénieur logiciel robotique ou embarqué junior-confirmé, avec un avantage rare : full-stack + firmware Rust + ROS 2. Cela ne remplace pas un master en robotique pour les postes de recherche (contrôle avancé, perception SOTA). Le visa est le goulot d'étranglement, pas les compétences.</Callout>\n        <ProsCons pros={[\"7 ans de prod logicielle : tests, revues, déploiement, déjà acquis\", \"React + backend : rare chez les roboticiens, utile pour l'outillage et les dashboards\", \"Le Rover couvre firmware, ROS 2, perception et navigation sur une seule plateforme\"]} cons={[\"Maths (algèbre linéaire, probas, contrôle) à reconstruire : le vrai mur\", \"Coder sans IA sur la partie bas niveau est indispensable pour apprendre\", \"Les offres US citent souvent un master/PhD ou une expérience robotique pro\"]} />\n      </Section>\n\n      <Section heading=\"Ce que le matériel permet vraiment\">\n        <Properties items={[\n          { label: \"Hôte\", value: \"Raspberry Pi 5 (4 Go), ROS 2 Humble (dépôt `ugv_ws`, branche `ros2-humble-develop`)\" },\n          { label: \"Sous-contrôleur\", value: \"ESP32 : moteurs + PID, IMU 9 axes, INA219, OLED, stabilisation pan-tilt ; firmware open source `ugv_base_ros` (C/Arduino)\" },\n          { label: \"Lien Pi ↔ ESP32\", value: \"UART avec commandes JSON ; aussi HTTP et ESP-NOW\" },\n          { label: \"Code Pi officiel\", value: \"`ugv_rpi` (Python, interface web, vision)\" },\n          { label: \"Capteurs\", value: \"Caméra 5 MP 160° sur pan-tilt ; LIDAR D500 ou STL27L en option\" },\n          { label: \"Prix du kit\", value: \"Affichés sur waveshare.com au 1er nov. 2026 : 244,99 $ et 486,99 $ selon la variante ; vérifie la tienne\" },\n        ]} />\n        <Text>Le firmware ESP32 étant ouvert, le réécrire (C++ puis Rust) est le cœur différenciant du plan.</Text>\n      </Section>\n\n      <Section heading=\"Feuille de route\">\n        <Columns points={phases.map((x: Phase) => ({ label: x.id, value: x.heures, display: x.heures + \" h\" }))} emphasis={2} />\n        <Diagram direction=\"horizontal\" nodes={[{ id: \"a\", label: \"Fondations\" }, { id: \"b\", label: \"Firmware C++\" }, { id: \"c\", label: \"Rust + fusion\" }, { id: \"d\", label: \"ROS 2 + web\" }, { id: \"e\", label: \"Perception\" }, { id: \"f\", label: \"SLAM + Nav2\" }, { id: \"g\", label: \"Rigueur\" }, { id: \"h\", label: \"Capstone\", kind: \"terminal\" }]} edges={[{ from: \"a\", to: \"b\" }, { from: \"b\", to: \"c\" }, { from: \"c\", to: \"d\" }, { from: \"d\", to: \"e\" }, { from: \"e\", to: \"f\" }, { from: \"f\", to: \"g\" }, { from: \"g\", to: \"h\" }]} />\n        <Text>Heures estimées par phase ; total 860 h de projet plus environ 100 h de maths réparties. Prévois 20 % de marge : le matériel casse.</Text>\n      </Section>\n\n      <Section heading=\"Détail des phases\">\n        <Segmented options={phases.map((x: Phase) => ({ value: x.id, label: x.id }))} value={sel} onChange={(v: string) => setSel(v)} />\n        <Properties items={[{ label: \"Phase\", value: p.nom }, { label: \"Période\", value: p.mois }, { label: \"Heures estimées\", value: p.heures + \" h\" }, { label: \"Difficulté\", value: diff[p.id] }]} />\n        <Section heading=\"Objectifs théoriques et pourquoi\">\n          <BulletList items={p.theorie} />\n        </Section>\n        <Section heading=\"Exercices concrets\">\n          <NumberedList items={p.exercices} />\n        </Section>\n        <Section heading=\"Livrable public et définition de terminé\">\n          <Properties items={[{ label: \"Livrable\", value: p.livrable }, { label: \"Terminé quand\", value: p.done }]} />\n        </Section>\n      </Section>\n\n      <Section heading=\"Piste maths et théorie\">\n        <Table columns={[\"Sujet\", \"Ressource\", \"Quand\"]} rows={[\n          [\"Algèbre linéaire\", \"3Blue1Brown puis MIT 18.06 (Strang)\", \"M1–M4\"],\n          [\"Contrôle (PID, espace d'état)\", \"Brian Douglas (YouTube)\", \"M3–M5\"],\n          [\"Kalman, EKF\", \"Kalman and Bayesian Filters in Python (Labbe)\", \"M5–M7\"],\n          [\"Cinématique, rotations\", \"Modern Robotics (Lynch & Park), livre + vidéos gratuits\", \"M5–M9\"],\n          [\"Probabilités, SLAM\", \"Probabilistic Robotics (Thrun et al.), livre à acheter ou emprunter\", \"M11–M13\"],\n          [\"Contrôle avancé (option)\", \"Underactuated Robotics (MIT, Tedrake)\", \"M15+\"],\n        ]} />\n        <Text>Règle : chaque concept est implémenté une fois à la main en Python ou Rust avant d'utiliser une bibliothèque.</Text>\n      </Section>\n\n      <Section heading=\"Options matérielles\">\n        <Table columns={[\"Option\", \"Prix\", \"Phase\"]} rows={[\n          [\"LIDAR D500 (Waveshare)\", \"à partir de 95,99 $ sur waveshare.com au 1er nov. 2026\", \"P5\"],\n          [\"LIDAR STL27L (Waveshare)\", \"à partir de 167,99 $ sur waveshare.com au 1er nov. 2026\", \"P5 (option)\"],\n          [\"Raspberry Pi AI HAT+ (Hailo)\", \"prix non vérifié\", \"P4\"],\n          [\"Raspberry Pi Debug Probe\", \"prix non vérifié\", \"P1\"],\n          [\"Analyseur logique USB bon marché\", \"prix non vérifié\", \"P1\"],\n        ]} />\n        <Text>Prix hors taxes et port, tarifs dégressifs selon la quantité. Le D500 suffit pour SLAM Toolbox et Nav2 en intérieur.</Text>\n      </Section>\n\n      <Section heading=\"Stratégie portfolio\">\n        <BulletList items={[\"GitHub : un repo par couche (`rover-fw-rs`, `rover_ros2`, `rover-dashboard`) + un repo parapluie avec README, schéma d'architecture et liens vidéo\", \"Chaque phase : une vidéo de 1 à 3 min montrant une mesure, pas seulement une démo\", \"Un article technique en anglais par phase, avec chiffres, échecs et graphes\", \"X et LinkedIn : un fil court par livrable, en taguant les projets utilisés (ROS 2, embassy, esp-hal)\", \"Contributions upstream : corriger docs et petits bugs dans esp-hal, embassy, Nav2 ou ros2_rust ; c'est le signal le plus fort et le plus vérifiable\", \"Compétitions et événements : F1TENTH, meetups ROS, soumettre un talk à ROSCon\"]} />\n      </Section>\n\n      <Section heading=\"Stratégie emploi et visa\">\n        <Table columns={[\"Voie\", \"Principe (USCIS)\", \"Réalisme pour toi\"]} rows={[\n          [\"L-1\", \"Transfert intra-groupe après au moins 1 an continu sur les 3 dernières années dans une entité liée hors US ; L-1B exige une connaissance spécialisée\", \"La voie la plus réaliste : rejoindre une boîte FR/UE avec une entité US, puis demander le transfert\"],\n          [\"O-1A\", \"Capacité extraordinaire prouvée par des critères (prix, publications, contributions originales majeures, salaire élevé, etc.)\", \"Long terme : se construit avec contributions upstream, talks, presse, articles cités\"],\n          [\"H-1B\", \"Loterie annuelle, employeur sponsor, diplôme spécialisé\", \"Ton diplôme d'ingénieur aide ; la loterie reste aléatoire et l'employeur doit l'accepter\"],\n        ]} />\n        <Text>Règles résumées, à vérifier sur uscis.gov et avec un avocat en immigration avant toute décision ; elles changent.</Text>\n        <BulletList items={[\"Rôles cibles : robotics software engineer, embedded software engineer, autonomy/perception engineer, et robotics tooling/infra (là où ton profil web est un atout)\", \"Pour la voie L-1, cherche en France/UE des entreprises robotiques ou hardware ayant une entité US ; vérifie chaque fois leur structure et leurs offres actuelles\", \"Postuler en remote US est rare pour du hardware : prévois une étape intermédiaire en Europe\", \"Prépare les entretiens : C/C++, systèmes embarqués, algos classiques (LeetCode moyen), design système robotique\"]} />\n      </Section>\n\n      <Section heading=\"Semaine type\">\n        <Table columns={[\"Créneau\", \"Durée\", \"Contenu\"]} rows={[\n          [\"Mardi soir\", \"1,5 h\", \"Maths ou théorie, avec exercices papier\"],\n          [\"Jeudi soir\", \"1,5 h\", \"Code ciblé (un exercice de la phase)\"],\n          [\"Samedi matin\", \"4 h\", \"Session robot : banc, mesures, vidéo\"],\n          [\"Dimanche\", \"2 h\", \"Write-up, commit, post, planification\"],\n        ]} />\n        <Text>9 h par semaine ; une semaine sur quatre allégée pour éviter l'épuisement.</Text>\n      </Section>\n\n      <Section heading=\"Tracker\">\n        <Text>Statut au 1er nov. 2026 : rien n'est encore démarré. Demande-moi de cocher un élément et je mettrai la page à jour.</Text>\n        <Checklist items={phases.map((x: Phase) => ({ text: x.id + \" \" + x.nom + \" : \" + x.done, meta: x.mois }))} />\n      </Section>\n\n      <Section heading=\"Ressources\">\n        <LinkCards links={[\n          { title: \"Page produit UGV Rover\", site: \"waveshare.com\", href: \"https://www.waveshare.com/ugv-rover.htm\" },\n          { title: \"Wiki UGV Rover PI ROS2\", site: \"waveshare.com\", href: \"https://www.waveshare.com/wiki/UGV_Rover_PI_ROS2\" },\n          { title: \"ugv_base_ros (firmware ESP32)\", site: \"github.com\", href: \"https://github.com/waveshareteam/ugv_base_ros\" },\n          { title: \"ugv_ws (ROS 2)\", site: \"github.com\", href: \"https://github.com/waveshareteam/ugv_ws\" },\n          { title: \"ugv_rpi (code Pi)\", site: \"github.com\", href: \"https://github.com/waveshareteam/ugv_rpi\" },\n          { title: \"Modern Robotics\", site: \"northwestern.edu\", href: \"https://hades.mech.northwestern.edu/index.php/Modern_Robotics\" },\n          { title: \"Brian Douglas, contrôle\", site: \"youtube.com\", href: \"https://www.youtube.com/@BrianBDouglas\" },\n          { title: \"Kalman and Bayesian Filters in Python\", site: \"github.com\", href: \"https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python\" },\n          { title: \"MIT 18.06 Linear Algebra\", site: \"ocw.mit.edu\", href: \"https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/\" },\n          { title: \"3Blue1Brown, algèbre linéaire\", site: \"3blue1brown.com\", href: \"https://www.3blue1brown.com/topics/linear-algebra\" },\n          { title: \"The Embedded Rust Book\", site: \"rust-embedded.org\", href: \"https://docs.rust-embedded.org/book/\" },\n          { title: \"esp-hal\", site: \"github.com\", href: \"https://github.com/esp-rs/esp-hal\" },\n          { title: \"Embassy book\", site: \"embassy.dev\", href: \"https://embassy.dev/book/\" },\n          { title: \"ROS 2 Humble docs\", site: \"docs.ros.org\", href: \"https://docs.ros.org/en/humble/\" },\n          { title: \"ros2_control\", site: \"control.ros.org\", href: \"https://control.ros.org/\" },\n          { title: \"Nav2 docs\", site: \"nav2.org\", href: \"https://docs.nav2.org/\" },\n          { title: \"SLAM Toolbox\", site: \"github.com\", href: \"https://github.com/SteveMacenski/slam_toolbox\" },\n          { title: \"Gazebo docs\", site: \"gazebosim.org\", href: \"https://gazebosim.org/docs/\" },\n          { title: \"Articulated Robotics\", site: \"youtube.com\", href: \"https://www.youtube.com/@ArticulatedRobotics\" },\n          { title: \"OpenCV docs\", site: \"opencv.org\", href: \"https://docs.opencv.org/4.x/\" },\n          { title: \"AprilTag\", site: \"github.com\", href: \"https://github.com/AprilRobotics/apriltag\" },\n          { title: \"Hailo RPi5 examples\", site: \"github.com\", href: \"https://github.com/hailo-ai/hailo-rpi5-examples\" },\n          { title: \"MCAP\", site: \"mcap.dev\", href: \"https://mcap.dev/\" },\n          { title: \"Foxglove docs\", site: \"foxglove.dev\", href: \"https://docs.foxglove.dev/\" },\n          { title: \"ros2_rust\", site: \"github.com\", href: \"https://github.com/ros2-rust/ros2_rust\" },\n          { title: \"Underactuated Robotics\", site: \"mit.edu\", href: \"https://underactuated.mit.edu/\" },\n          { title: \"F1TENTH\", site: \"f1tenth.org\", href: \"https://f1tenth.org/\" },\n          { title: \"ROSCon\", site: \"ros.org\", href: \"https://roscon.ros.org/\" },\n          { title: \"USCIS O-1\", site: \"uscis.gov\", href: \"https://www.uscis.gov/working-in-the-united-states/temporary-workers/o-1-visa-individuals-with-extraordinary-ability-or-achievement\" },\n          { title: \"USCIS L-1B\", site: \"uscis.gov\", href: \"https://www.uscis.gov/working-in-the-united-states/temporary-workers/l-1b-intracompany-transferee-specialized-knowledge\" },\n          { title: \"USCIS H-1B\", site: \"uscis.gov\", href: \"https://www.uscis.gov/working-in-the-united-states/h-1b-specialty-occupations\" },\n        ]} />\n      </Section>\n    </Page>\n  );\n}\n\n\n\n",
+    "program": "import { Page, Section, Text, Callout, Table, BulletList, Checklist, LinkCards, Properties, Segmented, TableOfContents, useState } from \"grok/canvas\";\n\ntype Slot = { c: string; d: string; contenu: string; res: string };\ntype Week = { n: string; date: string; theme: string; sais: string[]; slots: Slot[]; verif: string; preuve: string };\n\nconst weeks: Week[] = [\n  { n: \"S1\", date: \"2 nov. 2026\", theme: \"Vecteurs, mémoire C, Linux série, premier parseur\",\n    sais: [\"Je sais dire ce que fait une matrice 2×2 à un vecteur, en regardant où vont (1,0) et (0,1)\", \"Je sais expliquer pourquoi [[0,-1],[1,0]] est une rotation de 90° et à quoi elle sert pour un robot qui tourne\", \"Je sais compiler et déboguer un programme C avec gcc, make et gdb sans droits admin\", \"Je sais expliquer la différence entre pile et tas en montrant deux adresses réelles\", \"Je sais me connecter en SSH, lire l'état d'un service systemd et expliquer pourquoi /dev/ttyUSB0 exige le groupe dialout\", \"Je sais écrire sans IA un parseur C pour {\\\"T\\\":1,\\\"L\\\":0.5,\\\"R\\\":0.5} et le tester\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Maths : épisodes 1 à 3 de « Essence of linear algebra ». Exercice papier : ce que fait [[0,-1],[1,0]] à (1,0) et (0,1), et pourquoi un robot qui tourne en a besoin\", res: \"https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"C : installer gcc, make, gdb sans droits admin (conda ou conteneur). Programme qui affiche l'adresse d'une variable locale et d'un bloc malloc ; expliquer pile vs tas\", res: \"Documentation gcc/gdb ; conda-forge ou image Docker gcc\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"1 h 30 Linux : SSH, systemd, permissions du port série /dev/ttyUSB0, groupe dialout. Puis 2 h 30 : parseur de trames C sans IA pour {\\\"T\\\":1,\\\"L\\\":0.5,\\\"R\\\":0.5}, au moins 3 tests\", res: \"https://missing.csail.mit.edu/ ; wiki UGV Rover (format JSON)\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Premier commit dans le dépôt privé github.com/pierre-claisse/rover-notes + page de notes de la semaine\", res: \"Votre dépôt rover-notes\" },\n    ],\n    verif: \"Sans notes : dessiner la rotation de 90° et montrer à l'écran les deux adresses (pile, tas) en expliquant laquelle est la plus haute\", preuve: \"Commit 1 : parseur + 3 tests verts + notes S1\" },\n  { n: \"S2\", date: \"9 nov. 2026\", theme: \"Composition de matrices, pointeurs, shell\",\n    sais: [\"Je sais expliquer qu'un produit de matrices est l'enchaînement de deux transformations, et que l'ordre compte\", \"Je sais manipuler pointeurs, pointeurs de pointeurs et tableaux en C, et expliquer p[i] == *(p+i)\", \"Je sais écrire un script bash avec variables, boucles, pipes et redirections\", \"Je sais utiliser grep, find, chmod, chown et lire ls -l\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 4 et 5 (multiplication = composition, transformations 3D). Exercice : rotation de 90° puis symétrie, contre symétrie puis rotation : comparer les résultats\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"C : pointeurs et tableaux ; fonction qui inverse un tableau en place ; passer une structure par pointeur\", res: \"Missing Semester (outils) + man pages\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"1 h 30 shell (Missing Semester : shell, scripts) ; 2 h 30 : étendre le parseur aux trames invalides (accolade manquante, nombre mal formé), 5 tests de plus\", res: \"https://missing.csail.mit.edu/\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Notes : schéma pile/tas/pointeurs ; script bash qui lance les tests ; planifier S3\", res: \"rover-notes\" },\n    ],\n    verif: \"Prédire à la main le résultat de A·B et B·A pour deux matrices 2×2 simples, puis vérifier en Python\", preuve: \"Commit : tests d'erreurs + script run_tests.sh\" },\n  { n: \"S3\", date: \"16 nov. 2026\", theme: \"Déterminant, mémoire dynamique, électricité de base\",\n    sais: [\"Je sais dire ce que mesure un déterminant (facteur d'aire) et ce que signifie un déterminant nul\", \"Je sais allouer, libérer et détecter une fuite mémoire (valgrind ou -fsanitize=address)\", \"Je sais appliquer la loi d'Ohm U = R·I et la puissance P = U·I sur un circuit simple\", \"Je sais expliquer tension, courant et résistance avec mes propres mots\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 6 et 7 (déterminant ; inverse, espace colonne, noyau). Exercice : déterminant de la rotation de 90° et pourquoi il vaut 1\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"C : malloc/free, tampon circulaire pour recevoir des octets série ; compiler avec -fsanitize=address\", res: \"Documentation gcc (sanitizers)\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"1 h 30 électricité : tension, courant, résistance, loi d'Ohm. 2 h 30 : brancher le tampon circulaire au parseur (lecture octet par octet)\", res: \"https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Notes : 5 calculs de loi d'Ohm à la main ; commit ; planifier S4\", res: \"rover-notes\" },\n    ],\n    verif: \"Calculer le courant dans une LED avec résistance de 220 Ω sous 3,3 V (chute LED 2 V)\", preuve: \"Commit : tampon circulaire + tests, zéro erreur ASan\" },\n  { n: \"S4\", date: \"23 nov. 2026\", theme: \"Matrices non carrées, produit scalaire, PWM, endianness\",\n    sais: [\"Je sais calculer un produit scalaire et l'interpréter comme une projection\", \"Je sais expliquer la PWM : rapport cyclique, fréquence, et pourquoi elle règle la vitesse d'un moteur\", \"Je sais ce qu'est l'endianness et lire un entier 16 bits petit-boutiste dans un tableau d'octets\", \"Je sais quand utiliser volatile en C et pourquoi\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 8 et 9 (matrices non carrées ; produit scalaire et dualité). Exercice : angle entre le cap du robot et la direction d'une cible\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"C : opérations bit à bit, masques, décalages ; fonctions read_u16_le / read_u16_be testées ; volatile\", res: \"man pages ; Missing Semester\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"1 h 30 PWM et pont en H (principe). 2 h 30 : simuler en C une PWM logicielle (tableau de niveaux) et tracer le signal en Python\", res: \"https://learn.sparkfun.com/tutorials/pulse-width-modulation\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Semaine allégeable (1 semaine sur 4 selon le plan) : notes, commit, rattrapage\", res: \"rover-notes\" },\n    ],\n    verif: \"Expliquer sans notes pourquoi une PWM à 25 % donne en moyenne un quart de la tension d'alimentation\", preuve: \"Commit : fonctions d'endianness testées + graphe PWM\" },\n  { n: \"S5\", date: \"30 nov. 2026\", theme: \"Produit vectoriel, bus série, C++ et RAII\",\n    sais: [\"Je sais calculer un produit vectoriel et dire à quoi il sert (normale, sens de rotation)\", \"Je sais expliquer UART, I2C et SPI : fils, horloge, adressage, débit, et lequel relie le Pi à l'ESP32\", \"Je sais écrire une classe C++ qui libère sa ressource dans son destructeur (RAII)\", \"Je sais utiliser std::vector, std::string et std::unique_ptr à la place de malloc\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 10 et 11 (produit vectoriel). Exercice : le robot doit-il tourner à gauche ou à droite pour viser une cible ? (signe du produit vectoriel 2D)\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"C++ : réécrire le tampon circulaire en classe RAII ; tests\", res: \"Documentation cppreference\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"2 h bus série : UART puis I2C. 2 h : tableau comparatif UART/I2C/SPI dans les notes ; schéma Pi 5 ↔ UART ↔ ESP32 d'après le wiki\", res: \"https://learn.sparkfun.com/tutorials/serial-communication ; https://learn.sparkfun.com/tutorials/i2c ; wiki UGV Rover\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Commit ; première version du schéma d'architecture (sur papier puis en image)\", res: \"rover-notes\" },\n    ],\n    verif: \"Dire sans notes quel bus utilise une adresse sur 7 bits et lequel n'a pas de fil d'horloge\", preuve: \"Commit : classe C++ RAII + schéma d'architecture v1\" },\n  { n: \"S6\", date: \"7 déc. 2026\", theme: \"Changement de base, datasheet INA219, cross-compilation\",\n    sais: [\"Je sais passer un point du repère du robot au repère du monde (changement de base)\", \"Je sais lire une datasheet : brochage, registres, formules de conversion\", \"Je sais recalculer à la main tension et courant à partir des registres bruts de l'INA219\", \"Je sais ce qu'est la cross-compilation et compiler un binaire ARM64 depuis mon PC\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 12 et 13 (règle de Cramer ; changement de base). Exercice : robot en (2,1) orienté à 90°, où est dans le monde un point situé à 1 m devant lui ?\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"Cross-compilation : chaîne aarch64 (conda ou conteneur), compiler le parseur pour ARM64, vérifier avec file / qemu\", res: \"Documentation gcc\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"Datasheet INA219 : registres shunt/bus, calibration. Exercice : à partir de valeurs brutes d'exemple, recalculer la tension et le courant à la main puis en C\", res: \"https://www.ti.com/lit/ds/symlink/ina219.pdf\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Notes « comment lire une datasheet » ; commit\", res: \"rover-notes\" },\n    ],\n    verif: \"Convertir à la main une valeur brute de registre bus de l'INA219 en volts\", preuve: \"Commit : convertisseur INA219 en C + tests, binaire ARM64\" },\n  { n: \"S7\", date: \"14 déc. 2026\", theme: \"Valeurs propres, Rust (ownership), CI\",\n    sais: [\"Je sais dire ce qu'est un vecteur propre et pourquoi une rotation 2D n'en a pas de réel\", \"Je sais expliquer ownership, emprunt et durée de vie en Rust sur un exemple\", \"Je sais écrire une fonction Rust testée avec cargo test\", \"Je sais mettre en place une CI GitHub Actions qui compile et teste le code C\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisodes 14 et 15 (vecteurs et valeurs propres). Exercice : valeurs propres de [[2,0],[0,3]] et de la rotation de 90°\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"Rust Book ch. 1 à 4 (installation, ownership)\", res: \"https://doc.rust-lang.org/book/\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"2 h : workflow GitHub Actions qui lance make test sur le parseur C. 2 h : Rust Book ch. 5 et 6 (struct, enum, match)\", res: \"Documentation GitHub Actions ; Rust Book\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Notes ; commit ; badge CI\", res: \"rover-notes\" },\n    ],\n    verif: \"Expliquer pourquoi un code Rust qui utilise une String après l'avoir déplacée ne compile pas\", preuve: \"Commit : CI verte sur le test C (moitié du critère de fin P0)\" },\n  { n: \"S8\", date: \"21 déc. 2026\", theme: \"Rust : erreurs, traits ; parseur en Rust\",\n    sais: [\"Je sais gérer les erreurs en Rust avec Result, Option et l'opérateur ?\", \"Je sais définir et implémenter un trait\", \"Je sais porter le parseur de trames en Rust avec tests\", \"Je sais expliquer ce que signifie no_std et ce qu'on perd sans la bibliothèque standard\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"Épisode 16 (espaces vectoriels abstraits) + révision des 15 premiers avec 5 exercices papier\", res: \"Playlist 3Blue1Brown\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"Rust Book ch. 8 à 10 (collections, erreurs, traits et génériques)\", res: \"https://doc.rust-lang.org/book/\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"Porter le parseur C en Rust, mêmes tests ; lire l'introduction et no_std dans The Embedded Rust Book\", res: \"https://docs.rust-embedded.org/book/\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Semaine de fêtes, allégeable : notes C vs Rust, commit\", res: \"rover-notes\" },\n    ],\n    verif: \"Donner sans notes deux choses indisponibles en no_std (allocation dynamique par défaut, std::fs…)\", preuve: \"Commit : parseur Rust + tests\" },\n  { n: \"S9\", date: \"28 déc. 2026\", theme: \"MIT 18.06, ROS 2 en simulation, bilan P0\",\n    sais: [\"Je sais résoudre un petit système linéaire par élimination (vue « lignes » et vue « colonnes »)\", \"Je sais installer ROS 2 Humble (conteneur) et lancer un nœud talker/listener\", \"Je sais expliquer chaque fil entre le Pi et l'ESP32 d'après la documentation\", \"Je sais rédiger en anglais une page technique claire avec schéma\"],\n    slots: [\n      { c: \"Mardi\", d: \"1 h 30\", contenu: \"MIT 18.06, cours 1 et 2 (géométrie des équations, élimination)\", res: \"https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/\" },\n      { c: \"Jeudi\", d: \"1 h 30\", contenu: \"ROS 2 Humble dans un conteneur : tutoriels CLI (nœuds, topics)\", res: \"https://docs.ros.org/en/humble/Tutorials.html\" },\n      { c: \"Samedi\", d: \"4 h\", contenu: \"Brouillon de l'article EN « Reverse-engineering my rover's architecture » à partir du wiki et des dépôts ugv_base_ros / ugv_rpi\", res: \"Wiki UGV Rover ; github.com/waveshareteam\" },\n      { c: \"Dimanche\", d: \"2 h\", contenu: \"Bilan P0 : relire les « Je sais… », noter ce qui manque ; planifier P1\", res: \"rover-notes\" },\n    ],\n    verif: \"Expliquer à voix haute, sans notes, l'architecture Pi 5 ↔ UART ↔ ESP32 en 3 minutes (enregistrement)\", preuve: \"Commit : brouillon d'article + bilan P0\" },\n];\n\nconst phases = [\n  [\"P0\", \"Fondations\", \"M1–M2\", \"80 h\", \"Repo rover-notes + article EN « Reverse-engineering my rover's architecture »\", \"Vous expliquez sans notes chaque fil entre le Pi et l'ESP32 et un test C passe en CI\"],\n  [\"P1\", \"Firmware ESP32 en C++\", \"M3–M4\", \"100 h\", \"Fork documenté + article « Tuning wheel PID with real step responses »\", \"Dépassement < 10 % mesuré, protocole binaire avec taux d'erreur mesuré sur 1 h\"],\n  [\"P2\", \"IMU, fusion, Rust embarqué\", \"M5–M7\", \"140 h\", \"Repo rover-fw-rs + vidéo C++ vs Rust + article EKF\", \"Le Rover roule sur votre firmware Rust, watchdog testé, erreur EKF chiffrée\"],\n  [\"P3\", \"ROS 2, simulation, dashboard\", \"M7–M9\", \"120 h\", \"Repo rover_ros2 + dashboard + vidéo « same code, sim and real »\", \"Bascule sim/réel par un argument de launch ; latence vidéo mesurée\"],\n  [\"P4\", \"Perception\", \"M10–M11\", \"100 h\", \"Vidéo de suivi de tag + benchmark d'inférence Pi 5\", \"Erreur de pose AprilTag mesurée ; tableau FPS/latence publié\"],\n  [\"P5\", \"Localisation, SLAM, Nav2\", \"M12–M13\", \"100 h\", \"Vidéo de navigation + carte + article « What actually drifts »\", \"10 navigations sur 10 vers 3 points, résultats publiés\"],\n  [\"P6\", \"Rigueur industrielle\", \"M14–M15\", \"90 h\", \"CI publique avec badge HIL + article HIL\", \"Un bug réel attrapé par la CI HIL et documenté\"],\n  [\"P7\", \"Capstone\", \"M16–M18\", \"130 h\", \"Repo, vidéo 3 min, article long, talk soumis\", \"Un ingénieur inconnu reproduit le résultat depuis votre README\"],\n];\n\ntype Theme = { t: string; items: string[] };\ntype PhaseK = { id: string; titre: string; blocs: string; themes: Theme[]; res: string };\n\nconst later: PhaseK[] = [\n  { id: \"P1\", titre: \"Firmware ESP32 en C++ (100 h, M3–M4)\", blocs: \"S10–S12 outillage et compilation reproductible · S13–S16 PID et réponse indicielle · S17–S18 temps réel et jitter · S19–S21 protocole binaire\",\n    themes: [\n      { t: \"Contrôle\", items: [\"Je sais expliquer une boucle fermée : consigne, mesure, erreur, commande\", \"Je sais dire le rôle de P, I et D et l'effet de chaque gain sur une réponse indicielle\", \"Je sais mesurer dépassement, temps de montée et erreur statique sur un graphe\", \"Je sais ce qu'est la saturation et corriger le windup de l'intégrale\"] },\n      { t: \"Temps réel\", items: [\"Je sais créer des tâches FreeRTOS et choisir leurs priorités\", \"Je sais pourquoi une ISR doit être courte et comment passer une donnée d'une ISR à une tâche\", \"Je sais mesurer le jitter d'une boucle par timestamps ou analyseur logique\"] },\n      { t: \"Capteurs et protocole\", items: [\"Je sais lire un encodeur en quadrature et en déduire une vitesse filtrée\", \"Je sais encoder/décoder une trame COBS et calculer un CRC16\", \"Je sais détecter les trames perdues avec un numéro de séquence et mesurer un taux d'erreur\"] },\n      { t: \"Outillage\", items: [\"Je sais compiler et flasher ugv_base_ros de façon reproductible (PlatformIO ou arduino-cli)\", \"Je sais tracer des mesures avec Python/matplotlib\"] },\n    ], res: \"Brian Douglas (YouTube) · ugv_base_ros · FreeRTOS · PlatformIO\" },\n  { id: \"P2\", titre: \"IMU, fusion de capteurs, Rust embarqué (140 h, M5–M7)\", blocs: \"S22–S25 probabilités et filtre complémentaire · S26–S29 rotations et quaternions · S30–S33 EKF · S34–S37 Rust embassy et watchdog\",\n    themes: [\n      { t: \"Probabilités et filtrage\", items: [\"Je sais ce que représentent moyenne, variance et gaussienne\", \"Je sais écrire un filtre complémentaire gyroscope + accéléromètre\", \"Je sais dérouler les étapes prédiction / mise à jour d'un filtre de Kalman\", \"Je sais linéariser un modèle pour un EKF et chiffrer son erreur sur un log\"] },\n      { t: \"Rotations\", items: [\"Je sais passer d'angles d'Euler à une matrice de rotation et à un quaternion\", \"Je sais expliquer le blocage de cardan (gimbal lock)\", \"Je sais calibrer un magnétomètre (hard iron, soft iron)\"] },\n      { t: \"Rust embarqué\", items: [\"Je sais écrire un driver I2C no_std avec les traits embedded-hal\", \"Je sais écrire des tâches async avec embassy\", \"Je sais porter boucle moteur + PID + protocole binaire en Rust\", \"Je sais implémenter un watchdog qui coupe les moteurs après 200 ms sans trame\"] },\n    ], res: \"Labbe, Kalman and Bayesian Filters in Python · Modern Robotics ch. 3 · Embedded Rust Book · esp-hal · Embassy book\" },\n  { id: \"P3\", titre: \"ROS 2, simulation, dashboard web (120 h, M7–M9)\", blocs: \"S38–S41 concepts ROS 2 et tf2 · S42–S45 URDF, Gazebo, ros2_control · S46–S50 dashboard React + WebRTC\",\n    themes: [\n      { t: \"ROS 2\", items: [\"Je sais écrire nœuds, topics, services et actions\", \"Je sais choisir une QoS et expliquer reliable vs best effort\", \"Je sais écrire un fichier launch avec arguments\", \"Je sais publier et lire des transformations tf2\"] },\n      { t: \"Modélisation et simulation\", items: [\"Je sais décrire le Rover en URDF/xacro\", \"Je sais lancer le même code en Gazebo et sur le robot\", \"Je sais écrire un hardware_interface ros2_control pour mon protocole\"] },\n      { t: \"Web\", items: [\"Je sais streamer la vidéo en WebRTC et mesurer la latence bout en bout\", \"Je sais afficher télémétrie batterie/IMU et téléopérer depuis React\"] },\n    ], res: \"ROS 2 Humble docs · ros2_control · Gazebo docs · Articulated Robotics\" },\n  { id: \"P4\", titre: \"Perception (100 h, M10–M11)\", blocs: \"S51–S53 modèle de caméra et calibration fisheye · S54–S56 AprilTag et pan-tilt · S57–S59 inférence embarquée\",\n    themes: [\n      { t: \"Caméra\", items: [\"Je sais expliquer le modèle sténopé et les paramètres intrinsèques\", \"Je sais calibrer une caméra fisheye et publier camera_info\", \"Je sais ce qu'est la distorsion et la corriger\"] },\n      { t: \"Géométrie\", items: [\"Je sais estimer la pose d'un AprilTag et mesurer son erreur\", \"Je sais expliquer le principe de l'odométrie visuelle\"] },\n      { t: \"Inférence\", items: [\"Je sais mesurer FPS et latence d'un détecteur sur Pi 5\", \"Je sais ce que la quantification change en vitesse et en précision\"] },\n    ], res: \"OpenCV docs · AprilTag · Hailo RPi5 examples\" },\n  { id: \"P5\", titre: \"Localisation, SLAM, Nav2 (100 h, M12–M13)\", blocs: \"S60–S62 filtre particulaire et SLAM · S63–S65 SLAM Toolbox avec LIDAR · S66–S68 Nav2 et comparaison d'odométries\",\n    themes: [\n      { t: \"Localisation\", items: [\"Je sais expliquer un filtre particulaire (AMCL)\", \"Je sais fusionner roues + IMU avec robot_localization\", \"Je sais mesurer la dérive de chaque source d'odométrie\"] },\n      { t: \"SLAM et navigation\", items: [\"Je sais expliquer le SLAM par graphe et la fermeture de boucle\", \"Je sais construire une carte avec SLAM Toolbox\", \"Je sais configurer costmaps, planificateurs global/local et behavior trees dans Nav2\"] },\n    ], res: \"Probabilistic Robotics (Thrun et al.) · Nav2 docs · SLAM Toolbox\" },\n  { id: \"P6\", titre: \"Rigueur industrielle (90 h, M14–M15)\", blocs: \"S69–S72 banc HIL et CI · S73–S75 MCAP, Foxglove, replay · S76–S78 sûreté et OTA\",\n    themes: [\n      { t: \"Tests\", items: [\"Je sais distinguer tests unitaires, d'intégration et HIL\", \"Je sais faire tourner un banc HIL à chaque commit\"] },\n      { t: \"Observabilité\", items: [\"Je sais enregistrer en rosbag2/MCAP et rejouer un log de façon déterministe\", \"Je sais transformer un log en test de régression\"] },\n      { t: \"Sûreté\", items: [\"Je sais définir des états dégradés et un arrêt d'urgence\", \"Je sais faire une mise à jour OTA signée avec retour arrière\"] },\n    ], res: \"MCAP · Foxglove docs\" },\n  { id: \"P7\", titre: \"Capstone (130 h, M16–M18)\", blocs: \"S79–S82 choix et prototype · S83–S90 réalisation et mesures · S91–S94 article, vidéo, talk\",\n    themes: [\n      { t: \"Selon l'option\", items: [\"A : je sais construire une pile 100 % Rust (embassy + ros2_rust)\", \"B : je sais entraîner un contrôle en simulation et mesurer l'écart sim-to-real\", \"C : je sais coordonner deux robots et partager une carte\"] },\n      { t: \"Communication\", items: [\"Je sais écrire un README qu'un inconnu reproduit\", \"Je sais présenter un résultat en 3 minutes de vidéo et en talk\"] },\n    ], res: \"ros2_rust · Underactuated Robotics · ROSCon · F1TENTH\" },\n];\n\nconst referentiel: [string, string[]][] = [\n  [\"Linux\", [\"SSH, systemd, journalctl\", \"Permissions, groupes, dialout, udev\", \"Scripts bash\", \"Cross-compilation ARM64\"]],\n  [\"C/C++\", [\"Pointeurs, pile vs tas\", \"Mémoire dynamique sans fuite\", \"Bits, endianness, volatile\", \"RAII, conteneurs standard\", \"Tests unitaires et CI\"]],\n  [\"Électronique\", [\"Loi d'Ohm, puissance\", \"PWM, pont en H\", \"UART, I2C, SPI\", \"Lire une datasheet (INA219, IMU)\", \"Encodeurs\"]],\n  [\"Rust\", [\"Ownership, emprunt\", \"Result, Option, traits\", \"no_std, embedded-hal\", \"embassy async\"]],\n  [\"Maths\", [\"Transformations, matrices, déterminant\", \"Changement de base, valeurs propres\", \"Probabilités, gaussiennes\", \"Kalman, EKF\", \"Rotations, quaternions\", \"PID, réponse indicielle\"]],\n  [\"ROS 2\", [\"Nœuds, topics, services, actions, QoS\", \"Launch, tf2\", \"URDF, Gazebo\", \"ros2_control\"]],\n  [\"Perception\", [\"Modèle sténopé, calibration fisheye\", \"Pose AprilTag\", \"Inférence embarquée mesurée\"]],\n  [\"SLAM/Nav2\", [\"Filtre particulaire\", \"SLAM Toolbox\", \"Nav2 : costmaps, planificateurs, BT\", \"robot_localization\"]],\n  [\"Tests/CI/HIL\", [\"CI GitHub Actions\", \"Banc HIL\", \"MCAP, Foxglove, replay\", \"Watchdog, OTA signé\"]],\n  [\"Portfolio\", [\"Un article EN par phase\", \"Une vidéo de mesure par phase\", \"Contribution upstream\", \"Talk soumis\"]],\n];\n\nexport default function App() {\n  const [w, setW] = useState<string>(\"S1\");\n  const [ph, setPh] = useState<string>(\"P1\");\n  const wk = weeks.find((x: Week) => x.n === w) ?? weeks[0];\n  const pk = later.find((x: PhaseK) => x.id === ph) ?? later[0];\n  return (\n    <Page title=\"Programme d'étude : ce que vous devez savoir, semaine par semaine\" summary=\"La liste exacte de ce que vous devez savoir pour passer du front-end à la robotique embarquée en 18 mois, à environ 9 h par semaine, avec les 9 semaines de P0 détaillées.\" width=\"column\" lang=\"fr\">\n      <TableOfContents items={[{ label: \"Mode d'emploi\" }, { label: \"Vue d'ensemble des 18 mois\" }, { label: \"Piste maths\" }, { label: \"Phase P0 semaine par semaine\" }, { label: \"Quand le robot arrive\" }, { label: \"Phases P1 à P7 : ce qu'il faut savoir\" }, { label: \"Référentiel de compétences\" }, { label: \"Ressources\" }]} />\n\n      <Section heading=\"Mode d'emploi\">\n        <Text>Chaque semaine, lisez les « Je sais… » d'abord : c'est ce que vous devez savoir faire le dimanche, quelle que soit votre façon d'étudier.</Text>\n        <Callout tone=\"info\" lead=\"Le détail est indicatif au-delà de 8 semaines.\">Les semaines S1 à S9 sont précises. Au-delà, les blocs sont une estimation et seront affinés chaque dimanche lors de la planification. Robot pas encore acheté : les samedis se font sans robot (Linux, C/C++, Rust, maths, ROS 2 en simulation).</Callout>\n      </Section>\n\n      <Section heading=\"Vue d'ensemble des 18 mois\">\n        <Table columns={[\"Phase\", \"Nom\", \"Mois\", \"Heures\", \"Livrable\", \"C'est acquis quand…\"]} rows={phases} />\n        <Text>Total : 860 h de projet plus environ 100 h de maths réparties. Une semaine sur quatre peut être allégée ; prévoyez 20 % de marge.</Text>\n      </Section>\n\n      <Section heading=\"Piste maths\">\n        <Table columns={[\"Sujet\", \"Ressource\", \"Quand\"]} rows={[\n          [\"Algèbre linéaire\", \"3Blue1Brown puis MIT 18.06 (Strang)\", \"M1–M4\"],\n          [\"Contrôle (PID, espace d'état)\", \"Brian Douglas (YouTube)\", \"M3–M5\"],\n          [\"Kalman, EKF\", \"Kalman and Bayesian Filters in Python (Labbe)\", \"M5–M7\"],\n          [\"Cinématique, rotations\", \"Modern Robotics (Lynch & Park)\", \"M5–M9\"],\n          [\"Probabilités, SLAM\", \"Probabilistic Robotics (Thrun et al.)\", \"M11–M13\"],\n          [\"Contrôle avancé (option)\", \"Underactuated Robotics (MIT)\", \"M15+\"],\n        ]} />\n        <Text>Le créneau du mardi porte la piste maths. Règle du plan : chaque concept est implémenté une fois à la main en Python ou Rust avant d'utiliser une bibliothèque.</Text>\n      </Section>\n\n      <Section heading=\"Phase P0 semaine par semaine\">\n        <Segmented options={weeks.map((x: Week) => ({ value: x.n, label: x.n }))} value={w} onChange={(v: string) => setW(v)} />\n        <Properties items={[{ label: \"Semaine\", value: wk.n + \" · lundi \" + wk.date }, { label: \"Thème\", value: wk.theme }, { label: \"Volume\", value: \"9 h : mardi 1 h 30, jeudi 1 h 30, samedi 4 h, dimanche 2 h\" }]} />\n        <Section heading=\"Ce que vous devez savoir le dimanche\">\n          <Checklist items={wk.sais.map((s: string) => ({ text: s, done: false }))} />\n        </Section>\n        <Section heading=\"Les 4 créneaux\">\n          <Table columns={[\"Créneau\", \"Durée\", \"Contenu\", \"Ressource\"]} rows={wk.slots.map((s: Slot) => [s.c, s.d, s.contenu, s.res])} />\n        </Section>\n        <Section heading=\"Vérification et preuve\">\n          <Properties items={[{ label: \"Exercice de vérification\", value: wk.verif }, { label: \"Preuve à produire\", value: wk.preuve }]} />\n        </Section>\n        <Text>Statut au 3 nov. 2026 : 0 h faite, aucune case acquise. Dites-moi ce que vous savez et je mettrai la page à jour.</Text>\n      </Section>\n\n      <Section heading=\"Quand le robot arrive\">\n        <BulletList items={[\"Installer l'image ROS 2 du Rover et compléter le schéma Pi 5 ↔ UART ↔ ESP32 avec ce que vous voyez réellement\", \"Piloter le Rover depuis un script Python avec les commandes JSON du wiki (réutiliser votre parseur pour vérifier les trames)\", \"Comparer vos calculs INA219 de S6 avec la tension et le courant affichés sur l'OLED\", \"Ces exercices remplacent le samedi de la semaine d'arrivée ; P1 commence ensuite\"]} />\n      </Section>\n\n      <Section heading=\"Phases P1 à P7 : ce qu'il faut savoir\">\n        <Segmented options={later.map((x: PhaseK) => ({ value: x.id, label: x.id }))} value={ph} onChange={(v: string) => setPh(v)} />\n        <Properties items={[{ label: \"Phase\", value: pk.titre }, { label: \"Blocs indicatifs\", value: pk.blocs }, { label: \"Ressources du plan\", value: pk.res }]} />\n        {pk.themes.map((t: Theme) => (\n          <Section key={t.t} heading={t.t}>\n            <BulletList items={t.items} />\n          </Section>\n        ))}\n      </Section>\n\n      <Section heading=\"Référentiel de compétences\">\n        <Text>Statut enregistré au 3 nov. 2026 : rien d'acquis pour l'instant. Les cases ne se cochent pas depuis la page ; demandez-moi et je les coche.</Text>\n        <Checklist items={referentiel.flatMap(([d, list]: [string, string[]]) => list.map((s: string) => ({ text: s, meta: d, done: false })))} />\n      </Section>\n\n      <Section heading=\"Ressources\">\n        <LinkCards links={[\n          { title: \"Essence of linear algebra\", site: \"youtube.com\", href: \"https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab\" },\n          { title: \"MIT 18.06 Linear Algebra\", site: \"ocw.mit.edu\", href: \"https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/\" },\n          { title: \"The Missing Semester\", site: \"mit.edu\", href: \"https://missing.csail.mit.edu/\" },\n          { title: \"Loi d'Ohm\", site: \"sparkfun.com\", href: \"https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law\" },\n          { title: \"PWM\", site: \"sparkfun.com\", href: \"https://learn.sparkfun.com/tutorials/pulse-width-modulation\" },\n          { title: \"Communication série\", site: \"sparkfun.com\", href: \"https://learn.sparkfun.com/tutorials/serial-communication\" },\n          { title: \"I2C\", site: \"sparkfun.com\", href: \"https://learn.sparkfun.com/tutorials/i2c\" },\n          { title: \"Datasheet INA219\", site: \"ti.com\", href: \"https://www.ti.com/lit/ds/symlink/ina219.pdf\" },\n          { title: \"The Rust Book\", site: \"rust-lang.org\", href: \"https://doc.rust-lang.org/book/\" },\n          { title: \"The Embedded Rust Book\", site: \"rust-embedded.org\", href: \"https://docs.rust-embedded.org/book/\" },\n          { title: \"Wiki UGV Rover PI ROS2\", site: \"waveshare.com\", href: \"https://www.waveshare.com/wiki/UGV_Rover_PI_ROS2\" },\n          { title: \"ugv_base_ros\", site: \"github.com\", href: \"https://github.com/waveshareteam/ugv_base_ros\" },\n          { title: \"ugv_rpi\", site: \"github.com\", href: \"https://github.com/waveshareteam/ugv_rpi\" },\n          { title: \"ROS 2 Humble tutoriels\", site: \"docs.ros.org\", href: \"https://docs.ros.org/en/humble/Tutorials.html\" },\n          { title: \"FreeRTOS kernel\", site: \"freertos.org\", href: \"https://www.freertos.org/Documentation/02-Kernel/01-About-the-FreeRTOS-kernel/01-FreeRTOS-kernel\" },\n          { title: \"PlatformIO\", site: \"platformio.org\", href: \"https://docs.platformio.org/en/latest/\" },\n          { title: \"Brian Douglas, contrôle\", site: \"youtube.com\", href: \"https://www.youtube.com/@BrianBDouglas\" },\n          { title: \"Kalman and Bayesian Filters in Python\", site: \"github.com\", href: \"https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python\" },\n          { title: \"Modern Robotics\", site: \"northwestern.edu\", href: \"https://hades.mech.northwestern.edu/index.php/Modern_Robotics\" },\n          { title: \"esp-hal\", site: \"github.com\", href: \"https://github.com/esp-rs/esp-hal\" },\n          { title: \"Embassy book\", site: \"embassy.dev\", href: \"https://embassy.dev/book/\" },\n          { title: \"ros2_control\", site: \"control.ros.org\", href: \"https://control.ros.org/\" },\n          { title: \"Gazebo docs\", site: \"gazebosim.org\", href: \"https://gazebosim.org/docs/\" },\n          { title: \"Articulated Robotics\", site: \"youtube.com\", href: \"https://www.youtube.com/@ArticulatedRobotics\" },\n          { title: \"OpenCV docs\", site: \"opencv.org\", href: \"https://docs.opencv.org/4.x/\" },\n          { title: \"AprilTag\", site: \"github.com\", href: \"https://github.com/AprilRobotics/apriltag\" },\n          { title: \"Nav2 docs\", site: \"nav2.org\", href: \"https://docs.nav2.org/\" },\n          { title: \"SLAM Toolbox\", site: \"github.com\", href: \"https://github.com/SteveMacenski/slam_toolbox\" },\n          { title: \"MCAP\", site: \"mcap.dev\", href: \"https://mcap.dev/\" },\n          { title: \"Foxglove docs\", site: \"foxglove.dev\", href: \"https://docs.foxglove.dev/\" },\n          { title: \"ros2_rust\", site: \"github.com\", href: \"https://github.com/ros2-rust/ros2_rust\" },\n          { title: \"Underactuated Robotics\", site: \"mit.edu\", href: \"https://underactuated.mit.edu/\" },\n        ]} />\n      </Section>\n    </Page>\n  );\n}\n\n\n\n"
+  }
+}

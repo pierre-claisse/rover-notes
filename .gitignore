@@ -1,0 +1,9 @@
+node_modules/
+dist/
+public/secrets.json
+public/curriculum.seed.enc.json
+*.local
+.DS_Store
+test-results/
+playwright-report/
+coverage/

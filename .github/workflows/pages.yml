@@ -1,0 +1,48 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Bundle d’amorçage
+        env:
+          REQUIRE_SYNC_SECRETS: "1"
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+          SYNC_PASSWORD: ${{ secrets.SYNC_PASSWORD }}
+          SYNC_USERNAME: ${{ secrets.SYNC_USERNAME }}
+          SYNC_DATA_KEY: ${{ secrets.SYNC_DATA_KEY }}
+          SYNC_REPO_OWNER: pierre-claisse
+          SYNC_REPO_NAME: rover-notes-data
+          SYNC_BRANCH: main
+          SYNC_KEY_ID: k1
+        run: npm run build-secrets
+      - run: npm run build
+      - run: npm run check-dist -- --allow-bootstrap
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

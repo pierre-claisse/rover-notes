@@ -1,0 +1,17 @@
+<!doctype html>
+<meta charset="utf-8" />
+<script type="module">
+import { openObject, sealObject } from "../../src/crypto/envelope.ts";
+import { decodeBase64, encodeBase64 } from "../../src/crypto/bytes.ts";
+
+window.__roundtrip = {
+  async open(dataKeyB64, envelope) {
+    const plain = await openObject(decodeBase64(dataKeyB64), envelope);
+    return encodeBase64(plain);
+  },
+  async seal(dataKeyB64, keyId, objectId, plainB64, nonceB64) {
+    return sealObject(decodeBase64(dataKeyB64), keyId, objectId, decodeBase64(plainB64), decodeBase64(nonceB64));
+  },
+};
+window.__ready = true;
+</script>
