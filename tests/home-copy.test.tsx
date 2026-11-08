@@ -40,7 +40,9 @@ describe("brouillon sur l’appareil", () => {
         </MemoryRouter>
       </VaultProvider>,
     );
-    expect(await screen.findByText(/chiffré/)).toHaveTextContent("n’est pas enregistrée avec lui");
+    expect(await screen.findByText(/Un brouillon de vos saisies reste sur cet appareil, chiffré/)).toHaveTextContent(
+      "n’est pas enregistrée avec lui",
+    );
     expect(screen.queryByRole("heading", { name: "18 mois et S94" })).not.toBeInTheDocument();
   });
 });

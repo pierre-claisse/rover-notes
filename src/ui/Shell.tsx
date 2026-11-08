@@ -29,6 +29,7 @@ export function Shell() {
             Accueil
           </NavLink>
           <NavLink to="/programme">Programme</NavLink>
+          <NavLink to="/glossaire">Glossaire</NavLink>
           <NavLink to="/journal">Journal</NavLink>
           <button type="button" className="text-button" onClick={() => void auth.lock()}>
             Verrouiller

@@ -5,6 +5,7 @@ import type { Journal } from "../domain/schemas";
 import { minutesForWeeks, phaseTimeCopy } from "./atelier";
 import { prefersReducedMotion } from "./anchor";
 import { TimeMeter } from "./Meter";
+import { ThroughLines } from "./pedagogy";
 import { useVault } from "./vault";
 
 export function ProgramPage() {
@@ -30,6 +31,7 @@ export function ProgramPage() {
       <p>
         S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs. 94 semaines × 9 h, environ 22 mois (846 h) : on ne compacte pas le syllabus pour coller à 18 mois. Aucune date n’est inventée pour S10–S94.
       </p>
+      <ThroughLines lines={curriculum.throughLines} />
       <details className="week-switch">
         <summary>Changer la semaine en cours</summary>
         <label htmlFor="active-week">Semaine en cours</label>
@@ -97,6 +99,21 @@ function PhaseChapter({
         <p>
           {phase.mois} · {phase.heures} h estimées.
         </p>
+        <p>{phase.narrative.promise}</p>
+        <p className="task-kind">Matériel</p>
+        <p>{phase.narrative.hardwareNote}</p>
+        <p className="task-kind">Fil conducteur</p>
+        <p>{phase.narrative.throughLine}</p>
+        <p className="task-kind">Portfolio</p>
+        <p>{phase.narrative.portfolioNote}</p>
+        <p className="task-kind">Point de vigilance</p>
+        <p>{phase.narrative.commonPitfall}</p>
+        <h3>Critères de sortie</h3>
+        <ul>
+          {phase.narrative.exitCriteria.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
         <p className="progress-copy">{phaseTimeCopy(minutes, phase.heures)}</p>
         <TimeMeter minutes={minutes} hours={phase.heures} label={`Temps saisi pour ${phase.id}`} />
         <p>{phase.livrable}</p>
@@ -148,6 +165,9 @@ function PhaseWeeks({
               {block.sourceText}
               <span className="pill">bloc indicatif</span>
             </p>
+            <p>{block.briefing.whyThisBlock}</p>
+            <p className="task-kind">Matériel</p>
+            <p>{block.briefing.hardwareNote}</p>
             <ul className="week-links">
               {members.map((week) => (
                 <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "is-current" : undefined}>

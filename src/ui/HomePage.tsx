@@ -3,6 +3,7 @@ import { minutesEntered } from "../domain/schemas";
 import { formatFrenchDate, parisWeekday } from "../domain/time";
 import { enteredTimeCopy, sameDayName } from "./atelier";
 import { TimeMeter } from "./Meter";
+import { ThroughLines } from "./pedagogy";
 import { SlotList } from "./slots";
 import { useVault } from "./vault";
 
@@ -22,10 +23,24 @@ export function HomePage() {
   const sunday = sameDayName(weekday, "dimanche");
   const todaySlot = slots?.some((slot) => sameDayName(slot.c, weekday)) ?? false;
   const sourceMonday = detailed && "sourceMondayDate" in week.scheduleNotes ? week.scheduleNotes.sourceMondayDate : null;
+  const coach = snap.curriculum.homeCoach;
+  const onCoachWeek = week.id === coach.activeWeekId;
   return (
     <article>
       <h1>Maintenant : S{week.weekNumber}</h1>
-      <p className="lead">{week.title}</p>
+      {onCoachWeek ? (
+        <section>
+          <p className="task-kind">{coach.eyebrow}</p>
+          <p className="lead">{coach.title}</p>
+          <p>{coach.body}</p>
+          <p>{coach.throughLine}</p>
+          <p>{coach.constraint}</p>
+          <p>{coach.nextAction}</p>
+        </section>
+      ) : (
+        <p className="lead">{week.title}</p>
+      )}
+      <p>{coach.honestCalendar}</p>
       {week.proofs.length > 0 ? (
         <p className="due">
           <strong>À rendre : </strong>
@@ -65,6 +80,7 @@ export function HomePage() {
           <p>Bloc indicatif, à détailler. Pas de créneaux inventés pour cette semaine.</p>
         )}
       </section>
+      <ThroughLines lines={snap.curriculum.throughLines} />
       <details className="tracking">
         <summary>Détails du suivi</summary>
         <p>

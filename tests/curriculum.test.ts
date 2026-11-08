@@ -1,5 +1,7 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { canonicalJson } from "../src/domain/json";
+import { CURRICULUM_VERSION } from "../src/domain/limits";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
 import { packagedCurriculumWins, parseCurriculumDocument, readProgramRevision } from "../src/domain/curriculumDocument";
 import { parseWeekRecord } from "../src/domain/schemas";
@@ -33,7 +35,9 @@ describe("curriculum", () => {
     }
     expect(counts.get("P0-S1")).toBe(6);
     for (let week = 2; week <= 9; week += 1) expect(counts.get(`P0-S${week}`)).toBe(4);
-    expect(document.programRevision).toBe(1);
+    expect(CURRICULUM_VERSION).toBe("initial-canvas-import-v1");
+    expect(document.curriculumVersion).toBe(CURRICULUM_VERSION);
+    expect(document.programRevision).toBe(2);
     expect(document.inconsistency.summary).toContain("environ 22 mois, pas 18");
     expect(document.inconsistency.summary).toContain("La semaine en cours reste P0-S1.");
     expect(document.inconsistency.summary).not.toContain("ne décrivent pas le même calendrier");
@@ -46,6 +50,78 @@ describe("curriculum", () => {
     expect(document.context.activeWeek).toBe("P0-S1");
     expect(document.context.completedHours).toBe(0);
     expect(document.context.robotPurchased).toBe(false);
+    const authored = JSON.parse(readFileSync("curriculum/authored-p0.json", "utf8")) as { questions: { id: string; prompt: string }[] };
+    expect(document.authoredComplement.questions.map((question) => [question.id, question.prompt])).toEqual(
+      authored.questions.map((question) => [question.id, question.prompt]),
+    );
+  });
+
+  it("porte les briefings, les récits et le glossaire sans dates inventées", () => {
+    const document = loadCurriculumDocument();
+    const detailed = document.weeks.filter((week) => week.detailLevel === "source-detailed");
+    expect(detailed.map((week) => week.id)).toEqual(["P0-S1", "P0-S2", "P0-S3", "P0-S4", "P0-S5", "P0-S6", "P0-S7", "P0-S8", "P0-S9"]);
+    for (const week of detailed) {
+      expect(week.briefing?.whyThisWeek).toBeTruthy();
+      expect(week.briefing?.keyIdea).toBeTruthy();
+      expect(week.briefing?.sundayOutcome).toBeTruthy();
+      expect(week.briefing?.roverLink).toBeTruthy();
+      expect(week.briefing?.jsToCTrap).toBeTruthy();
+      expect(week.briefing?.nextUnlocks).toBeTruthy();
+      expect(week.briefing?.withoutRobot).toBeTruthy();
+    }
+    expect(document.weeks.filter((week) => week.detailLevel === "indicative-block-only" && week.briefing)).toHaveLength(0);
+    expect(document.phases).toHaveLength(8);
+    let blocks = 0;
+    for (const phase of document.phases) {
+      expect(phase.narrative.promise).toBeTruthy();
+      expect(phase.narrative.hardwareNote).toBeTruthy();
+      expect(phase.narrative.exitCriteria.length).toBeGreaterThan(0);
+      expect(phase.narrative.throughLine).toBeTruthy();
+      expect(phase.narrative.portfolioNote).toBeTruthy();
+      expect(phase.narrative.commonPitfall).toBeTruthy();
+      for (const block of phase.blocks) {
+        blocks += 1;
+        expect(block.briefing.whyThisBlock).toBeTruthy();
+        expect(block.briefing.hardwareNote).toBeTruthy();
+        expect(dated(block.briefing.whyThisBlock)).toBe(false);
+        expect(dated(block.briefing.hardwareNote)).toBe(false);
+      }
+    }
+    expect(blocks).toBe(23);
+    expect(document.phases.filter((phase) => phase.id !== "P0").every((phase) => phase.blocks.length > 0)).toBe(true);
+    expect(document.throughLines.map((line) => line.id)).toEqual(["parseur", "maths-mardi", "js-vers-c", "architecture"]);
+    expect(document.glossary).toHaveLength(29);
+    expect(document.homeCoach.activeWeekId).toBe("P0-S1");
+    expect(document.homeCoach.honestCalendar).toContain("22 mois");
+    expect(document.homeCoach.honestCalendar).toContain("pas 18");
+    const dates = document.weeks.flatMap((week) => ("sourceMondayDate" in week.scheduleNotes ? [week.scheduleNotes.sourceMondayDate] : []));
+    expect(dates).toEqual(["2 nov. 2026", "9 nov. 2026", "16 nov. 2026", "23 nov. 2026", "30 nov. 2026", "7 déc. 2026", "14 déc. 2026", "21 déc. 2026", "28 déc. 2026"]);
+    const coachDates = `${document.homeCoach.body} ${document.homeCoach.honestCalendar}`.match(/\d{1,2}\s+novembre(?:\s+2026)?/gi) ?? [];
+    expect(coachDates.map((item) => item.toLowerCase()).sort()).toEqual(["2 novembre 2026", "8 novembre 2026", "9 novembre"]);
+    const s1 = document.weeks[0];
+    expect(s1?.exercises.join("\n")).toContain("dépôt de travail distinct");
+    expect(s1?.exercises.join("\n")).not.toContain("github.com/pierre-claisse/rover-notes");
+    if (!s1 || !("slots" in s1.scheduleNotes)) throw new Error("S1 absente");
+    expect(s1.scheduleNotes.slots[3]?.res).toBe("Le hub rover-notes (coffre) pour les notes ; un dépôt de code distinct pour le parseur");
+    expect(s1.scheduleNotes.slots[3]?.contenu).toContain("coffre chiffré");
+    expect(document.phases[0]?.done).toBe("Vous savez expliquer sans notes chaque fil entre le Pi et l'ESP32, et un test C passe en CI");
+    const note = "Objectifs, exercices et livrables sont décrits au niveau de la phase. Le détail semaine par semaine sera écrit dans rover-notes à l’approche de cette phase, sans dates inventées.";
+    for (const week of document.weeks) {
+      if (week.detailLevel !== "indicative-block-only" || !("note" in week.scheduleNotes)) continue;
+      expect(week.scheduleNotes.note).toBe(note);
+      expect(week.scheduleNotes.note).not.toContain("Canvas");
+      expect(dated(week.scheduleNotes.note)).toBe(false);
+    }
+    for (const gap of document.gaps) expect(gap).not.toMatch(/canvas/i);
+    const student = JSON.stringify({
+      done: document.phases.map((phase) => phase.done),
+      narratives: document.phases.map((phase) => phase.narrative),
+      briefings: document.weeks.map((week) => week.briefing),
+      homeCoach: document.homeCoach,
+      throughLines: document.throughLines,
+      glossary: document.glossary,
+    });
+    expect(student).not.toMatch(/Tu sais/);
   });
 
   it("accepte un programme de coffre sans révision et reconnaît un seed plus récent", async () => {
@@ -88,3 +164,7 @@ describe("curriculum", () => {
     ).toThrow(/Schéma refusé/);
   });
 });
+
+function dated(value: string): boolean {
+  return /(?:\d{1,2}\s+)?(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|janv|févr|avr|juil|sept|oct|nov|déc)\b|\b20\d{2}\b|\b\d{1,2}\/\d{1,2}\/\d{4}\b/i.test(value);
+}
