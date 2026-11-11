@@ -10,7 +10,7 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && tsx tests/browser-roundtrip.ts",
-    "build": "vite build",
+    "build": "vite build && node scripts/copy-spa-fallback.mjs",
     "build-secrets": "tsx scripts/build-secrets.mjs",
     "read-progress": "tsx scripts/read-progress.mjs",
     "bootstrap-vault": "tsx scripts/bootstrap-vault.mjs",

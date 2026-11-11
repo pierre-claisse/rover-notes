@@ -2,7 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { App } from "../src/App";
@@ -35,16 +35,20 @@ beforeAll(async () => {
   secrets = JSON.stringify(file);
 });
 
+beforeEach(() => {
+  at("/rover-notes/");
+});
+
 afterEach(() => {
   cleanup();
   window.localStorage.clear();
   window.sessionStorage.clear();
-  window.location.hash = "";
+  at("/rover-notes/");
 });
 
 describe("login", () => {
   it("n’affiche pas le hub et ne lit pas GitHub avant déverrouillage", async () => {
-    window.location.hash = "#/semaine/P0-S1";
+    at("/rover-notes/semaine/P0-S1");
     const calls: string[] = [];
     const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
@@ -59,6 +63,90 @@ describe("login", () => {
     await settled(fetchImpl);
     expect(calls.every((url) => url.includes("secrets.json"))).toBe(true);
     expect(calls.some((url) => url.includes("api.github.com"))).toBe(false);
+    expect(window.location.pathname).toBe("/rover-notes/semaine/P0-S1");
+    expect(screen.queryByRole("heading", { name: /Vecteurs, mémoire C/ })).toBeNull();
+  });
+
+  it("laisse une URL à dièse telle quelle", async () => {
+    at("/rover-notes/#/programme");
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes("secrets.json")) return new Response(secrets, { status: 200 });
+      throw new Error(`requête inattendue ${String(input)}`);
+    });
+    const user = userEvent.setup();
+    render(
+      <App
+        deps={{
+          fetchImpl,
+          secretsUrl: "/rover-notes/secrets.json",
+          idleMs: 60_000,
+          autosaveMs: 0,
+          drafts: new MemoryDraftStore(),
+          seed: async () => loadCurriculumDocument(),
+          createClient: () => new MemoryContents(),
+        }}
+      />,
+    );
+    await screen.findByLabelText("Mot de passe");
+    expect(window.location.pathname).toBe("/rover-notes/");
+    expect(window.location.hash).toBe("#/programme");
+    await settled(fetchImpl);
+    await user.type(screen.getByLabelText("Identifiant"), "Ada");
+    await user.type(screen.getByLabelText("Mot de passe"), "phrase-de-test");
+    await user.click(screen.getByRole("button", { name: "Déverrouiller" }));
+    expect(await screen.findByRole("heading", { name: homeHeading() })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByRole("heading", { name: "Programme" })).toBeNull();
+    expect(window.location.pathname).toBe("/rover-notes/");
+    expect(window.location.hash).toBe("#/programme");
+  });
+
+  it("ouvre la semaine demandée par l’URL, puis retrouve la page après verrouillage", async () => {
+    at("/rover-notes/semaine/P0-S1");
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes("secrets.json")) return new Response(secrets, { status: 200 });
+      throw new Error(`requête inattendue ${String(input)}`);
+    });
+    const user = userEvent.setup();
+    render(
+      <App
+        deps={{
+          fetchImpl,
+          secretsUrl: "/rover-notes/secrets.json",
+          idleMs: 60_000,
+          autosaveMs: 0,
+          drafts: new MemoryDraftStore(),
+          seed: async () => loadCurriculumDocument(),
+          createClient: () => new MemoryContents(),
+        }}
+      />,
+    );
+    await screen.findByLabelText("Identifiant");
+    await settled(fetchImpl);
+    await user.type(screen.getByLabelText("Identifiant"), "Ada");
+    await user.type(screen.getByLabelText("Mot de passe"), "phrase-de-test");
+    await user.click(screen.getByRole("button", { name: "Déverrouiller" }));
+    expect(await screen.findByRole("heading", { name: "S1 — Vecteurs, mémoire C, Linux série, premier parseur" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/rover-notes/semaine/P0-S1");
+    expect(window.location.hash).toBe("");
+    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("href", "/rover-notes/");
+    expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("href", "/rover-notes/programme");
+    expect(screen.getByRole("link", { name: "Glossaire" })).toHaveAttribute("href", "/rover-notes/glossaire");
+    expect(screen.getByRole("link", { name: "Journal" })).toHaveAttribute("href", "/rover-notes/journal");
+    expect(screen.getByRole("link", { name: "Accueil" })).not.toHaveAttribute("aria-current");
+    await user.click(screen.getByRole("link", { name: "Accueil" }));
+    expect(await screen.findByRole("heading", { name: homeHeading() })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/rover-notes/");
+    expect(screen.getByRole("link", { name: "Ouvrir l’atelier de la semaine" })).toHaveAttribute("href", "/rover-notes/semaine/P0-S1");
+    await user.click(screen.getByRole("button", { name: "Verrouiller" }));
+    await waitFor(() => expect(screen.getByLabelText("Mot de passe")).toBeInTheDocument());
+    expect(window.location.pathname).toBe("/rover-notes/");
+    expect(screen.queryByRole("heading", { name: homeHeading() })).toBeNull();
+    await user.type(screen.getByLabelText("Identifiant"), "Ada");
+    await user.type(screen.getByLabelText("Mot de passe"), "phrase-de-test");
+    await user.click(screen.getByRole("button", { name: "Déverrouiller" }));
+    expect(await screen.findByRole("heading", { name: homeHeading() })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/rover-notes/");
   });
 
   it("affiche ou masque le mot de passe, et le déverrouillage occupe la largeur du coffre", async () => {
@@ -144,8 +232,15 @@ describe("login", () => {
     expect(screen.getAllByText("À regarder ou lire").length).toBeGreaterThan(0);
     expect(screen.getAllByText("À faire").length).toBeGreaterThan(0);
     expect(document.body.textContent ?? "").not.toMatch(/https?:\/\//);
+    expect(window.location.pathname).toBe("/rover-notes/");
+    expect(window.location.hash).toBe("");
+    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("href", "/rover-notes/");
     expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("href", "/rover-notes/programme");
     expect(screen.getByRole("link", { name: "Programme" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: "Glossaire" })).toHaveAttribute("href", "/rover-notes/glossaire");
+    expect(screen.getByRole("link", { name: "Journal" })).toHaveAttribute("href", "/rover-notes/journal");
+    expect(screen.getByRole("link", { name: /semaine en cours/ })).toHaveAttribute("href", "/rover-notes/semaine/P0-S1");
     expect(screen.getByRole("button", { name: "Verrouiller" })).toHaveClass("text-button");
     expect(screen.getByRole("status")).toHaveTextContent("Enregistré");
     expect(screen.getByRole("status")).not.toHaveTextContent("GitHub");
@@ -160,7 +255,11 @@ describe("login", () => {
     await user.click(screen.getByRole("link", { name: "Programme" }));
     expect(await screen.findByRole("heading", { name: "Programme" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/rover-notes/programme");
     expect(screen.getByRole("link", { name: "Aller à S1" })).toHaveAttribute("href", "#semaine-en-cours");
+    await user.click(screen.getByRole("link", { name: "Aller à S1" }));
+    expect(window.location.pathname).toBe("/rover-notes/programme");
+    expect(window.location.hash).toBe("");
     expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByText("94 sem. · ~846 h · ~22 mois")).toBeInTheDocument();
     await user.click(screen.getByText("Pourquoi 22 mois ?"));
@@ -182,6 +281,7 @@ describe("login", () => {
     await waitFor(() => expect(screen.getByText("en cours", { selector: ".pill-current" }).closest("li")?.textContent).toMatch(/S2/));
     await user.click(screen.getByRole("link", { name: "Journal" }));
     expect(await screen.findByRole("heading", { name: "Journal" })).toBeInTheDocument();
+    expect(window.location.pathname).toBe("/rover-notes/journal");
     expect(screen.getByRole("link", { name: "Journal" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("heading", { name: "Ajouter une séance" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Ajouter des minutes" })).not.toBeInTheDocument();
@@ -212,6 +312,7 @@ describe("login", () => {
     await user.click(screen.getByRole("button", { name: "Verrouiller" }));
     await waitFor(() => expect(screen.getByLabelText("Mot de passe")).toBeInTheDocument());
     expect(screen.queryByText(/Maintenant/)).toBeNull();
+    expect(window.location.pathname).toBe("/rover-notes/journal");
     expect(window.localStorage.length).toBe(0);
   });
 
@@ -230,6 +331,10 @@ function homeHeading(): string {
   const slots = week && "slots" in week.scheduleNotes ? week.scheduleNotes.slots : [];
   const match = slots.find((slot) => sameDayName(slot.c, weekday));
   return todayHeadline(weekday, match ? match.d : null);
+}
+
+function at(path: string): void {
+  window.history.replaceState(null, "", path);
 }
 
 async function settled(fetchImpl: { mock: { results: Array<{ value?: Promise<unknown> }> } }) {
