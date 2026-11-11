@@ -55,18 +55,17 @@ describe("lot pédagogique", () => {
     const session = await open();
     render(weekHarness(session, "/semaine/P0-S1"));
     const briefing = await screen.findByText(/C’est la bascule/);
-    const plan = screen.getByRole("heading", { name: "Plan" });
-    const objectives = screen.getByRole("heading", { name: "Je sais…" });
-    const questions = screen.getByRole("heading", { name: "Questions" });
-    const verification = screen.getByText("Exercice de vérification");
-    expect(order(plan, briefing)).toBe(true);
-    expect(order(briefing, objectives)).toBe(true);
-    expect(order(objectives, questions)).toBe(true);
-    expect(order(objectives, verification)).toBe(true);
-    const briefingSection = briefing.closest("section");
-    expect(briefingSection?.textContent ?? "").not.toMatch(/la plus haute/);
+    const plan = window.document.getElementById("plan");
+    expect(plan?.contains(briefing)).toBe(true);
+    expect(plan?.textContent ?? "").not.toMatch(/la plus haute/);
     expect(screen.getByRole("link", { name: "Matrice comme transformation" })).toHaveAttribute("href", "/glossaire/matrice-transformation");
-    expect(screen.getByRole("navigation", { name: "Sommaire de la semaine" })).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: "Semaine" })).toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("tab", { name: "Je sais" }));
+    expect(screen.getByRole("heading", { name: "Je sais…" })).toBeInTheDocument();
+    await user.click(screen.getByRole("tab", { name: "Exercices" }));
+    expect(screen.getByText(/Question 1 sur \d+/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Questions" })).not.toBeInTheDocument();
   });
 
   it("ouvre le glossaire depuis une semaine et le récit de phase", async () => {
@@ -114,10 +113,6 @@ describe("lot pédagogique", () => {
     expect(screen.queryByText(/sourceMondayDate|2 nov/)).not.toBeInTheDocument();
   });
 });
-
-function order(before: HTMLElement, after: HTMLElement): boolean {
-  return (before.compareDocumentPosition(after) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
-}
 
 async function open(): Promise<VaultSession> {
   const session = new VaultSession({

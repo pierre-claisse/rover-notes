@@ -112,7 +112,8 @@ export function MobileNav() {
 export function MobileLock() {
   const auth = useAuth();
   return (
-    <button type="button" className="text-button lock-button" onClick={() => void auth.lock()}>
+    <button type="button" className="text-button lock-button mobile-lock" onClick={() => void auth.lock()}>
+      <Icon name="lock" />
       Verrouiller
     </button>
   );

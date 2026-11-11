@@ -18,16 +18,35 @@ export function SlotList({ slots, weekday }: { slots: Slot[]; weekday: string })
     <ul className="day-plan">
       {weekRows(slots, weekday).map((row) => (
         <li key={row.name} className={rowClass(row)} aria-current={row.today ? "date" : undefined}>
-          <div className="day-head">
-            <h3>{row.name}</h3>
-            {row.today ? <span className="pill pill-today">Aujourd’hui</span> : null}
-            {row.past ? <span className="past-flag">passé</span> : null}
-            <span className="day-duration">{row.slot ? row.slot.d : "pas de créneau"}</span>
-          </div>
-          {row.slot ? <DayBody slot={row.slot} /> : null}
+          {row.past && row.slot ? (
+            <details className="day-fold">
+              <summary className="day-head">
+                <DayHeading row={row} />
+              </summary>
+              <DayBody slot={row.slot} />
+            </details>
+          ) : (
+            <>
+              <div className="day-head">
+                <DayHeading row={row} />
+              </div>
+              {row.slot ? <DayBody slot={row.slot} /> : null}
+            </>
+          )}
         </li>
       ))}
     </ul>
+  );
+}
+
+function DayHeading({ row }: { row: DayRow }) {
+  return (
+    <>
+      <h3>{row.name}</h3>
+      {row.today ? <span className="pill pill-today">Aujourd’hui</span> : null}
+      {row.past ? <span className="past-flag">passé</span> : null}
+      <span className="day-duration">{row.slot ? row.slot.d : "pas de créneau"}</span>
+    </>
   );
 }
 

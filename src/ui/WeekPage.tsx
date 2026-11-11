@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { copyBytes } from "../crypto/bytes";
 import { newObjectId } from "../domain/limits";
@@ -7,7 +7,7 @@ import { minutesEntered, parseWeekRecord, type AnswerValue, type WeekRecord } fr
 import { assertNever } from "../domain/assert";
 import { formatFrenchDate, formatFrenchNumeric, parisWeekday } from "../domain/time";
 import { enteredTimeCopy, entryKindLabel, paceFigure, sameDayName } from "./atelier";
-import { followAnchor, readScrollTarget, scrollToId } from "./anchor";
+import { readScrollTarget, scrollToId } from "./anchor";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
 import { TimeMeter } from "./Meter";
@@ -16,15 +16,17 @@ import { labelForHref } from "./present";
 import { SlotList } from "./slots";
 import { useVault } from "./vault";
 
-const TOC = [
-  ["plan", "Plan"],
-  ["je-sais", "Je sais"],
-  ["exercices", "Exercices"],
-  ["notes", "Notes"],
-  ["bilan", "Bilan"],
-  ["preuves", "Preuves"],
-  ["seance", "Séance"],
+const TABS = [
+  { id: "plan", label: "Plan" },
+  { id: "je-sais", label: "Je sais" },
+  { id: "exercices", label: "Exercices" },
+  { id: "notes-bilan", label: "Notes & bilan" },
+  { id: "preuves", label: "Preuves" },
 ] as const;
+
+type WeekTab = (typeof TABS)[number]["id"];
+
+const TAB_IDS = TABS.map((item) => item.id);
 
 export function WeekPage() {
   const { weekId = "" } = useParams();
@@ -36,8 +38,11 @@ export function WeekPage() {
   const [consented, setConsented] = useState(false);
   const [preview, setPreview] = useState(false);
   const [noted, setNoted] = useState(false);
+  const [chosenFile, setChosenFile] = useState<string | null>(null);
   const scrolledTo = useRef<string | null>(null);
   const scrollTo = readScrollTarget(location.state);
+  const [tab, setTab] = useState<WeekTab>(scrollTo === "bilan" ? "notes-bilan" : "plan");
+  const [sessionOpen, setSessionOpen] = useState(scrollTo === "seance");
 
   useEffect(() => {
     if (snap.phase === "ready") void session.ensureWeek(weekId);
@@ -61,8 +66,6 @@ export function WeekPage() {
     ...snap.curriculum.sourceQuestions.filter((item) => item.weekId === weekId),
     ...snap.curriculum.authoredComplement.questions.filter((item) => item.weekId === weekId),
   ];
-  const authoredQuestions = questions.filter((item) => item.origin === "authored");
-  const verificationQuestions = questions.filter((item) => item.origin === "canvas");
   const minutes = minutesEntered(snap.journal, weekId);
   const hours = snap.curriculum.context.hoursPerWeek;
   const weekday = parisWeekday(new Date()).toLocaleLowerCase("fr-FR");
@@ -70,6 +73,22 @@ export function WeekPage() {
   const slots = plan.detailLevel === "source-detailed" && "slots" in plan.scheduleNotes ? plan.scheduleNotes.slots : null;
   const todaySlot = slots?.some((slot) => sameDayName(slot.c, weekday)) ?? false;
   const currentWeek = snap.manifest?.activeWeekId === weekId;
+
+  function onWeekTabKey(event: KeyboardEvent<HTMLDivElement>) {
+    const next = moveTab(TAB_IDS, tab, event.key);
+    if (!next) return;
+    event.preventDefault();
+    setTab(next);
+    window.requestAnimationFrame(() => document.getElementById(`tab-${next}`)?.focus());
+  }
+
+  function onNoteTabKey(event: KeyboardEvent<HTMLDivElement>) {
+    const next = moveTab(["ecrire", "apercu"] as const, preview ? "apercu" : "ecrire", event.key);
+    if (!next) return;
+    event.preventDefault();
+    setPreview(next === "apercu");
+    window.requestAnimationFrame(() => document.getElementById(next === "apercu" ? "tab-apercu" : "tab-ecrire")?.focus());
+  }
   const declared = record.objectives.filter((item) => item.selfAssessment === "declared").length;
   const entries = snap.journal.entries.filter((entry) => entry.weekId === weekId);
   const block = weekBlock(snap.curriculum, plan);
@@ -110,34 +129,40 @@ export function WeekPage() {
         <p className="pace">{paceFigure(minutes, hours)}</p>
         <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
         <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
-        {plan.detailLevel === "source-detailed" ? <p>Semaine détaillée du programme.</p> : null}
       </header>
       <Conflicts />
-      <nav className="week-toc" aria-label="Sommaire de la semaine">
-        {TOC.map(([id, label]) => (
-          <a key={id} href={`#${id}`} onClick={(event) => followAnchor(event, id)}>
-            {label}
-          </a>
+      <div className="week-tabs" role="tablist" aria-label="Semaine" onKeyDown={onWeekTabKey}>
+        {TABS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className="text-button"
+            role="tab"
+            id={`tab-${item.id}`}
+            aria-selected={tab === item.id}
+            aria-controls={item.id}
+            tabIndex={tab === item.id ? 0 : -1}
+            onClick={() => setTab(item.id)}
+          >
+            {item.label}
+          </button>
         ))}
-      </nav>
-      <section id="plan" tabIndex={-1}>
-        <h2>Plan</h2>
+      </div>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          void session.saveWeek(weekId);
+        }}
+      >
+      <section id="plan" role="tabpanel" aria-labelledby="tab-plan" hidden={tab !== "plan"} tabIndex={0}>
         {sunday && currentWeek ? (
           <p className="today-note">
             Aujourd’hui, le bilan du write-up.{" "}
-            <a href="#bilan" onClick={(event) => followAnchor(event, "bilan")}>
+            <button type="button" className="text-button" onClick={() => setTab("notes-bilan")}>
               Ouvrir le bilan
-            </a>
+            </button>
           </p>
         ) : null}
-        {plan.briefing ? <WeekBriefingView briefing={plan.briefing} /> : null}
-        {block && !plan.briefing ? (
-          <>
-            <p>{block.briefing.whyThisBlock}</p>
-            <p>{block.briefing.hardwareNote}</p>
-          </>
-        ) : null}
-        <WeekTerms weekId={weekId} entries={snap.curriculum.glossary} />
         {slots ? (
           <>
             {!todaySlot && !sunday ? <p>Pas de créneau ce {weekday}. Le livrable et le plan de la semaine restent le repère.</p> : null}
@@ -149,14 +174,16 @@ export function WeekPage() {
             {"note" in plan.scheduleNotes ? <p>{plan.scheduleNotes.note}</p> : null}
           </>
         )}
+        {plan.briefing ? <WeekBriefingView briefing={plan.briefing} /> : null}
+        {block && !plan.briefing ? (
+          <>
+            <p>{block.briefing.whyThisBlock}</p>
+            <p>{block.briefing.hardwareNote}</p>
+          </>
+        ) : null}
+        <WeekTerms weekId={weekId} entries={snap.curriculum.glossary} />
       </section>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          void session.saveWeek(weekId);
-        }}
-      >
-        <section id="je-sais" tabIndex={-1}>
+        <section id="je-sais" role="tabpanel" aria-labelledby="tab-je-sais" hidden={tab !== "je-sais"} tabIndex={0}>
           <h2>Je sais…</h2>
           <p>Auto-évaluation. Cocher une case ne valide pas la compétence.</p>
           {record.objectives.length > 0 ? (
@@ -218,43 +245,41 @@ export function WeekPage() {
             </>
           )}
         </section>
-        <section id="exercices" tabIndex={-1}>
+        <section id="exercices" role="tabpanel" aria-labelledby="tab-exercices" hidden={tab !== "exercices"} tabIndex={0}>
           <h2>Exercices</h2>
-          {verificationQuestions.map((question) => (
-            <QuestionField
-              key={question.id}
-              legend="Exercice de vérification"
-              question={question}
-              record={record}
-              disabled={locked}
-              weekId={weekId}
-            />
-          ))}
-          {authoredQuestions.length > 0 ? (
-            <>
-              <h3>Questions</h3>
-              {authoredQuestions.map((question) => (
-                <QuestionField key={question.id} legend="Questions" question={question} record={record} disabled={locked} weekId={weekId} />
-              ))}
-            </>
-          ) : null}
-          {verificationQuestions.length === 0 && authoredQuestions.length === 0 ? (
+          {questions.length > 0 ? (
+            questions.map((question, index) => (
+              <QuestionField
+                key={question.id}
+                legend={`Question ${index + 1} sur ${questions.length}`}
+                question={question}
+                record={record}
+                disabled={locked}
+                weekId={weekId}
+                last={index === questions.length - 1}
+              />
+            ))
+          ) : (
             <>
               <h3>Exercices de phase</h3>
               <PhaseList phaseId={plan.phase} part="exercises" />
             </>
-          ) : null}
+          )}
         </section>
-        <section id="notes" tabIndex={-1}>
-          <div className="notes-head">
-            <h2>
-              <label htmlFor="notes">Notes</label>
-            </h2>
-            <button type="button" className="quiet" aria-pressed={preview} disabled={locked} onClick={() => setPreview((value) => !value)}>
-              {preview ? "Masquer l’aperçu" : "Aperçu"}
+        <section id="notes-bilan" role="tabpanel" aria-labelledby="tab-notes-bilan" hidden={tab !== "notes-bilan"} tabIndex={0}>
+          <h2 id="notes-title">Notes</h2>
+          <div className="note-tabs" role="tablist" aria-label="Édition des notes" onKeyDown={onNoteTabKey}>
+            <button type="button" className="text-button" role="tab" id="tab-ecrire" aria-selected={!preview} aria-controls="notes-ecrire" tabIndex={preview ? -1 : 0} onClick={() => setPreview(false)}>
+              Écrire
+            </button>
+            <button type="button" className="text-button" role="tab" id="tab-apercu" aria-selected={preview} aria-controls="notes-apercu" tabIndex={preview ? 0 : -1} onClick={() => setPreview(true)}>
+              Aperçu
             </button>
           </div>
-          <div className={preview ? "notes-stage is-preview" : "notes-stage"}>
+          <div id="notes-ecrire" role="tabpanel" aria-labelledby="tab-ecrire" hidden={preview}>
+            <label className="sr-only" htmlFor="notes">
+              Notes
+            </label>
             <textarea
               id="notes"
               className="writing"
@@ -262,13 +287,10 @@ export function WeekPage() {
               disabled={locked}
               onChange={(event) => session.updateWeek(weekId, (week) => ({ ...week, notes: event.target.value }))}
             />
-            {preview ? (
-              <div className="markdown-preview">
-                {record.notes ? <MarkdownText text={record.notes} /> : <p>Rien à prévisualiser.</p>}
-              </div>
-            ) : null}
           </div>
-        </section>
+          <div id="notes-apercu" role="tabpanel" aria-labelledby="tab-apercu" hidden={!preview} className="markdown-preview">
+            {record.notes ? <MarkdownText text={record.notes} /> : <p>Rien à prévisualiser.</p>}
+          </div>
         <section id="bilan" className="ritual" tabIndex={-1}>
           <h2>Bilan du dimanche</h2>
           <p>Appris, blocages, prochaine action — le write-up de la semaine.</p>
@@ -297,34 +319,40 @@ export function WeekPage() {
               session.updateWeek(weekId, (week) => ({ ...week, writeUp: { ...week.writeUp, nextSteps: event.target.value } }))
             }
           />
+          <button type="submit">Enregistrer</button>
         </section>
-        <button type="submit">Enregistrer</button>
+        </section>
       </form>
-      <section id="preuves" className="panel" tabIndex={-1}>
+      <section id="preuves" role="tabpanel" aria-labelledby="tab-preuves" className="panel" hidden={tab !== "preuves"} tabIndex={0}>
         <h2>Preuves</h2>
         <p>10 Mio maximum. Le nom du fichier reste dans le coffre chiffré.</p>
-        <input
-          aria-label="Ajouter une preuve"
-          type="file"
-          disabled={locked}
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            event.target.value = "";
-            if (!file) return;
-            void file.arrayBuffer().then((buffer) =>
-              session
-                .uploadEvidence(weekId, {
-                  filename: file.name,
-                  mimeType: file.type || "application/octet-stream",
-                  bytes: new Uint8Array(buffer),
-                })
-                .then(() => setLocalError(null))
-                .catch((error: unknown) => {
-                  setLocalError(error instanceof Error ? error.message : "Envoi impossible");
-                }),
-            );
-          }}
-        />
+        <label className="file-button">
+          <input
+            className="sr-only"
+            aria-label="Ajouter une preuve"
+            type="file"
+            disabled={locked}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (!file) return;
+              setChosenFile(file.name);
+              void file.arrayBuffer().then((buffer) =>
+                session
+                  .uploadEvidence(weekId, {
+                    filename: file.name,
+                    mimeType: file.type || "application/octet-stream",
+                    bytes: new Uint8Array(buffer),
+                  })
+                  .then(() => setLocalError(null))
+                  .catch((error: unknown) => {
+                    setLocalError(error instanceof Error ? error.message : "Envoi impossible");
+                  }),
+              );
+            }}
+          />
+          {chosenFile ?? "Choisir un fichier"}
+        </label>
         <label htmlFor="proof-url">Lien</label>
         <input id="proof-url" value={href} onChange={(event) => setHref(event.target.value)} disabled={locked} />
         <label htmlFor="proof-visibility">Visibilité du lien</label>
@@ -343,6 +371,7 @@ export function WeekPage() {
         </label>
         <button
           type="button"
+          className="proof-add"
           disabled={locked || !consented}
           onClick={() => {
             try {
@@ -398,16 +427,13 @@ export function WeekPage() {
           )}
         </ul>
       </section>
-      <section id="seance" className="ritual" tabIndex={-1}>
-        <p>La séance se note ici, à la fin, pendant que c’est encore frais.</p>
+      <section id="seance" className="session-card" tabIndex={-1}>
         {noted ? (
           <p className="session-note" role="status">
             Séance notée.
           </p>
         ) : null}
-        {entries.length === 0 ? (
-          <p>Rien n’est encore noté pour cette semaine.</p>
-        ) : (
+        {entries.length > 0 ? (
           <ol className="timeline">
             {entries.map((entry) => (
               <li key={entry.id}>
@@ -422,18 +448,34 @@ export function WeekPage() {
               </li>
             ))}
           </ol>
+        ) : null}
+        {sessionOpen ? (
+          <SessionForm
+            weekId={weekId}
+            weeks={[weekId]}
+            onAdd={(entry) => {
+              void session.addJournalEntry(entry);
+            }}
+            onNoted={() => setNoted(true)}
+          />
+        ) : (
+          <button type="button" onClick={() => setSessionOpen(true)}>
+            Noter une séance
+          </button>
         )}
-        <SessionForm
-          weekId={weekId}
-          weeks={[weekId]}
-          onAdd={(entry) => {
-            void session.addJournalEntry(entry);
-          }}
-          onNoted={() => setNoted(true)}
-        />
       </section>
     </article>
   );
+}
+
+function moveTab<T extends string>(ids: readonly T[], current: T, key: string): T | null {
+  const index = ids.indexOf(current);
+  if (index < 0) return null;
+  if (key === "ArrowRight") return ids[(index + 1) % ids.length];
+  if (key === "ArrowLeft") return ids[(index - 1 + ids.length) % ids.length];
+  if (key === "Home") return ids[0];
+  if (key === "End") return ids[ids.length - 1];
+  return null;
 }
 
 function weekBlock(curriculum: CurriculumDocument, week: WeekDocument) {
@@ -475,17 +517,19 @@ function QuestionField({
   weekId,
   disabled,
   legend,
+  last,
 }: {
   question: StudyQuestion;
   record: WeekRecord;
   weekId: string;
   disabled: boolean;
   legend: string;
+  last: boolean;
 }) {
   const { session } = useVault();
   const [hints, setHints] = useState(0);
   return (
-    <fieldset className="exercise-card" disabled={disabled}>
+    <fieldset className={last ? "exercise-card is-last" : "exercise-card"} disabled={disabled}>
       <legend>{legend}</legend>
       <p>{question.prompt}</p>
       {renderAnswer(question, record, (value) =>
@@ -500,7 +544,7 @@ function QuestionField({
         </p>
       ))}
       {hints < question.hints.length ? (
-        <button type="button" onClick={() => setHints((count) => count + 1)}>
+        <button type="button" className="hint-button" onClick={() => setHints((count) => count + 1)}>
           Afficher l’indice {hints + 1}
         </button>
       ) : null}
@@ -523,7 +567,7 @@ function renderAnswer(question: StudyQuestion, record: WeekRecord, onChange: (va
       return question.options.map((option) => {
         const selected = current?.kind === "checkboxes" ? current.selectedIds : [];
         return (
-          <label key={option.id}>
+          <label className="choice" key={option.id}>
             <input
               type="checkbox"
               checked={selected.includes(option.id)}
