@@ -789,9 +789,19 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
   gap: 8px;
 }
 
-.day-head h3 { margin: 0; font-size: 22px; font-weight: 500; }
+.day-head h3,
+.day-fold > summary h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
 
-.day-empty h3 { font-size: 17px; font-weight: 500; }
+.day-fold > summary {
+  font-weight: 500;
+  color: inherit;
+}
 
 .day-duration {
   margin-left: auto;
@@ -1105,6 +1115,8 @@ details[open] > summary::before { transform: rotate(45deg); }
   align-items: center;
   gap: 12px;
   margin-top: 12px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .week-pace {
@@ -1123,8 +1135,25 @@ details[open] > summary::before { transform: rotate(45deg); }
 
 .week-pace .meter {
   flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
-  min-width: 48px;
+  overflow: hidden;
+}
+
+@media (max-width: 799px) {
+  .week-status {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .week-pace { display: contents; }
+
+  .week-pace .pace { margin-left: auto; }
+
+  .week-pace .meter {
+    flex: 1 1 100%;
+    width: 100%;
+  }
 }
 
 .week-meta {
@@ -1133,7 +1162,8 @@ details[open] > summary::before { transform: rotate(45deg); }
   align-items: center;
   gap: 8px;
   margin-top: 0;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .week-meta label {
@@ -1143,9 +1173,10 @@ details[open] > summary::before { transform: rotate(45deg); }
 }
 
 .week-meta select {
-  width: auto;
-  max-width: 11rem;
-  flex: 0 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .week-toc {
@@ -1366,13 +1397,15 @@ fieldset.exercise-card {
   padding: 16px;
 }
 
-fieldset.exercise-card legend {
-  position: static;
-  float: none;
-  width: auto;
-  margin: 0 0 12px;
+.question-kicker {
+  margin: 0 0 8px;
   padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
+
+.question-prompt { margin: 0; }
 
 .exercise-card .choice {
   display: flex;
