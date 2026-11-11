@@ -5,6 +5,9 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
+import { parisWeekday } from "../src/domain/time";
+import { sameDayName } from "../src/ui/atelier";
+import { todayHeadline } from "../src/ui/today";
 import { MemoryContents } from "../src/github/memory";
 import { GlossaryPage } from "../src/ui/GlossaryPage";
 import { HomePage } from "../src/ui/HomePage";
@@ -29,7 +32,13 @@ describe("lot pédagogique", () => {
         </MemoryRouter>
       </VaultProvider>,
     );
-    expect(await screen.findByRole("heading", { name: "Maintenant : S1" })).toBeInTheDocument();
+    const weekday = parisWeekday(new Date()).toLocaleLowerCase("fr-FR");
+    const week = document.weeks.find((item) => item.id === "P0-S1");
+    const slots = week && "slots" in week.scheduleNotes ? week.scheduleNotes.slots : [];
+    const match = slots.find((slot) => sameDayName(slot.c, weekday));
+    const user = userEvent.setup();
+    expect(await screen.findByRole("heading", { name: todayHeadline(weekday, match?.d ?? null) })).toBeInTheDocument();
+    await user.click(screen.getByText("Pourquoi cette semaine"));
     expect(screen.getByText(document.homeCoach.body)).toBeInTheDocument();
     expect(screen.getByText(document.homeCoach.honestCalendar)).toBeInTheDocument();
     expect(screen.getByText(document.homeCoach.nextAction)).toBeInTheDocument();

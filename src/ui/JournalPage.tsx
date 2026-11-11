@@ -16,8 +16,8 @@ export function JournalPage() {
   const today = parisToday(new Date());
   const entries = journalTimeline(journal.entries);
   return (
-    <article>
-      <h1>Journal</h1>
+    <article className="page">
+      <h1 className="display">Journal</h1>
       <p>Une séance n’est enregistrée que lorsque vous l’ajoutez.</p>
       <dl className="totals">
         <div>

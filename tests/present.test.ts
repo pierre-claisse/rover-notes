@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
 import { formatFrenchDate, formatFrenchNumeric, parisWeekday, parseFrenchNumeric } from "../src/domain/time";
-import { labelForHref, resourceParts, richPieces, slotTasks } from "../src/ui/present";
+import { labelForHref, resourceParts, richPieces, slotTasks, splitLeadingDuration } from "../src/ui/present";
 import { saveLabel } from "../src/ui/status";
 
 describe("libellés et dates", () => {
@@ -55,6 +55,21 @@ describe("libellés et dates", () => {
     const samediTasks = slotTasks(samedi.contenu);
     expect(samediTasks.read.join(" ")).toMatch(/Linux/);
     expect(samediTasks.do.join(" ")).toMatch(/parseur/);
+  });
+
+  it("détache une durée en tête de tâche", () => {
+    expect(splitLeadingDuration("1 h 30 Linux : SSH, systemd")).toEqual({
+      duration: "1 h 30",
+      text: "Linux : SSH, systemd",
+    });
+    expect(splitLeadingDuration("2 h 30 : parseur de trames")).toEqual({
+      duration: "2 h 30",
+      text: "parseur de trames",
+    });
+    expect(splitLeadingDuration("Maths : épisodes 1 à 3")).toEqual({
+      duration: null,
+      text: "Maths : épisodes 1 à 3",
+    });
   });
 
   it("lit le 8 novembre 2026 et non le 11 août", () => {

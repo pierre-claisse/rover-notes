@@ -39,7 +39,7 @@ export function LoginScreen() {
       <SkipLink />
       <main id="contenu" className="gate" tabIndex={-1}>
       <form className="gate-card" onSubmit={onSubmit}>
-        <h1>rover-notes</h1>
+        <h1 className="display">rover-notes</h1>
         <p>Identifiez-vous pour ouvrir le coffre.</p>
         <label htmlFor="username">Identifiant</label>
         <input

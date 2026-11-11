@@ -75,8 +75,11 @@ export function WeekPage() {
   const block = weekBlock(snap.curriculum, plan);
 
   return (
-    <article className="week">
+    <article className="week page">
       <header className="week-head">
+        <p className="meta">
+          S{plan.weekNumber} · {plan.phase} · {hours} h
+        </p>
         <h1>
           S{plan.weekNumber} — {plan.title}
         </h1>

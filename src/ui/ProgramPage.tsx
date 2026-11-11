@@ -1,22 +1,14 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import type { PhaseDocument, WeekDocument } from "../domain/curriculumDocument";
 import type { Journal } from "../domain/schemas";
 import { minutesForWeeks, phaseTimeCopy } from "./atelier";
-import { prefersReducedMotion } from "./anchor";
+import { followAnchor } from "./anchor";
 import { TimeMeter } from "./Meter";
 import { ThroughLines } from "./pedagogy";
 import { useVault } from "./vault";
 
 export function ProgramPage() {
   const { session, snap } = useVault();
-  useEffect(() => {
-    if (snap.phase !== "ready") return;
-    if (prefersReducedMotion()) return;
-    const node = document.getElementById("semaine-en-cours");
-    if (!node || typeof node.scrollIntoView !== "function") return;
-    node.scrollIntoView({ block: "nearest" });
-  }, [snap.phase]);
 
   if (snap.phase !== "ready" || !snap.curriculum || !snap.manifest || !snap.journal) {
     return <p>{snap.phase === "error" ? snap.errorMessage : "Ouverture du coffre…"}</p>;
@@ -25,8 +17,9 @@ export function ProgramPage() {
   const activeId = snap.manifest.activeWeekId;
   const journal = snap.journal;
   return (
-    <article>
-      <h1>Programme</h1>
+    <article className="page">
+      <h1 className="display">Programme</h1>
+      <CurrentWeekPin activeId={activeId} weeks={curriculum.weeks} hours={curriculum.context.hoursPerWeek} />
       <p className="callout">{curriculum.inconsistency.summary}</p>
       <p>
         S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs. 94 semaines × 9 h, environ 22 mois (846 h) : on ne compacte pas le syllabus pour coller à 18 mois. Aucune date n’est inventée pour S10–S94.
@@ -74,6 +67,23 @@ function weekOptionLabel(week: WeekDocument): string {
       return neverLevel;
     }
   }
+}
+
+function CurrentWeekPin({ activeId, weeks, hours }: { activeId: string; weeks: WeekDocument[]; hours: number }) {
+  const week = weeks.find((item) => item.id === activeId);
+  if (!week) return null;
+  const label = `S${week.weekNumber}`;
+  return (
+    <section className="pin" aria-labelledby="semaine-courante-titre">
+      <p className="meta">
+        {label} · {week.phase} · {hours} h
+      </p>
+      <h2 id="semaine-courante-titre">Semaine en cours : {label}</h2>
+      <a href="#semaine-en-cours" onClick={(event) => followAnchor(event, "semaine-en-cours")}>
+        Aller à {label}
+      </a>
+    </section>
+  );
 }
 
 function PhaseChapter({
@@ -139,7 +149,8 @@ function PhaseWeeks({
     return (
       <ul className="week-cards">
         {weeks.map((week) => (
-          <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
+          <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined}
+            tabIndex={week.id === activeId ? -1 : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
             <WeekLink week={week} />
             <DetailPill week={week} />
             {week.id === activeId ? <CurrentPill /> : null}
@@ -170,7 +181,8 @@ function PhaseWeeks({
             <p>{block.briefing.hardwareNote}</p>
             <ul className="week-links">
               {members.map((week) => (
-                <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "is-current" : undefined}>
+                <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined}
+            tabIndex={week.id === activeId ? -1 : undefined} className={week.id === activeId ? "is-current" : undefined}>
                   <Link to={`/semaine/${week.id}`}>S{week.weekNumber}</Link>
                   {week.id === activeId ? <CurrentPill /> : null}
                   {handedIn(week.id) ? <HandedPill /> : null}
@@ -183,7 +195,8 @@ function PhaseWeeks({
       {rest.length > 0 ? (
         <ul className="week-cards">
           {rest.map((week) => (
-            <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
+            <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined}
+            tabIndex={week.id === activeId ? -1 : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
               <WeekLink week={week} />
               <DetailPill week={week} />
               {week.id === activeId ? <CurrentPill /> : null}
@@ -226,5 +239,5 @@ function CurrentPill() {
 }
 
 function HandedPill() {
-  return <span className="pill">write-up remis</span>;
+  return <span className="pill pill-done">write-up remis</span>;
 }

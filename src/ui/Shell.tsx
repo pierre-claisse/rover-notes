@@ -1,13 +1,14 @@
-import { useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import { useAuth } from "../auth/AuthProvider";
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import { SkipLink } from "./anchor";
+import { DesktopNav, MobileNav, persistRail, readRail, SecondaryMenu, useNarrow } from "./navigation";
 import { saveLabel } from "./status";
 import { useVault } from "./vault";
 
 export function Shell() {
-  const auth = useAuth();
   const { snap } = useVault();
+  const narrow = useNarrow();
+  const [rail, setRail] = useState(readRail);
 
   useEffect(() => {
     const onLeave = (event: BeforeUnloadEvent) => {
@@ -20,35 +21,41 @@ export function Shell() {
   }, [snap.saveStatus]);
 
   return (
-    <div className="app">
+    <div className={rail && !narrow ? "app is-rail" : "app"}>
       <SkipLink />
-      <header className="top">
-        <p className="brand">rover-notes</p>
-        <nav aria-label="Navigation">
-          <NavLink to="/" end>
-            Accueil
-          </NavLink>
-          <NavLink to="/programme">Programme</NavLink>
-          <NavLink to="/glossaire">Glossaire</NavLink>
-          <NavLink to="/journal">Journal</NavLink>
-          <button type="button" className="text-button" onClick={() => void auth.lock()}>
-            Verrouiller
-          </button>
-        </nav>
-        <p className="save-status" role="status" aria-live="polite">
-          {snap.phase === "ready" ? (
-            <span className="pill">{saveLabel(snap.saveStatus)}</span>
-          ) : snap.phase === "loading" ? (
-            "Ouverture du coffre…"
-          ) : (
-            "Coffre non ouvert"
-          )}
-          {snap.saveDetail ? ` — ${snap.saveDetail}` : ""}
-        </p>
-      </header>
-      <main id="contenu" tabIndex={-1}>
-        <Outlet />
-      </main>
+      {narrow ? <MobileNav /> : (
+        <DesktopNav
+          rail={rail}
+          onToggle={() => {
+            const next = !rail;
+            setRail(next);
+            persistRail(next);
+          }}
+        />
+      )}
+      <div className="workspace">
+        <header className="top">
+          {narrow ? (
+            <>
+              <p className="brand">rover-notes</p>
+              <SecondaryMenu />
+            </>
+          ) : null}
+          <p className="save-status" role="status" aria-live="polite">
+            {snap.phase === "ready" ? (
+              <span className="pill">{saveLabel(snap.saveStatus)}</span>
+            ) : snap.phase === "loading" ? (
+              "Ouverture du coffre…"
+            ) : (
+              "Coffre non ouvert"
+            )}
+            {snap.saveDetail ? ` — ${snap.saveDetail}` : ""}
+          </p>
+        </header>
+        <main id="contenu" tabIndex={-1}>
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
