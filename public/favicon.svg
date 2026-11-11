@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <title>rover-notes</title>
+  <rect width="32" height="32" rx="8" fill="#5B1FE0"/>
+  <path fill="#FFFFFF" d="M4 9h24V14.4a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 14.4V9z"/>
+  <path fill="#2BE07A" d="M7.5 4h17a1.5 1.5 0 0 1 1.5 1.5V10H6V5.5A1.5 1.5 0 0 1 7.5 4z"/>
+  <circle cx="10" cy="23" r="5" fill="#FFFFFF"/>
+  <circle cx="22" cy="23" r="5" fill="#FFFFFF"/>
+  <circle cx="10" cy="23" r="2" fill="#00D1E0"/>
+  <circle cx="22" cy="23" r="2" fill="#00D1E0"/>
+</svg>
