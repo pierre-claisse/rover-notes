@@ -325,8 +325,9 @@ main a:not(.button):hover { color: var(--ink); }
   font-weight: 600;
 }
 
-.top .mobile-lock {
+header.top button.mobile-lock {
   width: auto;
+  flex: 0 0 auto;
   margin-left: auto;
   color: var(--muted);
   gap: 8px;
@@ -1099,20 +1100,52 @@ details[open] > summary::before { transform: rotate(45deg); }
 .week header,
 .conflict { scroll-margin-top: 16px; }
 
-.week-meta {
+.week-status {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 8px 16px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
-.week-meta label { margin: 0; }
+.week-pace {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.week-pace .pace {
+  margin: 0;
+  font-size: 22px;
+  white-space: nowrap;
+}
+
+.week-pace .meter {
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 48px;
+}
+
+.week-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0;
+  flex: 0 1 auto;
+}
+
+.week-meta label {
+  margin: 0;
+  flex: none;
+  white-space: nowrap;
+}
 
 .week-meta select {
-  width: 14rem;
-  max-width: 100%;
-  flex: 0 0 auto;
+  width: auto;
+  max-width: 11rem;
+  flex: 0 1 auto;
 }
 
 .week-toc {
@@ -1231,10 +1264,13 @@ input[type="file"] { min-height: 44px; max-width: 100%; }
 
 .session-note { margin: 0 0 8px; font-weight: 600; }
 
-.week-tabs, .note-tabs {
+.week-tabs-wrap {
   position: sticky;
   top: 0;
   z-index: 2;
+}
+
+.week-tabs, .note-tabs {
   display: flex;
   gap: 4px;
   margin: 24px 0 0;
@@ -1322,6 +1358,22 @@ li.day-card.day-past:has(details[open]) {
 
 .day-fold > summary .day-head { width: 100%; }
 
+fieldset.exercise-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 16px;
+  padding: 16px;
+}
+
+fieldset.exercise-card legend {
+  position: static;
+  float: none;
+  width: auto;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
 .exercise-card .choice {
   display: flex;
   align-items: center;
@@ -1389,7 +1441,32 @@ li.day-card.day-past:has(details[open]) {
 @media (max-width: 799px) {
   .app { display: block; }
 
-  .top { padding-inline: 16px; }
+  header.top {
+    justify-content: space-between;
+    width: 100%;
+    padding-inline: 16px;
+  }
+
+  header.top button.mobile-lock {
+    margin-left: auto;
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .week-head h1 { font-size: 26px; }
+
+  .week-head .due { margin-top: 8px; }
+
+  .week-tabs-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 48px;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--bg) 70%);
+  }
 
   main {
     width: min(100% - 32px, var(--layout));
