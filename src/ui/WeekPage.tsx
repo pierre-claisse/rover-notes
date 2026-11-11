@@ -534,9 +534,11 @@ function QuestionField({
   const { session } = useVault();
   const [hints, setHints] = useState(0);
   return (
-    <fieldset className={last ? "exercise-card is-last" : "exercise-card"} disabled={disabled}>
-      <legend>{legend}</legend>
-      <p>{question.prompt}</p>
+    <fieldset className={last ? "exercise-card is-last" : "exercise-card"} disabled={disabled} aria-labelledby={`${question.id}-kicker`}>
+      <p id={`${question.id}-kicker`} className="question-kicker">
+        {legend}
+      </p>
+      <p className="question-prompt">{question.prompt}</p>
       {renderAnswer(question, record, (value) =>
         session.updateWeek(weekId, (week) => ({
           ...week,
