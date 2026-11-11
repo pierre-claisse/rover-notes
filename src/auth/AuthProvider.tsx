@@ -1,9 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ConfigurationError } from "../crypto/errors";
 import { openBootstrap, parseSecretsFile, type BootstrapPayload, type SecretsFile } from "../crypto/envelope";
-import { IDLE_LOCK_MS } from "../domain/limits";
 import type { VaultSession } from "../vault/session";
-import { createIdleWatch } from "./idle";
 
 export type AuthStatus = "locked" | "unlocking" | "unlocked";
 
@@ -23,12 +21,10 @@ export function AuthProvider({
   children,
   secretsUrl,
   fetchImpl,
-  idleMs = IDLE_LOCK_MS,
 }: {
   children: ReactNode;
   secretsUrl: string;
   fetchImpl?: typeof fetch;
-  idleMs?: number;
 }) {
   const [status, setStatus] = useState<AuthStatus>("locked");
   const [configIssue, setConfigIssue] = useState<"missing" | "invalid" | null>(null);
@@ -92,25 +88,6 @@ export function AuthProvider({
       else setLoginError("Identifiant ou mot de passe incorrect.");
     }
   }, []);
-
-  useEffect(() => {
-    if (status !== "unlocked") return;
-    const watch = createIdleWatch({ ms: idleMs, onLock: () => void lock() });
-    watch.bump();
-    const bump = () => watch.bump();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") watch.check();
-    };
-    window.addEventListener("keydown", bump);
-    window.addEventListener("pointerdown", bump);
-    document.addEventListener("visibilitychange", onVisible);
-    return () => {
-      watch.stop();
-      window.removeEventListener("keydown", bump);
-      window.removeEventListener("pointerdown", bump);
-      document.removeEventListener("visibilitychange", onVisible);
-    };
-  }, [idleMs, lock, status]);
 
   const value = useMemo<AuthValue>(
     () => ({

@@ -56,7 +56,7 @@ describe("login", () => {
       if (url.includes("secrets.json")) return new Response(secrets, { status: 200 });
       return new Response("absent", { status: 404 });
     });
-    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json", idleMs: 60_000, autosaveMs: 0 }} />);
+    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json", autosaveMs: 0 }} />);
     expect(screen.queryByText(/Maintenant/)).toBeNull();
     expect(screen.queryByText(/parseur/i)).toBeNull();
     await screen.findByLabelText("Mot de passe");
@@ -79,7 +79,6 @@ describe("login", () => {
         deps={{
           fetchImpl,
           secretsUrl: "/rover-notes/secrets.json",
-          idleMs: 60_000,
           autosaveMs: 0,
           drafts: new MemoryDraftStore(),
           seed: async () => loadCurriculumDocument(),
@@ -113,7 +112,6 @@ describe("login", () => {
         deps={{
           fetchImpl,
           secretsUrl: "/rover-notes/secrets.json",
-          idleMs: 60_000,
           autosaveMs: 0,
           drafts: new MemoryDraftStore(),
           seed: async () => loadCurriculumDocument(),
@@ -149,10 +147,59 @@ describe("login", () => {
     expect(window.location.pathname).toBe("/rover-notes/");
   });
 
+  it("reste déverrouillé après une longue inactivité et au retour de l’onglet", async () => {
+    const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes("secrets.json")) return new Response(secrets, { status: 200 });
+      throw new Error(`requête inattendue ${String(input)}`);
+    });
+    const user = userEvent.setup();
+    render(
+      <App
+        deps={{
+          fetchImpl,
+          secretsUrl: "/rover-notes/secrets.json",
+          autosaveMs: 0,
+          drafts: new MemoryDraftStore(),
+          seed: async () => loadCurriculumDocument(),
+          createClient: () => new MemoryContents(),
+        }}
+      />,
+    );
+    await screen.findByLabelText("Identifiant");
+    await settled(fetchImpl);
+    await user.type(screen.getByLabelText("Identifiant"), "Ada");
+    await user.type(screen.getByLabelText("Mot de passe"), "phrase-de-test");
+    await user.click(screen.getByRole("button", { name: "Déverrouiller" }));
+    expect(await screen.findByRole("heading", { name: homeHeading() })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Verrouiller" })).toBeInTheDocument();
+
+    vi.useFakeTimers();
+    try {
+      await vi.advanceTimersByTimeAsync(20 * 60 * 1000);
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
+      document.dispatchEvent(new Event("visibilitychange"));
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+      document.dispatchEvent(new Event("visibilitychange"));
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
+      window.dispatchEvent(new PointerEvent("pointerdown"));
+      await vi.advanceTimersByTimeAsync(20 * 60 * 1000);
+    } finally {
+      Reflect.deleteProperty(document, "visibilityState");
+      vi.useRealTimers();
+    }
+
+    expect(screen.getByRole("heading", { name: homeHeading() })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Verrouiller" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Mot de passe")).toBeNull();
+    expect(document.body.textContent ?? "").not.toMatch(/inactivité/);
+    expect(window.sessionStorage.length).toBe(0);
+    expect(window.localStorage.length).toBe(0);
+  });
+
   it("affiche ou masque le mot de passe, et le déverrouillage occupe la largeur du coffre", async () => {
     const fetchImpl = vi.fn(async () => new Response(secrets, { status: 200 }));
     const user = userEvent.setup();
-    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json", idleMs: 60_000 }} />);
+    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json" }} />);
     const password = await screen.findByLabelText("Mot de passe");
     const username = screen.getByLabelText("Identifiant");
     expect(password).toHaveAttribute("type", "password");
@@ -181,7 +228,7 @@ describe("login", () => {
   it("refuse un mot de passe faux sans ouvrir le hub", async () => {
     const fetchImpl = vi.fn(async () => new Response(secrets, { status: 200 }));
     const user = userEvent.setup();
-    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json", idleMs: 60_000 }} />);
+    render(<App deps={{ fetchImpl, secretsUrl: "/rover-notes/secrets.json" }} />);
     await screen.findByLabelText("Identifiant");
     await settled(fetchImpl);
     await user.type(screen.getByLabelText("Identifiant"), "Ada");
@@ -202,7 +249,6 @@ describe("login", () => {
         deps={{
           fetchImpl,
           secretsUrl: "/rover-notes/secrets.json",
-          idleMs: 60_000,
           autosaveMs: 0,
           drafts: new MemoryDraftStore(),
           seed: async () => loadCurriculumDocument(),

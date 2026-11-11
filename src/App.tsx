@@ -19,7 +19,6 @@ import { VaultSession } from "./vault/session";
 export type AppDeps = {
   fetchImpl?: typeof fetch;
   secretsUrl?: string;
-  idleMs?: number;
   createClient?: (payload: BootstrapPayload) => ContentsStore;
   seed?: () => Promise<CurriculumDocument>;
   drafts?: DraftStore;
@@ -29,7 +28,7 @@ export type AppDeps = {
 export function App({ deps }: { deps?: AppDeps } = {}) {
   const secretsUrl = deps?.secretsUrl ?? publicAsset("secrets.json");
   return (
-    <AuthProvider secretsUrl={secretsUrl} fetchImpl={deps?.fetchImpl} idleMs={deps?.idleMs}>
+    <AuthProvider secretsUrl={secretsUrl} fetchImpl={deps?.fetchImpl}>
       <Gate deps={deps} />
     </AuthProvider>
   );
