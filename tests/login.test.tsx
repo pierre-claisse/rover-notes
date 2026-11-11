@@ -162,6 +162,10 @@ describe("login", () => {
     expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Aller à S1" })).toHaveAttribute("href", "#semaine-en-cours");
     expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByText("94")).toBeInTheDocument();
+    expect(screen.getByText("~846 h")).toBeInTheDocument();
+    expect(screen.getByText("~22 mois")).toBeInTheDocument();
+    await user.click(screen.getByText("Pourquoi 22 mois ?"));
     expect(screen.getByText(summary)).toBeInTheDocument();
     expect(screen.getByText(/environ 22 mois, pas 18/)).toBeInTheDocument();
     expect(screen.getByText(/S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs/)).toBeInTheDocument();
@@ -169,14 +173,15 @@ describe("login", () => {
     expect(screen.queryByText(/planning de 18 mois daté/)).not.toBeInTheDocument();
     expect(screen.queryAllByRole("button", { name: "Définir comme semaine en cours" })).toHaveLength(0);
     expect(screen.getAllByText("en cours", { selector: ".pill-current" })).toHaveLength(1);
-    expect(screen.getAllByText("détaillée", { selector: ".pill" })).toHaveLength(9);
+    expect(screen.queryAllByText("détaillée", { selector: ".pill" })).toHaveLength(0);
+    expect(screen.getAllByText("indicative", { selector: ".pill" }).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/outillage et compilation reproductible/)).toHaveLength(1);
     expect(screen.getByRole("link", { name: /^S10$/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /^S11$/ })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /S11 — outillage/ })).not.toBeInTheDocument();
     await user.click(screen.getByText("Changer la semaine en cours"));
     await user.selectOptions(screen.getByLabelText("Semaine en cours"), "P0-S2");
-    await waitFor(() => expect(screen.getByText("en cours", { selector: ".pill-current" }).closest("li")?.textContent).toMatch(/S2 —/));
+    await waitFor(() => expect(screen.getByText("en cours", { selector: ".pill-current" }).closest("li")?.textContent).toMatch(/S2/));
     await user.click(screen.getByRole("link", { name: "Journal" }));
     expect(await screen.findByRole("heading", { name: "Journal" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Journal" })).toHaveAttribute("aria-current", "page");

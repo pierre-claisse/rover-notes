@@ -5,6 +5,7 @@
   --ink: #0f1720;
   --muted: #4a5563;
   --field: #7a8693;
+  --line: #e3e8ee;
   --uv: #5b1fe0;
   --uv-press: #4316b8;
   --cyan: #00d1e0;
@@ -156,7 +157,7 @@ main a:not(.button):hover { color: var(--ink); }
   gap: 8px;
   padding: 16px 12px;
   background: var(--bg);
-  border-right: 1px solid var(--field);
+  border-right: 1px solid var(--line);
 }
 
 .app.is-rail .sidebar {
@@ -202,7 +203,9 @@ main a:not(.button):hover { color: var(--ink); }
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
+  width: 100%;
   min-height: 44px;
   padding: 8px 12px;
   border-radius: var(--radius-sm);
@@ -210,6 +213,16 @@ main a:not(.button):hover { color: var(--ink); }
   text-decoration: none;
   font-weight: 500;
   font-size: 17px;
+}
+
+.sidebar .nav-toggle,
+.sidebar .lock-button,
+.sidebar .nav-link {
+  width: 100%;
+  margin: 0;
+  padding: 8px 12px;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
 .nav-link[aria-current="page"] { background: var(--surface); }
@@ -270,6 +283,7 @@ main a:not(.button):hover { color: var(--ink); }
 .app.is-rail .lock-button {
   justify-content: center;
   padding-inline: 0;
+  width: 100%;
 }
 
 .app.is-rail .nav-link:hover::after,
@@ -312,15 +326,24 @@ main a:not(.button):hover { color: var(--ink); }
 }
 
 .save-status {
-  margin: 0 0 0 auto;
-  min-height: 44px;
   display: flex;
   align-items: center;
   gap: 8px;
+  margin: 0 0 24px;
+  min-height: 24px;
   color: var(--muted);
+  font-family: var(--body);
   font-size: 14px;
   font-weight: 500;
 }
+
+.save-status .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--ink);
+}
+
+.save-status.is-saved .icon { color: var(--green-ink); }
 
 .menu-anchor { position: relative; }
 
@@ -353,7 +376,7 @@ main a:not(.button):hover { color: var(--ink); }
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   background: var(--bg);
-  border-top: 1px solid var(--field);
+  border-top: 1px solid var(--line);
 }
 
 .tabbar a {
@@ -416,7 +439,7 @@ main, .gate-card, .day-card, .week-panel, .pin {
   width: min(100%, 28rem);
   margin-inline: auto;
   background: var(--bg);
-  border: 1px solid var(--field);
+  border: 1px solid var(--line);
   border-top: 4px solid var(--uv);
   border-radius: var(--radius);
   padding: 32px 24px;
@@ -431,10 +454,20 @@ main, .gate-card, .day-card, .week-panel, .pin {
 }
 
 .week-panel, .callout, .today-note, .empty-journal, .chapter-head, .panel, .know-card, fieldset.exercise-card {
-  background: var(--bg);
-  border: 1px solid var(--field);
+  background: var(--surface);
+  border: 0;
   padding: 24px;
 }
+
+.week-panel h2 {
+  margin-top: 8px;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.gate-card > button[type="submit"] { margin-top: 24px; }
 
 .pin {
   background: var(--surface);
@@ -463,16 +496,76 @@ main, .gate-card, .day-card, .week-panel, .pin {
   line-height: 1.3;
 }
 
-.meta, .progress-copy, .day-duration, .task-duration, .past-flag, .timeline-meta, code, .pill {
+.meta, .day-duration, .task-duration, .past-flag, .timeline-meta, code, .pill {
   font-family: var(--mono);
 }
 
-.meta, .progress-copy, .past-flag {
+.meta, .past-flag {
   margin: 0;
   color: var(--muted);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
+}
+
+.pace {
+  margin: 16px 0 0;
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.progress-copy {
+  margin: 8px 0 0;
+  max-width: var(--measure);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.key-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.key-figures li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.key-figures strong {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.key-figures span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.minutes-field .hint {
+  margin: 8px 0 0;
+  white-space: normal;
 }
 
 .due {
@@ -487,11 +580,11 @@ main, .gate-card, .day-card, .week-panel, .pin {
 .progress-block { margin-top: 16px; }
 
 .meter {
-  height: 16px;
+  height: 20px;
   margin-top: 8px;
-  border: 1px solid var(--field);
+  border: 0;
   border-radius: 999px;
-  background: var(--surface);
+  background: var(--line);
   overflow: hidden;
 }
 
@@ -499,7 +592,9 @@ main, .gate-card, .day-card, .week-panel, .pin {
   display: block;
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, var(--cyan), var(--green));
+  min-width: 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan) 0 16px, var(--green));
 }
 
 .quiet-link {
@@ -601,10 +696,10 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
 
 .password-field > input {
   width: 100%;
-  padding-right: 6.6rem;
+  padding-right: 9rem;
 }
 
-.password-field > button.text-button {
+.password-field > button {
   position: absolute;
   top: 0;
   right: 0;
@@ -612,7 +707,21 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
   min-height: 44px;
   min-width: 44px;
   margin: 0;
-  padding: 0 16px;
+  padding: 0 12px;
+  gap: 8px;
+  border: 1px solid var(--field);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.password-field > button .icon { width: 18px; height: 18px; }
+
+.password-field > button:hover {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--field);
 }
 
 .suffix-field {
@@ -648,15 +757,14 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
 }
 
 .day-card {
-  background: #fff;
-  border: 1px solid var(--field);
+  background: var(--surface);
+  border: 0;
   border-radius: var(--radius);
   padding: 16px;
 }
 
 .day-today {
-  border-color: transparent;
-  box-shadow: inset 4px 0 0 var(--cyan), 0 1px 2px rgba(15, 23, 32, 0.06);
+  box-shadow: inset 4px 0 0 var(--cyan);
 }
 
 .day-empty {
@@ -666,7 +774,7 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
   padding: 0 4px;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid var(--field);
+  border-bottom: 1px solid var(--line);
   border-radius: 0;
   box-shadow: none;
 }
@@ -732,7 +840,7 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
   justify-content: space-between;
   gap: 16px;
   padding: 12px 0;
-  border-top: 1px solid var(--field);
+  border-top: 1px solid var(--line);
 }
 
 .task-body { flex: 1 1 auto; min-width: 0; max-width: var(--measure); }
@@ -768,7 +876,7 @@ button:disabled { color: var(--muted); background: var(--surface); border-color:
   align-items: center;
   min-height: 32px;
   padding: 4px 12px;
-  border: 1px solid var(--field);
+  border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--ink);
   font-size: 14px;
@@ -793,7 +901,7 @@ code.keep {
   align-items: center;
   min-height: 24px;
   padding: 2px 8px;
-  border: 1px solid var(--field);
+  border: 1px solid var(--line);
   border-radius: 999px;
   background: #fff;
   color: var(--ink);
@@ -824,24 +932,60 @@ code.keep {
 .week-cards, .block-list, .week-links { list-style: none; padding-left: 0; }
 
 .week-card, .block-card {
-  background: #fff;
-  border: 1px solid var(--field);
+  background: var(--surface);
+  border: 0;
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 0;
   margin: 16px 0;
 }
 
-.week-card, .block-title {
+.block-card { padding: 16px; }
+
+.block-title {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
 
-.week-card a {
+.week-card-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  min-height: 44px;
+  padding: 16px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.week-name {
   font-family: var(--display);
   font-size: 22px;
   font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.week-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+main .week-card a,
+main .week-links a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+main .week-card a:hover .week-name,
+main .week-card a:focus-visible .week-name,
+main .week-links a:hover,
+main .week-links a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .week-card.is-current, .week-links li.is-current {
@@ -892,10 +1036,10 @@ summary::before {
 details[open] > summary::before { transform: rotate(45deg); }
 
 .fold, .week-switch {
-  border: 1px solid var(--field);
+  border: 0;
   border-radius: var(--radius);
   padding: 8px 24px 16px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .tracking, .week-switch { margin: 0; }
@@ -942,7 +1086,7 @@ details[open] > summary::before { transform: rotate(45deg); }
   position: relative;
   margin: 0;
   padding: 0 0 24px 24px;
-  border-left: 2px solid var(--field);
+  border-left: 2px solid var(--line);
 }
 
 .timeline li::before {
@@ -987,7 +1131,7 @@ details[open] > summary::before { transform: rotate(45deg); }
   gap: 8px 16px;
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--field);
+  border-bottom: 1px solid var(--line);
 }
 
 main .week-toc a:not(.button) {
@@ -1024,7 +1168,7 @@ main .week-toc a:not(.button) {
 }
 
 fieldset {
-  border: 1px solid var(--field);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   margin: 0 0 16px;
   padding: 16px 16px 8px;
@@ -1063,6 +1207,12 @@ textarea.writing {
 
 .markdown-preview { overflow-wrap: anywhere; max-width: var(--measure); }
 
+.ritual {
+  background: var(--surface);
+  border: 0;
+  padding: 24px;
+}
+
 .ritual > h2:first-child,
 .ritual > p:first-child { margin-top: 0; }
 
@@ -1074,12 +1224,12 @@ textarea.writing {
   align-items: center;
   gap: 8px 16px;
   padding: 12px 0;
-  border-top: 1px solid var(--field);
+  border-top: 1px solid var(--line);
 }
 
 .conflict {
-  background: #fff;
-  border: 1px solid var(--field);
+  background: var(--surface);
+  border: 0;
   border-left: 3px solid var(--danger);
   border-radius: var(--radius);
   padding: 16px;
@@ -1126,11 +1276,9 @@ input[type="file"] { min-height: 44px; max-width: 100%; }
 
   button.text-button,
   button.quiet,
-  .password-field > button.text-button { width: auto; }
+  .password-field > button { width: auto; }
 
   .actions { flex-direction: column; align-items: stretch; }
-
-  .save-status { margin-left: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -6,7 +6,7 @@ import type { CurriculumDocument, StudyQuestion, WeekDocument } from "../domain/
 import { minutesEntered, parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import { assertNever } from "../domain/assert";
 import { formatFrenchDate, formatFrenchNumeric, parisWeekday } from "../domain/time";
-import { enteredTimeCopy, entryKindLabel, sameDayName } from "./atelier";
+import { enteredTimeCopy, entryKindLabel, paceFigure, sameDayName } from "./atelier";
 import { followAnchor, readScrollTarget, scrollToId } from "./anchor";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
@@ -107,6 +107,7 @@ export function WeekPage() {
             <option value="handed_in">Write-up remis</option>
             </select>
         </div>
+        <p className="pace">{paceFigure(minutes, hours)}</p>
         <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
         <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
         {plan.detailLevel === "source-detailed" ? <p>Semaine détaillée du programme.</p> : null}

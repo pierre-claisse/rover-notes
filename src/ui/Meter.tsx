@@ -13,7 +13,7 @@ export function TimeMeter({ minutes, hours, label }: { minutes: number; hours: n
       aria-valuenow={shown}
       aria-valuetext={`${minutes} min saisies, rythme ${hours} h`}
     >
-      <span style={{ width: `${ratio * 100}%` }} />
+      <span style={{ width: ratio === 0 ? "16px" : `${Math.max(ratio * 100, 2)}%` }} />
     </div>
   );
 }
