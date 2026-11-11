@@ -8,6 +8,9 @@ import { resolve } from "node:path";
 import { App } from "../src/App";
 import { sealBootstrap } from "../src/crypto/envelope";
 import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
+import { parisWeekday } from "../src/domain/time";
+import { sameDayName } from "../src/ui/atelier";
+import { todayHeadline } from "../src/ui/today";
 import { MANIFEST_PATH } from "../src/domain/limits";
 import { MemoryContents } from "../src/github/memory";
 import { MemoryDraftStore } from "../src/vault/drafts";
@@ -124,7 +127,7 @@ describe("login", () => {
     await user.type(screen.getByLabelText("Identifiant"), "Ada");
     await user.type(screen.getByLabelText("Mot de passe"), "phrase-de-test");
     await user.click(screen.getByRole("button", { name: "Déverrouiller" }));
-    expect(await screen.findByRole("heading", { name: "Maintenant : S1" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: homeHeading() })).toBeInTheDocument();
     const summary = loadCurriculumDocument().inconsistency.summary;
     expect(screen.queryByRole("heading", { name: "18 mois et S94" })).not.toBeInTheDocument();
     expect(screen.queryByText(summary)).not.toBeInTheDocument();
@@ -156,6 +159,8 @@ describe("login", () => {
     expect(screen.queryByText(/sans arbitrage/)).not.toBeInTheDocument();
     await user.click(screen.getByRole("link", { name: "Programme" }));
     expect(await screen.findByRole("heading", { name: "Programme" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Aller à S1" })).toHaveAttribute("href", "#semaine-en-cours");
     expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByText(summary)).toBeInTheDocument();
     expect(screen.getByText(/environ 22 mois, pas 18/)).toBeInTheDocument();
@@ -189,6 +194,16 @@ describe("login", () => {
     expect(screen.getByText("ex. 90")).toBeInTheDocument();
     expect(screen.getByText("min")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ajouter la séance" })).toHaveAttribute("type", "submit");
+    const fold = screen.getByRole("button", { name: "Replier la navigation" });
+    expect(fold).toHaveAttribute("aria-expanded", "true");
+    expect(fold).toHaveAttribute("aria-controls", "navigation-principale");
+    await user.click(fold);
+    const unfold = screen.getByRole("button", { name: "Déplier la navigation" });
+    expect(unfold).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("title", "Accueil");
+    expect(window.localStorage.getItem("rover-notes.sidebar")).toBe("rail");
+    await user.click(unfold);
+    expect(window.localStorage.getItem("rover-notes.sidebar")).toBeNull();
     expect(window.localStorage.length).toBe(0);
     expect(window.sessionStorage.length).toBe(0);
     await user.click(screen.getByRole("button", { name: "Verrouiller" }));
@@ -205,6 +220,14 @@ describe("login", () => {
     expect(screen.queryByLabelText("Mot de passe")).toBeNull();
   });
 });
+
+function homeHeading(): string {
+  const weekday = parisWeekday(new Date()).toLocaleLowerCase("fr-FR");
+  const week = loadCurriculumDocument().weeks.find((item) => item.id === "P0-S1");
+  const slots = week && "slots" in week.scheduleNotes ? week.scheduleNotes.slots : [];
+  const match = slots.find((slot) => sameDayName(slot.c, weekday));
+  return todayHeadline(weekday, match ? match.d : null);
+}
 
 async function settled(fetchImpl: { mock: { results: Array<{ value?: Promise<unknown> }> } }) {
   await waitFor(() => expect(fetchImpl.mock.results.length).toBeGreaterThan(0));

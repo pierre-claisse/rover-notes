@@ -10,8 +10,10 @@ describe("graphe client", () => {
     expect(blob).not.toContain("Je sais écrire sans IA un parseur C");
     expect(blob).not.toContain("rawCanvasSources");
     expect(blob).not.toContain("dangerouslySetInnerHTML");
-    expect(blob).not.toContain("localStorage");
     expect(blob).not.toContain("sessionStorage");
+    const stored = files.filter((file) => readFileSync(file, "utf8").includes("localStorage"));
+    expect(stored.map((file) => file.endsWith("src/ui/navigation.tsx"))).toEqual([true]);
+    expect(readFileSync(stored[0] ?? "", "utf8")).toContain("rover-notes.sidebar");
   });
 });
 

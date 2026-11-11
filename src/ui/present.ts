@@ -93,6 +93,17 @@ export function richPieces(text: string, context = text): RichPiece[] {
   return pieces;
 }
 
+const LEADING_DURATION = /^(\d+\s*h(?:\s+\d{1,2})?|\d+\s*min)\s*[:.]?\s*/i;
+
+export function splitLeadingDuration(text: string): { duration: string | null; text: string } {
+  const trimmed = text.trim();
+  const match = LEADING_DURATION.exec(trimmed);
+  if (!match) return { duration: null, text: trimmed };
+  const rest = trimmed.slice(match[0].length).trim();
+  if (!rest) return { duration: null, text: trimmed };
+  return { duration: match[1].replace(/\s+/g, " "), text: rest };
+}
+
 export function slotTasks(contenu: string): { read: string[]; do: string[] } {
   const read: string[] = [];
   const tasks: string[] = [];

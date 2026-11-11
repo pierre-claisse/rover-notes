@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { scrollToId } from "./anchor";
 import { useVault } from "./vault";
 
 export function GlossaryPage() {
@@ -8,7 +9,7 @@ export function GlossaryPage() {
 
   useEffect(() => {
     if (!entryId) return;
-    document.getElementById(entryId)?.scrollIntoView({ block: "start" });
+    scrollToId(entryId);
   }, [entryId]);
 
   if (snap.phase !== "ready" || !snap.curriculum) {
@@ -16,8 +17,8 @@ export function GlossaryPage() {
   }
 
   return (
-    <article>
-      <h1>Glossaire</h1>
+    <article className="page">
+      <h1 className="display">Glossaire</h1>
       <p>Les termes de P0, tels qu’ils servent sur le rover. Le détail des semaines suivantes n’est pas encore écrit.</p>
       {snap.curriculum.glossary.map((entry) => (
         <section key={entry.id} id={entry.id} className={entry.id === entryId ? "callout" : undefined}>

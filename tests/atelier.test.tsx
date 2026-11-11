@@ -9,6 +9,7 @@ import { loadCurriculumDocument } from "../src/domain/loadCurriculum";
 import { parisWeekday } from "../src/domain/time";
 import { MemoryContents } from "../src/github/memory";
 import { enteredTimeCopy, phaseTimeCopy, sameDayName } from "../src/ui/atelier";
+import { todayHeadline } from "../src/ui/today";
 import { HomePage } from "../src/ui/HomePage";
 import { JournalPage } from "../src/ui/JournalPage";
 import { ProgramPage } from "../src/ui/ProgramPage";
@@ -47,18 +48,17 @@ describe("atelier", () => {
     const weekday = parisWeekday(new Date()).toLocaleLowerCase("fr-FR");
     const session = await open();
     render(page(session, <HomePage />));
-    await screen.findByRole("heading", { name: "Maintenant : S1" });
     const week = curriculum.weeks.find((item) => item.id === "P0-S1");
     if (!week || !("slots" in week.scheduleNotes)) throw new Error("créneaux S1 absents");
     const match = week.scheduleNotes.slots.find((slot) => sameDayName(slot.c, weekday));
-    const today = screen.queryByText("Aujourd’hui");
+    expect(await screen.findByRole("heading", { name: todayHeadline(weekday, match?.d ?? null) })).toBeInTheDocument();
+    const today = screen.getByText("Aujourd’hui");
+    expect(today.closest("li")).toHaveAttribute("aria-current", "date");
     if (match) {
-      expect(today).toBeInTheDocument();
-      expect(today?.closest("li")).toHaveTextContent(match.c);
-      expect(today?.closest("li")).toHaveAttribute("aria-current", "date");
+      expect(today.closest("li")).toHaveTextContent(match.c);
     } else {
-      expect(today).not.toBeInTheDocument();
-      expect(screen.getByText(new RegExp(`Pas de créneau ce ${weekday}`))).toBeInTheDocument();
+      expect(today.closest("li")).toHaveTextContent(new RegExp(weekday, "i"));
+      expect(today.closest("li")).toHaveTextContent(/pas de créneau/);
     }
     if (sameDayName(weekday, "dimanche")) {
       expect(screen.getByRole("link", { name: "Ouvrir le bilan" })).toBeInTheDocument();
@@ -124,14 +124,18 @@ describe("atelier", () => {
     expect(screen.queryByText("Enregistré")).not.toBeInTheDocument();
   });
 
-  it("ramène la semaine en cours dans le champ, sauf si le mouvement est réduit", async () => {
+  it("ouvre le programme en haut et ne défile que depuis le lien d’ancre", async () => {
     const scroll = vi.spyOn(Element.prototype, "scrollIntoView").mockImplementation(() => {});
     mockMotion(false);
     const session = await open();
+    const user = userEvent.setup();
     render(page(session, <ProgramPage />));
     await screen.findByRole("heading", { name: "Programme" });
     const current = document.getElementById("semaine-en-cours");
     expect(current?.textContent).toMatch(/S1 —/);
+    expect(scroll).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
+    await user.click(screen.getByRole("link", { name: "Aller à S1" }));
     expect(scroll).toHaveBeenCalled();
     expect(scroll.mock.instances[0]).toBe(current);
     cleanup();
@@ -140,6 +144,8 @@ describe("atelier", () => {
     render(page(session, <ProgramPage />));
     await screen.findByRole("heading", { name: "Programme" });
     expect(scroll).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("link", { name: "Aller à S1" }));
+    expect(scroll).toHaveBeenCalled();
     const copies = document.querySelectorAll(".progress-copy");
     expect(copies.length).toBeGreaterThan(0);
     for (const node of copies) expect(node.textContent ?? "").not.toMatch(/retard/i);
