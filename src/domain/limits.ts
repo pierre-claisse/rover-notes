@@ -3,7 +3,6 @@ export const OBJECTS_PREFIX = "vault/v1/objects/";
 export const CURRICULUM_VERSION = "initial-canvas-import-v1";
 export const MAX_FILE_BYTES = 10 * 1024 * 1024;
 export const CHUNK_BYTES = 256 * 1024;
-export const IDLE_LOCK_MS = 15 * 60 * 1000;
 export const DEFAULT_REPO_OWNER = "pierre-claisse";
 export const DEFAULT_REPO_NAME = "rover-notes-data";
 export const DEFAULT_BRANCH = "main";
