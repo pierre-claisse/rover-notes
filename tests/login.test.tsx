@@ -162,9 +162,7 @@ describe("login", () => {
     expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Aller à S1" })).toHaveAttribute("href", "#semaine-en-cours");
     expect(screen.getByRole("link", { name: "Programme" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByText("94")).toBeInTheDocument();
-    expect(screen.getByText("~846 h")).toBeInTheDocument();
-    expect(screen.getByText("~22 mois")).toBeInTheDocument();
+    expect(screen.getByText("94 sem. · ~846 h · ~22 mois")).toBeInTheDocument();
     await user.click(screen.getByText("Pourquoi 22 mois ?"));
     expect(screen.getByText(summary)).toBeInTheDocument();
     expect(screen.getByText(/environ 22 mois, pas 18/)).toBeInTheDocument();

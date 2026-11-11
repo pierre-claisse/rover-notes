@@ -20,20 +20,7 @@ export function ProgramPage() {
     <article className="page">
       <h1 className="display">Programme</h1>
       <CurrentWeekPin activeId={activeId} weeks={curriculum.weeks} hours={curriculum.context.hoursPerWeek} />
-      <ul className="key-figures">
-        <li>
-          <strong>94</strong>
-          <span>semaines</span>
-        </li>
-        <li>
-          <strong>~846 h</strong>
-          <span>au rythme prévu</span>
-        </li>
-        <li>
-          <strong>~22 mois</strong>
-          <span>à 9 h/sem</span>
-        </li>
-      </ul>
+      <p className="key-line">94 sem. · ~846 h · ~22 mois</p>
       <details className="fold">
         <summary>Pourquoi 22 mois ?</summary>
         <p>{curriculum.inconsistency.summary}</p>

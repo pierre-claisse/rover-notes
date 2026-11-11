@@ -325,6 +325,18 @@ main a:not(.button):hover { color: var(--ink); }
   font-weight: 600;
 }
 
+.top .mobile-lock {
+  width: auto;
+  margin-left: auto;
+  color: var(--muted);
+  gap: 8px;
+}
+
+.top .mobile-lock .icon {
+  width: 18px;
+  height: 18px;
+}
+
 .save-status {
   display: flex;
   align-items: center;
@@ -528,39 +540,17 @@ main, .gate-card, .day-card, .week-panel, .pin {
   line-height: 1.6;
 }
 
-.key-figures {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+.pin + .key-line { margin-top: 16px; }
 
-.key-figures li {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 16px;
-  background: var(--surface);
-  border-radius: var(--radius);
-}
-
-.key-figures strong {
+.key-line {
+  margin-bottom: 0;
   font-family: var(--display);
-  font-size: 32px;
+  font-size: clamp(16px, 4.8vw, 28px);
   font-weight: 300;
-  line-height: 1.1;
+  line-height: 1.2;
   letter-spacing: -0.03em;
   color: var(--ink);
-}
-
-.key-figures span {
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .minutes-field .hint {
@@ -1240,6 +1230,141 @@ textarea.writing {
 input[type="file"] { min-height: 44px; max-width: 100%; }
 
 .session-note { margin: 0 0 8px; font-weight: 600; }
+
+.week-tabs, .note-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  margin: 24px 0 0;
+  padding: 0;
+  overflow-x: auto;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.note-tabs { position: static; margin-top: 16px; }
+
+.week-tabs [role="tab"], .note-tabs [role="tab"] {
+  flex: none;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  background: transparent;
+  color: var(--ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.week-tabs button.text-button[aria-selected="true"],
+.note-tabs button.text-button[aria-selected="true"] {
+  background: var(--surface);
+  box-shadow: inset 0 -3px 0 var(--uv);
+}
+
+.week-tabs [role="tab"]:hover, .note-tabs [role="tab"]:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: transparent;
+}
+
+.briefing-body {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.briefing.is-open .briefing-body {
+  display: block;
+  overflow: visible;
+}
+
+.term-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+main .term-chips a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+main .term-chips a:hover,
+main .term-chips a:focus-visible { text-decoration: underline; }
+
+li.day-card.day-past {
+  background: transparent;
+  padding: 0;
+}
+
+li.day-card.day-past:has(details[open]) {
+  background: var(--surface);
+  padding: 8px 16px 16px;
+  border-radius: var(--radius);
+}
+
+.day-fold > summary { width: 100%; }
+
+.day-fold > summary .day-head { width: 100%; }
+
+.exercise-card .choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.exercise-card .choice input {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.exercise-card.is-last .hint-button { margin-top: 16px; }
+
+.file-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--field);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.proof-add { margin-top: 16px; }
+
+.session-form label + input,
+.session-form label + select,
+.session-form label + textarea,
+.session-form label + .minutes-field {
+  margin-top: 8px;
+}
+
+.session-card { margin-top: 48px; }
+
+.session-card > button { margin-top: 0; }
 
 @media (min-width: 800px) {
   .totals { grid-template-columns: repeat(4, minmax(0, 1fr)); }

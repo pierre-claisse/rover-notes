@@ -128,7 +128,7 @@ export function SessionForm({
       : "journal-minutes-example journal-minutes-unit";
 
   return (
-    <form noValidate onSubmit={onSubmit}>
+    <form className="session-form" noValidate onSubmit={onSubmit}>
       <h2>Ajouter une séance</h2>
       <label htmlFor="journal-week">Semaine</label>
       <select id="journal-week" value={currentWeek} onChange={(event) => setCurrentWeek(event.target.value)}>

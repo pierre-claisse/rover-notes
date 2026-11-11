@@ -94,26 +94,21 @@ describe("atelier", () => {
   it("donne un sommaire à la page semaine et un décompte déclaratif", async () => {
     const session = await open();
     render(week(session, "P0-S1"));
-    const toc = await screen.findByRole("navigation", { name: "Sommaire de la semaine" });
-    for (const [id, label] of [
-      ["plan", "Plan"],
-      ["je-sais", "Je sais"],
-      ["exercices", "Exercices"],
-      ["notes", "Notes"],
-      ["bilan", "Bilan"],
-      ["preuves", "Preuves"],
-      ["seance", "Séance"],
-    ] as const) {
-      expect(within(toc).getByRole("link", { name: label })).toHaveAttribute("href", `#${id}`);
-      expect(document.getElementById(id)).toBeTruthy();
+    const tabs = await screen.findByRole("tablist", { name: "Semaine" });
+    for (const label of ["Plan", "Je sais", "Exercices", "Notes & bilan", "Preuves"]) {
+      expect(within(tabs).getByRole("tab", { name: label })).toBeInTheDocument();
     }
+    expect(within(tabs).getByRole("tab", { name: "Plan" })).toHaveAttribute("aria-selected", "true");
+    const user = userEvent.setup();
+    await user.click(within(tabs).getByRole("tab", { name: "Je sais" }));
     expect(screen.getByText("0 sur 6 déclarés")).toBeInTheDocument();
     expect(screen.getByText(/Cocher une case ne valide pas la compétence/)).toBeInTheDocument();
     expect(screen.queryByText("Précision facultative")).not.toBeInTheDocument();
-    const user = userEvent.setup();
     await user.click(screen.getByRole("checkbox", { name: /matrice 2×2/ }));
     expect(screen.getByLabelText("Précision facultative")).toBeInTheDocument();
+    await user.click(within(tabs).getByRole("tab", { name: "Notes & bilan" }));
     expect(screen.getByRole("heading", { name: "Bilan du dimanche" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Notes" })).toBeInTheDocument();
   });
 
   it("réserve l’encart du dimanche à la semaine en cours", async () => {
