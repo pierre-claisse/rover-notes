@@ -132,7 +132,8 @@ describe("atelier", () => {
     render(page(session, <ProgramPage />));
     await screen.findByRole("heading", { name: "Programme" });
     const current = document.getElementById("semaine-en-cours");
-    expect(current?.textContent).toMatch(/S1 —/);
+    expect(current?.textContent).toMatch(/S1/);
+    expect(current?.textContent).toMatch(/Vecteurs/);
     expect(scroll).not.toHaveBeenCalled();
     expect(screen.getByRole("heading", { name: "Semaine en cours : S1" })).toBeInTheDocument();
     await user.click(screen.getByRole("link", { name: "Aller à S1" }));

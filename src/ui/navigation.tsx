@@ -109,37 +109,12 @@ export function MobileNav() {
   );
 }
 
-export function SecondaryMenu() {
+export function MobileLock() {
   const auth = useAuth();
-  const [open, setOpen] = useState(false);
   return (
-    <div className="menu-anchor">
-      <button
-        type="button"
-        className="text-button menu-button"
-        aria-expanded={open}
-        aria-controls="menu-secondaire"
-        onClick={() => setOpen((value) => !value)}
-      >
-        Menu
-      </button>
-      {open ? (
-        <div
-          id="menu-secondaire"
-          className="secondary-menu"
-          role="group"
-          aria-label="Menu secondaire"
-          onKeyDown={(event) => {
-            if (event.key !== "Escape") return;
-            setOpen(false);
-          }}
-        >
-          <button type="button" className="text-button" onClick={() => void auth.lock()}>
-            Verrouiller
-          </button>
-        </div>
-      ) : null}
-    </div>
+    <button type="button" className="text-button lock-button" onClick={() => void auth.lock()}>
+      Verrouiller
+    </button>
   );
 }
 

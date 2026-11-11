@@ -5,6 +5,10 @@ export function enteredTimeCopy(minutes: number, hours: number): string {
   return `Temps saisi : ${minutes} min, sur un rythme de ${formatHours(hours)} h.`;
 }
 
+export function paceFigure(minutes: number, hours: number): string {
+  return `${enteredPace(minutes)} / ${formatHours(hours)} h`;
+}
+
 export function phaseTimeCopy(minutes: number, hours: number): string {
   return `Temps saisi : ${minutes} min, pour ${formatHours(hours)} h estimées.`;
 }
@@ -53,6 +57,15 @@ export function entryKindLabel(kind: JournalEntry["kind"]): string {
       return neverKind;
     }
   }
+}
+
+function enteredPace(minutes: number): string {
+  if (minutes <= 0) return "0 h";
+  const whole = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (rest === 0) return `${whole} h`;
+  if (whole === 0) return `${rest} min`;
+  return `${whole} h ${rest}`;
 }
 
 function formatHours(hours: number): string {

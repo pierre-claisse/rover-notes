@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { SkipLink } from "../ui/anchor";
+import { Icon } from "../ui/icons";
 import { useAuth } from "./AuthProvider";
 
 const MISSING =
@@ -66,12 +67,13 @@ export function LoginScreen() {
           />
           <button
             type="button"
-            className="text-button"
+            className="reveal"
             aria-controls="password"
             aria-pressed={showPassword}
             onClick={() => setShowPassword((value) => !value)}
             disabled={busy}
           >
+            <Icon name={showPassword ? "eye-off" : "eye"} />
             {showPassword ? "Masquer" : "Afficher"}
           </button>
         </div>

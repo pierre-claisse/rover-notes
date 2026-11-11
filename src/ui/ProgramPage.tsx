@@ -20,10 +20,27 @@ export function ProgramPage() {
     <article className="page">
       <h1 className="display">Programme</h1>
       <CurrentWeekPin activeId={activeId} weeks={curriculum.weeks} hours={curriculum.context.hoursPerWeek} />
-      <p className="callout">{curriculum.inconsistency.summary}</p>
-      <p>
-        S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs. 94 semaines × 9 h, environ 22 mois (846 h) : on ne compacte pas le syllabus pour coller à 18 mois. Aucune date n’est inventée pour S10–S94.
-      </p>
+      <ul className="key-figures">
+        <li>
+          <strong>94</strong>
+          <span>semaines</span>
+        </li>
+        <li>
+          <strong>~846 h</strong>
+          <span>au rythme prévu</span>
+        </li>
+        <li>
+          <strong>~22 mois</strong>
+          <span>à 9 h/sem</span>
+        </li>
+      </ul>
+      <details className="fold">
+        <summary>Pourquoi 22 mois ?</summary>
+        <p>{curriculum.inconsistency.summary}</p>
+        <p>
+          S1 à S9 sont détaillées. S10 à S94 restent des blocs indicatifs. 94 semaines × 9 h, environ 22 mois (846 h) : on ne compacte pas le syllabus pour coller à 18 mois. Aucune date n’est inventée pour S10–S94.
+        </p>
+      </details>
       <ThroughLines lines={curriculum.throughLines} />
       <details className="week-switch">
         <summary>Changer la semaine en cours</summary>
@@ -151,10 +168,7 @@ function PhaseWeeks({
         {weeks.map((week) => (
           <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined}
             tabIndex={week.id === activeId ? -1 : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
-            <WeekLink week={week} />
-            <DetailPill week={week} />
-            {week.id === activeId ? <CurrentPill /> : null}
-            {handedIn(week.id) ? <HandedPill /> : null}
+            <WeekLink week={week} active={week.id === activeId} handed={handedIn(week.id)} />
           </li>
         ))}
       </ul>
@@ -174,7 +188,7 @@ function PhaseWeeks({
           <li key={block.sourceText} className="block-card">
             <p className="block-title">
               {block.sourceText}
-              <span className="pill">bloc indicatif</span>
+              <span className="pill">indicative</span>
             </p>
             <p>{block.briefing.whyThisBlock}</p>
             <p className="task-kind">Matériel</p>
@@ -197,10 +211,7 @@ function PhaseWeeks({
           {rest.map((week) => (
             <li key={week.id} id={week.id === activeId ? "semaine-en-cours" : undefined}
             tabIndex={week.id === activeId ? -1 : undefined} className={week.id === activeId ? "week-card is-current" : "week-card"}>
-              <WeekLink week={week} />
-              <DetailPill week={week} />
-              {week.id === activeId ? <CurrentPill /> : null}
-              {handedIn(week.id) ? <HandedPill /> : null}
+              <WeekLink week={week} active={week.id === activeId} handed={handedIn(week.id)} />
             </li>
           ))}
         </ul>
@@ -209,26 +220,27 @@ function PhaseWeeks({
   );
 }
 
-function WeekLink({ week }: { week: WeekDocument }) {
+function WeekLink({ week, active, handed }: { week: WeekDocument; active: boolean; handed: boolean }) {
   return (
-    <Link to={`/semaine/${week.id}`}>
-      S{week.weekNumber} — {week.title}
+    <Link className="week-card-link" to={`/semaine/${week.id}`}>
+      <span className="meta">S{week.weekNumber}</span>
+      <WeekTitle week={week} />
+      <span className="week-flags">
+        {active ? <CurrentPill /> : null}
+        {handed ? <HandedPill /> : null}
+      </span>
     </Link>
   );
 }
 
-function DetailPill({ week }: { week: WeekDocument }) {
-  return <span className="pill">{detailLabel(week.detailLevel)}</span>;
-}
-
-function detailLabel(level: WeekDocument["detailLevel"]): string {
-  switch (level) {
+function WeekTitle({ week }: { week: WeekDocument }) {
+  switch (week.detailLevel) {
     case "source-detailed":
-      return "détaillée";
+      return <span className="week-name">{week.title}</span>;
     case "indicative-block-only":
-      return "bloc indicatif";
+      return <span className="pill">indicative</span>;
     default: {
-      const neverLevel: never = level;
+      const neverLevel: never = week.detailLevel;
       return neverLevel;
     }
   }

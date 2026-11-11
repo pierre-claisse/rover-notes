@@ -11,7 +11,10 @@ export type IconName =
   | "expand"
   | "read"
   | "write"
-  | "external";
+  | "external"
+  | "eye"
+  | "eye-off"
+  | "check";
 
 export function Icon({ name }: { name: IconName }) {
   return (
@@ -85,6 +88,24 @@ function IconPaths({ name }: { name: IconName }): ReactNode {
           <path d="M17 13.5V18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4.5" />
         </>
       );
+    case "eye":
+      return (
+        <>
+          <path d="M3 12s3.6-6 9-6 9 6 9 6-3.6 6-9 6-9-6-9-6z" />
+          <circle cx="12" cy="12" r="2.4" />
+        </>
+      );
+    case "eye-off":
+      return (
+        <>
+          <path d="M4 6 20 18" />
+          <path d="M9.2 9.4A3 3 0 0 0 14.6 14" />
+          <path d="M6.1 7.7C4.4 9.1 3 12 3 12s3.6 6 9 6c1.5 0 2.9-.4 4.1-1" />
+          <path d="M10 6.2A9 9 0 0 1 12 6c5.4 0 9 6 9 6a17 17 0 0 1-2.1 2.7" />
+        </>
+      );
+    case "check":
+      return <path d="M5 12.5 9.5 17 19 7.5" />;
     default: {
       const neverName: never = name;
       return neverName;

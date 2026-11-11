@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { Slot } from "../domain/curriculumDocument";
 import { minutesEntered } from "../domain/schemas";
 import { formatFrenchDate, parisWeekday } from "../domain/time";
-import { enteredTimeCopy, sameDayName } from "./atelier";
+import { enteredTimeCopy, paceFigure, sameDayName } from "./atelier";
 import { TimeMeter } from "./Meter";
 import { ThroughLines } from "./pedagogy";
 import { splitLeadingDuration, slotTasks } from "./present";
@@ -51,10 +51,7 @@ export function HomePage() {
         <p className="meta">
           S{week.weekNumber} · {week.phase} · {hours} h
         </p>
-        <h2 id="semaine-titre" className="display">
-          S{week.weekNumber}
-        </h2>
-        <p className="theme">{week.title}</p>
+        <h2 id="semaine-titre">{week.title}</h2>
         {week.proofs.length > 0 ? (
           <p className="due">
             <strong>À rendre : </strong>
@@ -62,6 +59,7 @@ export function HomePage() {
           </p>
         ) : null}
         <section className="progress-block" aria-label="Temps saisi">
+          <p className="pace">{paceFigure(minutes, hours)}</p>
           <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
           <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
         </section>

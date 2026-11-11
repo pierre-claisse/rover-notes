@@ -152,22 +152,26 @@ export function SessionForm({
         onChange={(event) => setDateText(event.target.value)}
         required
       />
-      <p id="journal-date-readout">{localDate ? formatFrenchDate(localDate) : "Format JJ/MM/AAAA."}</p>
+      <p id="journal-date-readout" className="sr-only">
+        {localDate ? formatFrenchDate(localDate) : "Format JJ/MM/AAAA."}
+      </p>
       <label htmlFor="journal-minutes">Minutes</label>
-      <div className="suffix-field">
-        <input
-          id="journal-minutes"
-          inputMode="numeric"
-          aria-invalid={errorField === "minutes" || undefined}
-          aria-describedby={minutesDescribedBy}
-          value={minutes}
-          onChange={(event) => setMinutes(event.target.value)}
-          required
-        />
-        <span id="journal-minutes-example" className="hint">
+      <div className="minutes-field">
+        <div className="suffix-field">
+          <input
+            id="journal-minutes"
+            inputMode="numeric"
+            aria-invalid={errorField === "minutes" || undefined}
+            aria-describedby={minutesDescribedBy}
+            value={minutes}
+            onChange={(event) => setMinutes(event.target.value)}
+            required
+          />
+          <span id="journal-minutes-unit">min</span>
+        </div>
+        <p id="journal-minutes-example" className="hint">
           ex. 90
-        </span>
-        <span id="journal-minutes-unit">min</span>
+        </p>
       </div>
       <label htmlFor="journal-summary">Résumé</label>
       <textarea id="journal-summary" value={summary} onChange={(event) => setSummary(event.target.value)} />
