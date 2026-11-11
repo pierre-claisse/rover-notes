@@ -1,5 +1,6 @@
 {
   "name": "rover-notes",
+  "start_url": "./",
   "theme_color": "#5B1FE0",
   "background_color": "#FFFFFF",
   "icons": [
