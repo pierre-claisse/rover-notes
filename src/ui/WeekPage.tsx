@@ -6,7 +6,7 @@ import type { CurriculumDocument, StudyQuestion, WeekDocument } from "../domain/
 import { minutesEntered, parseWeekRecord, type AnswerValue, type WeekRecord } from "../domain/schemas";
 import { assertNever } from "../domain/assert";
 import { formatFrenchDate, formatFrenchNumeric, parisWeekday } from "../domain/time";
-import { enteredTimeCopy, entryKindLabel, paceFigure, sameDayName } from "./atelier";
+import { entryKindLabel, paceFigure, sameDayName } from "./atelier";
 import { readScrollTarget, scrollToId } from "./anchor";
 import { SessionForm } from "./JournalPage";
 import { MarkdownText } from "./markdown";
@@ -108,29 +108,33 @@ export function WeekPage() {
             {plan.proofs.join(" · ")}
           </p>
         ) : null}
-        <div className="week-meta">
-          <label htmlFor="week-state">État</label>
-          <select
-            id="week-state"
-            value={record.state}
-            disabled={locked}
-            onChange={(event) => {
-              const state = event.target.value;
-              if (state === "not_started" || state === "in_progress" || state === "handed_in") {
-                session.updateWeek(weekId, (week) => ({ ...week, state }));
-              }
-            }}
-          >
-            <option value="not_started">Pas commencée</option>
-            <option value="in_progress">En cours</option>
-            <option value="handed_in">Write-up remis</option>
+        <div className="week-status">
+          <div className="week-meta">
+            <label htmlFor="week-state">État</label>
+            <select
+              id="week-state"
+              value={record.state}
+              disabled={locked}
+              onChange={(event) => {
+                const state = event.target.value;
+                if (state === "not_started" || state === "in_progress" || state === "handed_in") {
+                  session.updateWeek(weekId, (week) => ({ ...week, state }));
+                }
+              }}
+            >
+              <option value="not_started">Pas commencée</option>
+              <option value="in_progress">En cours</option>
+              <option value="handed_in">Write-up remis</option>
             </select>
+          </div>
+          <div className="week-pace">
+            <p className="pace">{paceFigure(minutes, hours)}</p>
+            <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
+          </div>
         </div>
-        <p className="pace">{paceFigure(minutes, hours)}</p>
-        <p className="progress-copy">{enteredTimeCopy(minutes, hours)}</p>
-        <TimeMeter minutes={minutes} hours={hours} label="Temps saisi cette semaine" />
       </header>
       <Conflicts />
+      <div className="week-tabs-wrap">
       <div className="week-tabs" role="tablist" aria-label="Semaine" onKeyDown={onWeekTabKey}>
         {TABS.map((item) => (
           <button
@@ -147,6 +151,7 @@ export function WeekPage() {
             {item.label}
           </button>
         ))}
+      </div>
       </div>
       <form
         onSubmit={(event) => {
