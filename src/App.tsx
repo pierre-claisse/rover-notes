@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import { LoginScreen } from "./auth/LoginScreen";
 import { utf8Decode } from "./crypto/bytes";
@@ -84,7 +84,7 @@ function Unlocked({ deps }: { deps?: AppDeps }) {
 
   return (
     <VaultProvider session={session}>
-      <HashRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route element={<Shell />}>
             <Route path="/" element={<HomePage />} />
@@ -94,7 +94,7 @@ function Unlocked({ deps }: { deps?: AppDeps }) {
             <Route path="/semaine/:weekId" element={<WeekPage />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </VaultProvider>
   );
 }
